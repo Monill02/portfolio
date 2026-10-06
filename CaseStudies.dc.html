@@ -9,11 +9,10 @@
 <x-dc>
 <helmet>
 <style>
-@font-face{font-family:'Redaction';src:url(fonts/Redaction-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
-@font-face{font-family:'Redaction 10';src:url(fonts/Redaction_10-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
-@font-face{font-family:'Redaction 35';src:url(fonts/Redaction_35-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
-@font-face{font-family:'Redaction 70';src:url(fonts/Redaction_70-Bold.woff2) format('woff2');font-weight:700;font-style:normal;font-display:swap;}
-@keyframes crtRoll{0%{transform:translateY(-110%)}100%{transform:translateY(420%)}}
+/* Fonts and the crtRoll keyframes live in index.html; re-declaring them here made every font re-download on mount. */
+[data-cs-sq] > span:first-child{transition:opacity 160ms ease;}
+[data-cs-sq]:focus-visible{outline:1px solid #df5227;outline-offset:3px;}
+@media (hover: hover){ [data-cs-sq]:hover > span:first-child{opacity:0.6;} }
 </style>
 </helmet>
 <div data-cs-track="1" ref="{{ trackRef }}" style="position:relative;height:{{ trackHeight }};">
@@ -35,7 +34,7 @@
         </div>
         <div aria-label="Case studies" style="position:relative;margin-left:auto;display:flex;gap:4px;padding:2px;">
           <sc-for list="{{ squares }}" as="sq" hint-placeholder-count="4">
-            <button type="button" aria-label="{{ sq.label }}" aria-current="{{ sq.on }}" onClick="{{ sq.go }}" style="position:relative;width:24px;height:24px;padding:0;border:0;background:transparent;cursor:pointer;overflow:hidden;">
+            <button type="button" data-cs-sq="1" aria-label="{{ sq.label }}" aria-current="{{ sq.on }}" onClick="{{ sq.go }}" style="position:relative;width:24px;height:24px;padding:0;border:0;background:transparent;cursor:pointer;overflow:hidden;">
               <span style="position:absolute;inset:0;background:#d9d9d9;opacity:0.3;"></span>
               <span data-fill="{{ sq.i }}" style="position:absolute;inset:0;background:#d9d9d9;transform-origin:0 50%;transform:scaleX(0);"></span>
               <span style="position:absolute;inset:0;background-image:url(assets/noise-dark.svg);background-size:200px 200px;opacity:0.35;"></span>
@@ -93,7 +92,7 @@
                   <div style="font-family:'Redaction 35','Redaction',Georgia,serif;font-size:80px;line-height:72px;letter-spacing:-0.01em;color:#ffffff;white-space:nowrap;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">{{ c.outcome.value }}</div>
                   <div style="font-family:'Redaction',Georgia,serif;font-size:18px;line-height:22px;color:#ffffff;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">{{ c.outcome.caption }}</div>
                 </div>
-                <div aria-hidden="true" style="position:absolute;inset:0;z-index:2;pointer-events:none;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
+                <div aria-hidden="true" data-crt-scan="1" style="position:absolute;inset:0;z-index:2;pointer-events:none;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
                 <canvas data-crt-noise="1" width="240" height="96" aria-hidden="true" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;pointer-events:none;"></canvas>
                 <div aria-hidden="true" data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 8.6s linear infinite;animation-delay:-2.2s;"></div>
                 <div aria-hidden="true" style="position:absolute;inset:0;z-index:5;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 12px rgba(0,0,0,0.3);"></div>
@@ -195,19 +194,22 @@ class Component extends DCLogic {
   componentDidMount() {
     this.reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     this.mql = window.matchMedia('(max-width: 760px)');
-    this.onMql = () => this.setState({ mobile: this.mql.matches }, () => this.update());
+    this.onMql = () => this.setState({ mobile: this.mql.matches }, () => this.update(true));
     this.mql.addEventListener('change', this.onMql);
-    this.onScroll = () => { this.lastY = window.scrollY; this.update(); };
-    this.poll = setInterval(() => { if (window.scrollY !== this.lastY) this.onScroll(); }, 90);
+    // Scroll work is batched to one pass per frame; fitting the card (which
+    // forces layout) only happens when its size can actually have changed.
+    this.onScroll = () => { this.lastY = window.scrollY; if (!this.raf) this.raf = requestAnimationFrame(() => { this.raf = 0; this.update(this.needFit); }); };
+    this.poll = setInterval(() => { if (!document.hidden && window.scrollY !== this.lastY) this.onScroll(); }, 90);
     window.addEventListener('scroll', this.onScroll, { passive: true });
-    this.onResize = () => { this.z = 1; this.update(); };
+    this.onResize = () => { this.z = 1; this.update(true); };
     window.addEventListener('resize', this.onResize);
-    this.setState({ mobile: this.mql.matches }, () => this.update());
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { this.z = 1; this.update(); });
+    this.setState({ mobile: this.mql.matches }, () => this.update(true));
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { this.z = 1; this.update(true); });
   }
 
   componentWillUnmount() {
     clearInterval(this.poll);
+    cancelAnimationFrame(this.raf);
     window.removeEventListener('scroll', this.onScroll);
     window.removeEventListener('resize', this.onResize);
     if (this.mql) this.mql.removeEventListener('change', this.onMql);
@@ -216,21 +218,17 @@ class Component extends DCLogic {
   componentDidUpdate() {
     const idx = this.state.idx;
     if (this.shownIdx === undefined) { this.shownIdx = idx; return; }
-    if (this.shownIdx !== idx) { this.shownIdx = idx; this.animateIn(); this.paintFill(idx, this.local || 0); }
+    if (this.shownIdx !== idx) { this.shownIdx = idx; this.animateIn(); this.paintFill(idx, this.local || 0); this.needFit = true; this.onScroll(); }
   }
 
-  update() {
+  update(refit) {
     const tr = this.track();
     if (!tr) return;
     const n = CASES.length;
-    if (this.state.mobile) {
-      const card = tr.querySelector('[data-cs-card]');
-      if (card) this.fit(card, window.innerHeight);
-      this.local = 1; this.paintFill(this.state.idx, 1); return;
-    }
     const card = tr.querySelector('[data-cs-card]');
     const vh = window.innerHeight;
-    if (card) this.fit(card, vh);
+    if (card && (refit || !this.fitted)) { this.fit(card, vh); this.fitted = true; this.needFit = false; }
+    if (this.state.mobile) { this.local = 1; this.paintFill(this.state.idx, 1); return; }
     const ch = card ? card.getBoundingClientRect().height : vh;
     const top = Math.min(0, Math.round(vh - ch - 24));
     const stickH = Math.max(vh, ch + 48);
@@ -280,11 +278,15 @@ class Component extends DCLogic {
     const tr = this.track();
     if (!tr || this.reduce || !tr.animate) return;
     const ease = 'cubic-bezier(.2,.75,.2,1)';
+    // Transform + opacity only: they stay on the compositor, so swapping cases mid-scroll doesn't drop frames.
+    // Any entrance still running from a fast scroll-through is cancelled first so they never stack.
     tr.querySelectorAll('[data-anim]').forEach((el, k) => {
-      el.animate([{ opacity: 0, transform: 'translateY(8px)', filter: 'blur(2px)' }, { opacity: 1, transform: 'none', filter: 'none' }],
+      el.getAnimations().forEach(a => a.cancel());
+      el.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }],
         { duration: 520, delay: k * 22, easing: ease, fill: 'backwards' });
     });
     tr.querySelectorAll('[data-line]').forEach((el, k) => {
+      el.getAnimations().forEach(a => a.cancel());
       const v = el.style.height === '1px' ? 'scaleX(0)' : 'scaleY(0)';
       el.animate([{ transform: v }, { transform: 'none' }], { duration: 480, delay: 80 + k * 18, easing: ease, fill: 'backwards' });
     });

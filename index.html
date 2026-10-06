@@ -1,13 +1,21 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="./support.js"></script>
-</head>
-<body>
-<x-dc>
-<helmet>
+<title>Monil · Portfolio</title>
+<meta name="description" content="Product consultant based in New York. 6+ years working directly with founders and leadership, 50+ products shipped across iOS, Android and the web.">
+<meta name="theme-color" content="#1b1b1b">
+<link rel="icon" href="assets/logo.svg" type="image/svg+xml">
+<!-- Fetch everything the runtime would otherwise discover one step at a time. -->
+<link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="preload" as="script" href="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous">
+<link rel="preload" as="script" href="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous">
+<link rel="preload" as="font" type="font/woff2" href="fonts/Redaction-Regular.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="fonts/Redaction_35-Bold.woff2" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Declared here, outside the runtime-managed <helmet>: the runtime re-creates helmet styles during boot, which re-declared every face and downloaded each font twice. -->
 <style>
 @font-face{font-family:'Redaction';src:url(fonts/Redaction-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
 @font-face{font-family:'Redaction';src:url(fonts/Redaction-Italic.woff2) format('woff2');font-weight:400;font-style:italic;font-display:swap;}
@@ -30,12 +38,61 @@
 @font-face{font-family:'Redaction 100';src:url(fonts/Redaction_100-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
 @font-face{font-family:'Redaction 100';src:url(fonts/Redaction_100-Italic.woff2) format('woff2');font-weight:400;font-style:italic;font-display:swap;}
 @font-face{font-family:'Redaction 100';src:url(fonts/Redaction_100-Bold.woff2) format('woff2');font-weight:700;font-style:normal;font-display:swap;}
+</style>
+<!-- Hold the page until every section has mounted and the fonts are in, then fade it up once. -->
+<style>html,body{margin:0;background:#1b1b1b;}html.dc-boot #dc-root{opacity:0;}#dc-root{transition:opacity 700ms cubic-bezier(.2,.8,.2,1);}</style>
+<script>document.documentElement.classList.add('dc-boot');setTimeout(function(){document.documentElement.classList.remove('dc-boot');},3500);</script>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
 html,body{margin:0;background:#1b1b1b;}
 *{box-sizing:border-box;}
 a{color:#ececec;text-decoration:none;}
 a:hover{color:#ffffff;}
-@keyframes crtRoll{0%{transform:translateY(-110%)}100%{transform:translateY(420%)}}
-@media (prefers-reduced-motion: reduce){[data-crt-anim]{animation:none !important;}}
+::selection{background:#df5227;color:#ffffff;}
+:focus-visible{outline:2px solid #df5227;outline-offset:3px;}
+@media (prefers-reduced-motion: no-preference){ html{scroll-behavior:smooth;} }
+#articles,#testimonials,#contact{scroll-margin-top:96px;}
+
+/* CRT: the roll bar now travels fully off-screen instead of popping out at 93%. */
+@keyframes crtRoll{0%{transform:translateY(-100%)}100%{transform:translateY(560%)}}
+@media (prefers-reduced-motion: reduce){ [data-crt-anim]{animation:none !important;} }
+[data-role="crt"] [data-crt-content]{will-change:transform;}
+[data-role="crt"][data-glitch] [data-crt-content] p,
+[data-role="crt"][data-glitch] [data-crt-content] div{text-shadow:-1.5px 0 rgba(255,46,96,0.6), 1.5px 0 rgba(46,214,255,0.6), 0 0 8px rgba(255,255,255,0.3) !important;}
+[data-role="crt"][data-glitch] [data-crt-content] img{filter:drop-shadow(-1.5px 0 rgba(255,46,96,0.7)) drop-shadow(1.5px 0 rgba(46,214,255,0.7)) drop-shadow(0 0 6px rgba(255,255,255,0.22)) !important;}
+[data-crt-tear]{mix-blend-mode:screen;}
+[data-crt-flicker]{will-change:opacity;}
+
+/* Nav: direction-aware hide, hover fill, sliding bracket on the current section. */
+[data-nav]{transition:transform 420ms cubic-bezier(.2,.8,.2,1);will-change:transform;}
+[data-nav][data-hidden]{transform:translateY(-130%);}
+[data-nav]:has(:focus-visible){transform:none;}
+[data-nav-link]{position:relative;color:#c9c9c9;transition:color 180ms ease, background-color 180ms ease;}
+[data-nav-link][aria-current="true"]{color:#ffffff;}
+[data-nav-link]:active{background:#303030;transition-duration:0ms;}
+[data-nav-link]:focus-visible{outline:1px solid #df5227;outline-offset:-5px;}
+[data-nav-ind]{position:absolute;left:0;top:4px;bottom:4px;width:0;pointer-events:none;opacity:0;transition:transform 520ms cubic-bezier(.2,.8,.2,1), width 520ms cubic-bezier(.2,.8,.2,1), opacity 240ms ease;}
+[data-nav-ind]::before,[data-nav-ind]::after{content:"";position:absolute;width:8px;height:8px;}
+[data-nav-ind]::before{left:0;top:0;border-top:1px solid #ffffff;border-left:1px solid #ffffff;}
+[data-nav-ind]::after{right:0;bottom:0;border-bottom:1px solid #ffffff;border-right:1px solid #ffffff;}
+[data-nav-btn]{transition:border-color 180ms ease, background-color 180ms ease;}
+[data-nav-btn] img{transition:transform 520ms cubic-bezier(.2,.8,.2,1), filter 180ms ease;}
+/* Phones: the labels overflowed their cells and ran into each other. Size cells to their labels instead. */
+@media (max-width: 480px){
+  [data-nav]{gap:8px !important;}
+  [data-nav-link]{flex:1 1 auto !important;padding:0 4px;font-size:13px !important;letter-spacing:0 !important;white-space:nowrap;}
+}
+@media (max-width: 350px){ [data-nav-link]{font-size:11.5px !important;padding:0 3px;} }
+@media (hover: hover){
+  [data-nav-link]:hover{color:#ffffff;background:#262626;}
+  [data-nav-btn]:hover{border-color:#ffffff !important;background:#262626 !important;}
+  [data-nav-btn]:hover img{filter:brightness(1.2);}
+  [data-nav-btn="spark"]:hover img{transform:rotate(90deg);}
+}
 </style>
 </helmet>
 <div data-screen-label="Page" style="position:relative;min-height:100vh;background:#1c1c1c;color:#ececec;font-family:'Redaction',Georgia,serif;overflow:clip;">
@@ -44,20 +101,21 @@ a:hover{color:#ffffff;}
   <div data-role="page-gutter" style="position:relative;padding:0 clamp(20px, 3.7037vw, 64px);">
     <div data-role="container" style="max-width:1600px;margin:0 auto;">
 
-      <header data-screen-label="Nav" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:clamp(20px, 2.778vw, 48px);pointer-events:none;transform:{{ navTf }};transition:transform 180ms steps(4);">
-        <a href="#" aria-label="Home" style="pointer-events:auto;background:#1c1c1c;flex:0 0 40px;width:40px;height:40px;border:2px solid #d8d8d8;display:flex;overflow:hidden;">
-          <img src="assets/logo.svg" alt="Logo" style="width:36px;height:36px;display:block;">
+      <header data-nav="1" data-screen-label="Nav" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:clamp(20px, 2.778vw, 48px);pointer-events:none;">
+        <a href="#" aria-label="Home" data-nav-btn="home" style="pointer-events:auto;background:#1c1c1c;flex:0 0 40px;width:40px;height:40px;border:2px solid #d8d8d8;display:flex;overflow:hidden;">
+          <img src="assets/logo.svg" alt="Logo" width="36" height="36" style="width:36px;height:36px;display:block;">
         </a>
-        <nav style="pointer-events:auto;background:#1c1c1c;flex:0 1 684px;min-width:0;border:1px solid #9a9a9a;padding:3px;">
-          <div style="display:flex;border:0.5px solid #d6d6d6;height:clamp(36px, 2.66vw, 46px);">
-            <a href="#work" style="flex:139 1 0;min-width:0;display:flex;align-items:center;justify-content:center;font-size:clamp(14px, 1.389vw, 24px);border-right:0.5px solid #bdbdbd;letter-spacing:0.01em;" style-hover="background:#2a2a2a;">Work</a>
-            <a href="#articles" style="flex:162 1 0;min-width:0;display:flex;align-items:center;justify-content:center;font-size:clamp(14px, 1.389vw, 24px);border-right:0.5px solid #bdbdbd;letter-spacing:0.01em;" style-hover="background:#2a2a2a;">Articles</a>
-            <a href="#testimonials" style="flex:213 1 0;min-width:0;display:flex;align-items:center;justify-content:center;font-size:clamp(14px, 1.389vw, 24px);border-right:0.5px solid #bdbdbd;letter-spacing:0.01em;white-space:nowrap;" style-hover="background:#2a2a2a;">Testi-Monils</a>
-            <a href="#contact" style="flex:162 1 0;min-width:0;display:flex;align-items:center;justify-content:center;font-size:clamp(14px, 1.389vw, 24px);letter-spacing:0.01em;" style-hover="background:#2a2a2a;">Contact</a>
+        <nav aria-label="Primary" style="pointer-events:auto;background:#1c1c1c;flex:0 1 684px;min-width:0;border:1px solid #9a9a9a;padding:3px;">
+          <div style="position:relative;display:flex;border:0.5px solid #d6d6d6;height:clamp(36px, 2.66vw, 46px);">
+            <a href="#work" data-nav-link="1" style="flex:139 1 0;min-width:0;display:flex;align-items:center;justify-content:center;font-size:clamp(14px, 1.389vw, 24px);border-right:0.5px solid #bdbdbd;letter-spacing:0.01em;">Work</a>
+            <a href="#articles" data-nav-link="1" style="flex:162 1 0;min-width:0;display:flex;align-items:center;justify-content:center;font-size:clamp(14px, 1.389vw, 24px);border-right:0.5px solid #bdbdbd;letter-spacing:0.01em;">Articles</a>
+            <a href="#testimonials" data-nav-link="1" style="flex:213 1 0;min-width:0;display:flex;align-items:center;justify-content:center;font-size:clamp(14px, 1.389vw, 24px);border-right:0.5px solid #bdbdbd;letter-spacing:0.01em;white-space:nowrap;">Testi-Monils</a>
+            <a href="#contact" data-nav-link="1" style="flex:162 1 0;min-width:0;display:flex;align-items:center;justify-content:center;font-size:clamp(14px, 1.389vw, 24px);letter-spacing:0.01em;">Contact</a>
+            <span data-nav-ind="1" aria-hidden="true"></span>
           </div>
         </nav>
-        <a href="#" aria-label="Sparkle" style="pointer-events:auto;background:#1c1c1c;flex:0 0 40px;width:40px;height:40px;border:2px solid #d8d8d8;display:flex;overflow:hidden;">
-          <img src="assets/spark.svg" alt="" style="width:40px;height:40px;margin:-2px;display:block;">
+        <a href="#" aria-label="Sparkle" data-nav-btn="spark" style="pointer-events:auto;background:#1c1c1c;flex:0 0 40px;width:40px;height:40px;border:2px solid #d8d8d8;display:flex;overflow:hidden;">
+          <img src="assets/spark.svg" alt="" width="40" height="40" style="width:40px;height:40px;margin:-2px;display:block;">
         </a>
       </header>
 
@@ -70,7 +128,7 @@ a:hover{color:#ffffff;}
                 <div style="flex:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px;"><div style="font-family:{{ displayFont }};font-weight:700;font-size:84px;line-height:0.86;letter-spacing:-0.01em;white-space:nowrap;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">50+</div></div>
                 <div style="flex:none;padding:0 16px 34px;"><p style="margin:0;text-align:center;font-size:17px;line-height:22px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Products shipped across domains</p></div>
               </div>
-              <div aria-hidden="true" style="position:absolute;inset:0;z-index:2;pointer-events:none;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
+              <div aria-hidden="true" data-crt-scan="1" style="position:absolute;inset:0;z-index:2;pointer-events:none;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
               <canvas data-crt-noise="1" width="240" height="96" aria-hidden="true" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;pointer-events:none;"></canvas>
               <div aria-hidden="true" data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 7.3s linear infinite;animation-delay:-1.2s;"></div>
               <div aria-hidden="true" style="position:absolute;inset:0;z-index:5;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 12px rgba(0,0,0,0.3);"></div>
@@ -94,7 +152,7 @@ a:hover{color:#ffffff;}
                 <div style="flex:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px;"><div style="font-family:{{ displayFont }};font-weight:700;font-size:84px;line-height:0.86;letter-spacing:-0.01em;white-space:nowrap;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">6+ YoE</div></div>
                 <div style="flex:none;padding:0 16px 34px;"><p style="margin:0;text-align:center;font-size:17px;line-height:22px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Working as a Product Consultant, directly with founders and cross-functional team</p></div>
               </div>
-              <div aria-hidden="true" style="position:absolute;inset:0;z-index:2;pointer-events:none;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
+              <div aria-hidden="true" data-crt-scan="1" style="position:absolute;inset:0;z-index:2;pointer-events:none;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
               <canvas data-crt-noise="1" width="240" height="96" aria-hidden="true" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;pointer-events:none;"></canvas>
               <div aria-hidden="true" data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 9.1s linear infinite;animation-delay:-4.7s;"></div>
               <div aria-hidden="true" style="position:absolute;inset:0;z-index:5;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 12px rgba(0,0,0,0.3);"></div>
@@ -114,7 +172,7 @@ a:hover{color:#ffffff;}
         <div data-role="col-center" style="grid-column:{{ cCol }};grid-row:{{ cRow }};width:100%;max-width:561px;justify-self:center;min-width:0;position:relative;z-index:3;">
         <section data-role="crt" data-crt-center="1" style="position:sticky;top:{{ stickyTop }};width:100%;aspect-ratio:561 / 692;height:{{ centerH }};overflow:hidden;border:0.5px solid #ffffff;background:linear-gradient(rgba(171,171,171,0.17), rgba(171,171,171,0.17)), #141414;">
               <div data-crt-content="1" style="position:relative;z-index:1;height:100%;"></div>
-              <div aria-hidden="true" style="position:absolute;inset:0;z-index:2;pointer-events:none;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
+              <div aria-hidden="true" data-crt-scan="1" style="position:absolute;inset:0;z-index:2;pointer-events:none;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
               <canvas data-crt-noise="1" width="240" height="96" aria-hidden="true" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;pointer-events:none;"></canvas>
               <div aria-hidden="true" data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 10.4s linear infinite;animation-delay:-3.3s;"></div>
               <div aria-hidden="true" style="position:absolute;inset:0;z-index:5;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 12px rgba(0,0,0,0.3);"></div>
@@ -133,7 +191,7 @@ a:hover{color:#ffffff;}
                 <div style="flex:1;min-height:0;display:flex;align-items:flex-start;justify-content:center;"><img src="assets/skyline-alpha.png" alt="New York skyline" style="display:block;width:100%;height:112px;object-fit:cover;object-position:50% 100%;filter:drop-shadow(0 0 1.5px rgba(255,255,255,0.55)) drop-shadow(0 0 6px rgba(255,255,255,0.22));"></div>
                 <div style="flex:none;padding:0 16px 34px;"><p style="margin:0;text-align:center;font-size:17px;line-height:22px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Currently based out of New York and stuck on the L train</p></div>
               </div>
-              <div aria-hidden="true" style="position:absolute;inset:0;z-index:2;pointer-events:none;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
+              <div aria-hidden="true" data-crt-scan="1" style="position:absolute;inset:0;z-index:2;pointer-events:none;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
               <canvas data-crt-noise="1" width="240" height="96" aria-hidden="true" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;pointer-events:none;"></canvas>
               <div aria-hidden="true" data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 6.4s linear infinite;animation-delay:-2.9s;"></div>
               <div aria-hidden="true" style="position:absolute;inset:0;z-index:5;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 12px rgba(0,0,0,0.3);"></div>
@@ -155,7 +213,7 @@ a:hover{color:#ffffff;}
                 <div style="flex:1;min-height:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:14px;"><img src="assets/bots.svg" alt="Human and agent pixel icons" style="display:block;max-width:100%;height:74px;width:auto;filter:drop-shadow(0 0 1.5px rgba(255,255,255,0.55)) drop-shadow(0 0 6px rgba(255,255,255,0.22));"></div>
                 <div style="flex:none;padding:0 16px 34px;"><p style="margin:0;text-align:center;font-size:17px;line-height:22px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Building solutions for and with humans and agents alike</p></div>
               </div>
-              <div aria-hidden="true" style="position:absolute;inset:0;z-index:2;pointer-events:none;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
+              <div aria-hidden="true" data-crt-scan="1" style="position:absolute;inset:0;z-index:2;pointer-events:none;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
               <canvas data-crt-noise="1" width="240" height="96" aria-hidden="true" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;pointer-events:none;"></canvas>
               <div aria-hidden="true" data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 8.2s linear infinite;animation-delay:-6.1s;"></div>
               <div aria-hidden="true" style="position:absolute;inset:0;z-index:5;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 12px rgba(0,0,0,0.3);"></div>
@@ -207,47 +265,223 @@ class Component extends DCLogic {
     this.ro = new ResizeObserver(([e]) => { const cw = Math.round(e.contentRect.width), vh = window.innerHeight; if (cw > 0 && (Math.abs(cw - this.state.cw) > 1 || Math.abs(vh - this.state.vh) > 1)) this.setState({ cw, vh }); });
     this.ro.observe(el);
   };
-  crtLoop() {
-    const R = Math.random;
-    if (!this.crt || !this.crt.length || document.querySelectorAll('[data-role="crt"]').length !== this.crt.length) {
-      this.crt = Array.from(document.querySelectorAll('[data-role="crt"]')).map(el => {
-        const cv = el.querySelector('[data-crt-noise]'), g = cv && cv.getContext('2d');
-        return { el, cv, g, img: g && g.createImageData(cv.width, cv.height), fl: el.querySelector('[data-crt-flicker]'), tear: el.querySelector('[data-crt-tear]'), ct: el.querySelector('[data-crt-content]'), c: el.hasAttribute('data-crt-center'), dip: 0, lvl: 0, gl: 0, tr: 0 };
-      }).filter(o => o.g);
-    }
-    const hero = document.querySelector('[data-role="hero-fit"]'), rc = hero && hero.getBoundingClientRect();
-    const on = !document.hidden && rc && rc.bottom > 0 && rc.top < window.innerHeight;
-    const mp = this.morphP || 0, boost = Math.sin(Math.PI * Math.max(0, Math.min(1, (mp - 0.3) / 0.4)));
-    if (on) for (const o of this.crt) {
-      const er = o.el.getBoundingClientRect(); if (er.bottom < 0 || er.top > window.innerHeight) continue;
-      if (!o.el.isConnected) { this.crt = null; break; }
-      const d = o.img.data;
-      for (let i = 0; i < d.length; i += 4) { d[i] = d[i + 1] = d[i + 2] = 255; const v = R(); d[i + 3] = v > 0.55 ? (v - 0.55) * 70 * R() * (o.c ? 1 + 3.5 * boost : 1) : 0; }
-      o.g.putImageData(o.img, 0, 0);
-      if (o.dip > 0) { o.dip--; o.fl.style.opacity = (o.lvl * (0.6 + 0.4 * R())).toFixed(3); }
-      else if (R() < 0.022) { o.dip = 1 + ((R() * 4) | 0); o.lvl = 0.06 + R() * 0.12; }
-      else o.fl.style.opacity = (R() * R() * 0.05).toFixed(3);
-      if (o.gl > 0) { if (--o.gl === 0) o.ct.style.transform = ''; }
-      else if (R() < 0.006) { o.gl = 1 + ((R() * 2) | 0); o.ct.style.transform = 'translateX(' + ((R() - 0.5) * 4).toFixed(1) + 'px)'; }
-      if (o.tr > 0) { if (--o.tr === 0) o.tear.style.opacity = '0'; }
-      else if (R() < 0.008 + (o.c ? 0.3 * boost : 0)) { o.tr = 1; o.tear.style.top = (R() * 96).toFixed(1) + '%'; o.tear.style.height = (1 + ((R() * 3) | 0)) + 'px'; o.tear.style.opacity = (0.15 + R() * 0.3).toFixed(2); }
-    }
-    this.crtT = setTimeout(() => this.crtLoop(), on ? 40 + R() * 80 : 300);
+  // ── CRT screens ─────────────────────────────────────────────────────────
+  // One engine drives every [data-role="crt"] on the page (hero cards, the
+  // centre panel, the case-study Outcomes screen). Only screens that are on
+  // screen get frames, at a steady 24fps. Noise is drawn from a few
+  // pre-baked tiles instead of being regenerated pixel by pixel.
+  crtStart() {
+    const R = Math.random, T = 128;
+    this.crt = new Map(); this.crtOn = new Set(); this.crtLast = 0;
+    this.tiles = Array.from({ length: 6 }, () => {
+      const c = document.createElement('canvas'); c.width = c.height = T;
+      const g = c.getContext('2d'), im = g.createImageData(T, T), d = im.data;
+      for (let i = 0; i < d.length; i += 4) { d[i] = d[i + 1] = d[i + 2] = 255; const v = R(); d[i + 3] = v > 0.55 ? (v - 0.55) * 70 * R() : 0; }
+      g.putImageData(im, 0, 0); return c;
+    });
+    this.crtIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) this.crtOn.add(e.target); else this.crtOn.delete(e.target); }), { rootMargin: '48px' });
+    this.crtRO = new ResizeObserver(es => es.forEach(e => { const o = this.crt.get(e.target.closest('[data-role="crt"]')); if (o) o.dirty = true; }));
+    this.crtScan();
+    this.crtScanT = setInterval(() => this.crtScan(), 1500);
+    if (this.reduce) return;
+    const loop = now => {
+      this.crtRaf = requestAnimationFrame(loop);
+      if (document.hidden || !this.crtOn.size || now - this.crtLast < 40) return;
+      this.crtLast = now;
+      for (const el of this.crtOn) { const o = this.crt.get(el); if (o) this.crtFrame(o, now); }
+    };
+    this.crtRaf = requestAnimationFrame(loop);
   }
-  componentDidUpdate(pp, ps) { if (ps.cw !== this.state.cw || ps.stickyTop !== this.state.stickyTop) { this.measure(); this.onS && this.onS(); } }
+  crtScan() {
+    const now = performance.now();
+    for (const [el, o] of this.crt) if (!el.isConnected) { this.crtIO.unobserve(el); this.crtRO.unobserve(o.cv); this.crt.delete(el); this.crtOn.delete(el); }
+    document.querySelectorAll('[data-role="crt"]').forEach(el => {
+      let o = this.crt.get(el);
+      if (!o) {
+        const cv = el.querySelector('[data-crt-noise]'), fl = el.querySelector('[data-crt-flicker]'), tear = el.querySelector('[data-crt-tear]'), ct = el.querySelector('[data-crt-content]');
+        if (!cv || !fl || !tear || !ct) return;
+        o = { el, cv, fl, tear, ct, g: cv.getContext('2d'), scan: el.querySelector('[data-crt-scan]'), c: el.hasAttribute('data-crt-center'), dirty: true, s: 0, dipEnd: 0, lvl: 0, glEnd: 0, tearEnd: 0, hoverAt: 0, nextGl: now + 1500 + Math.random() * 6000 };
+        el.addEventListener('pointerenter', () => this.crtGlitch(o, true));
+        this.crt.set(el, o); this.crtIO.observe(el); this.crtRO.observe(cv);
+      }
+      this.crtScanlines(o);
+      if (this.reduce && o.dirty) this.crtFrame(o, now, true);
+    });
+  }
+  // Scanlines are re-cut so their period lands on whole device pixels. The
+  // hero is CSS-zoomed and most Windows screens run at 125–150%, so the
+  // original 1px/3px pattern fell between pixels and showed moiré bands.
+  crtScanlines(o) {
+    const h = o.scan && o.el.offsetHeight; if (!h) return;
+    const s = o.el.getBoundingClientRect().height / h * (window.devicePixelRatio || 1);
+    if (!(s > 0) || Math.abs(s - o.s) < 0.01) return;
+    o.s = s;
+    const L = Math.max(1, Math.round(s)) / s, P = Math.max(2, Math.round(3 * s)) / s, px = v => v.toFixed(3) + 'px';
+    o.scan.style.backgroundImage = 'repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) ' + px(L) + ', rgba(0,0,0,0) ' + px(L) + ', rgba(0,0,0,0) ' + px(P) + ')';
+  }
+  crtFrame(o, now, still) {
+    const R = Math.random, cv = o.cv, g = o.g;
+    if (o.dirty) {
+      o.dirty = false;
+      const w = cv.clientWidth, h = cv.clientHeight; if (!w || !h) return;
+      // ~2 CSS px of grain in both axes, so tall screens no longer smear into vertical streaks.
+      const W = Math.max(8, Math.round(w / 2)), H = Math.max(8, Math.round(h / 2));
+      if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; }
+      o.pats = this.tiles.map(t => g.createPattern(t, 'repeat'));
+    }
+    if (!o.pats) return;
+    const W = cv.width, H = cv.height, boost = o.c ? (this.boost || 0) : 0;
+    g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, W, H);
+    for (let k = 0, n = 1 + Math.round(boost * 3); k < n; k++) {
+      const ox = (R() * 128) | 0, oy = (R() * 128) | 0;
+      g.setTransform(1, 0, 0, 1, ox, oy); g.fillStyle = o.pats[(R() * o.pats.length) | 0]; g.fillRect(-ox, -oy, W, H);
+    }
+    if (still) return;
+    // Brightness: a faint constant shimmer, with an occasional short dip.
+    let fl;
+    if (now < o.dipEnd) fl = o.lvl * (0.6 + 0.4 * R());
+    else { if (R() < 0.012) { o.dipEnd = now + 40 + R() * 130; o.lvl = 0.06 + R() * 0.1; } fl = R() * R() * 0.045; }
+    o.fl.style.opacity = fl.toFixed(3);
+    // Glitches are scheduled per screen (every 3.5–11.5s) so the screens never fire in sync.
+    if (o.glEnd) {
+      if (now >= o.glEnd) { o.glEnd = 0; o.el.removeAttribute('data-glitch'); o.ct.style.transform = ''; }
+      else o.ct.style.transform = 'translateX(' + ((R() - 0.5) * 5).toFixed(1) + 'px)';
+    } else if (now >= o.nextGl || R() < 0.25 * boost) this.crtGlitch(o, false, now);
+    if (o.tearEnd && now >= o.tearEnd) { o.tearEnd = 0; o.tear.style.opacity = '0'; }
+  }
+  crtGlitch(o, hover, now = performance.now()) {
+    if (this.reduce || o.glEnd) return;
+    if (hover) { if (now - o.hoverAt < 1200) return; o.hoverAt = now; }
+    const R = Math.random;
+    o.glEnd = now + (hover ? 170 : 60 + R() * 90);
+    o.nextGl = now + 3500 + R() * 8000;
+    o.el.setAttribute('data-glitch', '');
+    o.ct.style.transform = 'translateX(' + ((R() < 0.5 ? -1 : 1) * (1 + R() * 2)).toFixed(1) + 'px)';
+    o.tearEnd = now + 50 + R() * 70;
+    o.tear.style.top = (8 + R() * 84).toFixed(1) + '%';
+    o.tear.style.height = (1 + ((R() * 3) | 0)) + 'px';
+    o.tear.style.opacity = (0.18 + R() * 0.3).toFixed(2);
+  }
+
+  // ── Nav ─────────────────────────────────────────────────────────────────
+  // Hides when you scroll down, comes back when you scroll up, reach the top,
+  // or move the pointer to the top edge. A bracket marks the current section
+  // and follows the pointer across the links.
+  navStart() {
+    this.navY = window.scrollY; this.navAcc = 0; this.navHover = null; this.navActive = null;
+    this.onNavOver = e => {
+      if (e.pointerType === 'touch') return;
+      const a = e.target.closest ? e.target.closest('[data-nav-link]') : null;
+      if (a !== this.navHover) { this.navHover = a; this.paintInd(); }
+    };
+    this.onNavFocus = e => {
+      const a = e.target.closest ? e.target.closest('[data-nav-link]') : null;
+      if (a !== this.navHover) { this.navHover = a; this.paintInd(); }
+    };
+    // A nav click keeps the bar up for the glide so you see the bracket land,
+    // then tucks it away so it doesn't sit over the section you jumped to.
+    const land = () => {
+      if (!this.navLock) return;
+      this.navLock = false; this.navY = window.scrollY; this.navAcc = 0;
+      clearTimeout(this.navTuckT);
+      this.navTuckT = setTimeout(() => { if (window.scrollY > 120 && !document.querySelector('[data-nav]:hover')) this.setNav(true); }, 900);
+    };
+    this.onNavClick = e => {
+      const a = e.target.closest ? e.target.closest('[data-nav-link]') : null;
+      if (!a) return;
+      this.navLock = true; this.setNav(false); clearTimeout(this.navTuckT);
+      clearTimeout(this.navLockT); this.navLockT = setTimeout(land, 2500);
+    };
+    this.onScrollEnd = land;
+    this.onEdge = e => { if (e.clientY < 72 && e.pointerType !== 'touch') { clearTimeout(this.navTuckT); this.setNav(false); } };
+    document.addEventListener('pointerover', this.onNavOver, { passive: true });
+    document.addEventListener('focusin', this.onNavFocus);
+    document.addEventListener('click', this.onNavClick);
+    window.addEventListener('scrollend', this.onScrollEnd);
+    window.addEventListener('pointermove', this.onEdge, { passive: true });
+  }
+  setNav(hide) {
+    const h = document.querySelector('[data-nav]'); if (!h) return;
+    if (hide === h.hasAttribute('data-hidden')) return;
+    if (hide) h.setAttribute('data-hidden', ''); else h.removeAttribute('data-hidden');
+  }
+  navScroll() {
+    const y = window.scrollY, dy = y - this.navY; this.navY = y;
+    if (y < 120) { this.navAcc = 0; this.setNav(false); return; }
+    if (this.navLock) return;
+    if (dy && (dy > 0) !== (this.navAcc > 0)) this.navAcc = 0;
+    this.navAcc += dy;
+    if (this.navAcc > 24) this.setNav(true); else if (this.navAcc < -12) this.setNav(false);
+  }
+  spy() {
+    const links = document.querySelectorAll('[data-nav-link]'), probe = window.innerHeight * 0.4;
+    const atEnd = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4;
+    let act = null;
+    links.forEach(a => {
+      const s = document.getElementById(a.getAttribute('href').slice(1)); if (!s) return;
+      const r = s.getBoundingClientRect();
+      if (r.top <= probe && r.bottom + 300 > probe) act = a;
+    });
+    if (atEnd && links.length) act = links[links.length - 1];
+    if (act === this.navActive) return;
+    if (this.navActive) this.navActive.removeAttribute('aria-current');
+    this.navActive = act;
+    if (act) act.setAttribute('aria-current', 'true');
+    this.paintInd();
+  }
+  paintInd() {
+    const ind = document.querySelector('[data-nav-ind]'); if (!ind) return;
+    const t = this.navHover || this.navActive;
+    if (!t) { ind.style.opacity = '0'; return; }
+    const appearing = ind.style.opacity !== '1';
+    // Appear in place (fade only); once visible, slide between links.
+    if (appearing) ind.style.transition = 'opacity 240ms ease';
+    ind.style.transform = 'translateX(' + (t.offsetLeft + 4) + 'px)';
+    ind.style.width = Math.max(0, t.offsetWidth - 8) + 'px';
+    ind.style.opacity = '1';
+    if (appearing) { void ind.offsetWidth; ind.style.transition = ''; }
+  }
+
+  // Fade the page up once the hero's own typefaces are in, so the first thing
+  // you see is never a Georgia fallback swapping to Redaction. Capped at 1s so
+  // a slow font never holds the page back; sections below the fold keep
+  // loading behind it.
+  reveal() {
+    const root = document.documentElement, t0 = performance.now(), F = document.fonts;
+    const done = () => requestAnimationFrame(() => root.classList.remove('dc-boot'));
+    const check = () => {
+      if (!root.classList.contains('dc-boot')) return;
+      const fonts = !F || !F.check || (F.check("16px 'Redaction'") && F.check("700 64px 'Redaction 35'"));
+      if (fonts || performance.now() - t0 > 1000) { done(); return; }
+      this.revealT = setTimeout(check, 30);
+    };
+    check();
+  }
+
+  // The runtime only passes prevProps here, so track the layout inputs ourselves.
+  componentDidUpdate() {
+    const k = this.state.cw + '|' + this.state.stickyTop;
+    if (k === this.layoutKey) return;
+    this.layoutKey = k; this.measure(); this.onS && this.onS(); requestAnimationFrame(() => this.paintInd());
+  }
   componentDidMount() {
     this.reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-    this.onS = () => {
-      if (!this.mraf) this.mraf = requestAnimationFrame(() => this.morph());
-      const y = window.scrollY;
-      if (y > 120 && !this.state.navHidden) this.setState({ navHidden: true });
-      clearTimeout(this.navT); this.navT = setTimeout(() => this.setState({ navHidden: false }), 260);
-    };
+    this.onS = () => { if (!this.mraf) this.mraf = requestAnimationFrame(() => this.morph()); };
     window.addEventListener('scroll', this.onS, { passive: true });
     setTimeout(() => { this.measure(); this.onS(); }, 60);
-    if (!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) this.crtT = setTimeout(() => this.crtLoop(), 200);
-    this.onR = () => { if (Math.abs(window.innerHeight - this.state.vh) > 1) this.setState({ vh: window.innerHeight }); this.measure(); this.onS(); }; window.addEventListener('resize', this.onR); }
-  componentWillUnmount() { clearTimeout(this.crtT); clearTimeout(this.navT); cancelAnimationFrame(this.mraf); window.removeEventListener('scroll', this.onS); if (this.ro) this.ro.disconnect(); window.removeEventListener('resize', this.onR); }
+    this.navStart();
+    this.crtStart();
+    this.reveal();
+    this.onR = () => { if (Math.abs(window.innerHeight - this.state.vh) > 1) this.setState({ vh: window.innerHeight }); this.measure(); this.onS(); this.paintInd(); };
+    window.addEventListener('resize', this.onR);
+  }
+  componentWillUnmount() {
+    cancelAnimationFrame(this.crtRaf); clearInterval(this.crtScanT); clearTimeout(this.navLockT); clearTimeout(this.navTuckT); clearTimeout(this.revealT); cancelAnimationFrame(this.mraf);
+    if (this.crtIO) this.crtIO.disconnect(); if (this.crtRO) this.crtRO.disconnect(); if (this.ro) this.ro.disconnect();
+    window.removeEventListener('scroll', this.onS); window.removeEventListener('resize', this.onR);
+    window.removeEventListener('scrollend', this.onScrollEnd); window.removeEventListener('pointermove', this.onEdge);
+    document.removeEventListener('pointerover', this.onNavOver); document.removeEventListener('focusin', this.onNavFocus); document.removeEventListener('click', this.onNavClick);
+  }
   heroLayout() {
     const { cw } = this.state, narrow = cw < 900;
     if (narrow) return { narrow: true, heroRef: this.heroRef, heroZoom: 1, heroW: '100%', heroCols: 'minmax(0,1fr)', heroRows: 'auto', rowGap: '28px', heroPad: '40px 0 64px', cardH: 'auto', centerH: 'auto', stickyTop: 'auto', lCol: 'auto', lRow: 'auto', cCol: 'auto', cRow: 'auto', rCol: 'auto', rRow: 'auto', wmCol: 'auto', wmRow: 'auto' };
@@ -261,30 +495,37 @@ class Component extends DCLogic {
     const px = Math.min(natural, Math.max(12, (vh - 692 * z) / 2)), d = px / z;
     if (Math.abs(d - (this.state.stickyTop ?? -99)) > 0.5) this.setState({ stickyTop: d });
   }
+  // Scroll-driven CRT power-off (hero cards) and power-on (work map clusters).
+  // Fully determined by scroll position: stop scrolling mid-way and the frame
+  // holds still instead of flickering at random.
   morph() {
     this.mraf = 0;
+    this.navScroll(); this.spy();
     const outs = document.querySelectorAll('[data-morph-out]'), ins = document.querySelectorAll('[data-morph-in]'), edges = document.querySelector('[data-wm-edges]');
-    const reset = () => { outs.forEach(e => { e.style.transform = ''; e.style.opacity = ''; }); ins.forEach(e => { e.style.transform = ''; e.style.opacity = ''; }); if (edges) edges.style.opacity = ''; this.morphP = 0; };
+    const reset = () => { outs.forEach(e => { e.style.transform = ''; e.style.opacity = ''; e.style.filter = ''; }); ins.forEach(e => { e.style.transform = ''; e.style.opacity = ''; }); if (edges) edges.style.opacity = ''; this.morphP = 0; this.boost = 0; };
     const st = document.querySelector('[data-role="stage"]');
     if (!st || this.state.cw < 900 || this.reduce) { reset(); return; }
     const z = this.state.cw / 1625, top = (this.state.stickyTop ?? 0) * z;
-    const C = (v) => Math.max(0, Math.min(1, v)), q = (v, n) => Math.round(v * n) / n, R = Math.random;
+    const C = (v) => Math.max(0, Math.min(1, v)), q = (v, n) => Math.round(v * n) / n;
     const p = C((top - st.getBoundingClientRect().top) / (892 * z));
     this.morphP = p;
-    const jit = t => (t > 0 && t < 1) ? Math.round((R() - 0.5) * 3) * 2 : 0;
+    this.boost = Math.sin(Math.PI * C((p - 0.3) / 0.4));
+    const jit = (t, i) => (t > 0 && t < 1) ? Math.round(Math.sin(t * 41 + i * 2.3) * 1.5) * 2 : 0;
     outs.forEach(e => {
       const i = +e.getAttribute('data-morph-out'), t = C((p - [0.06, 0.16, 0.1, 0.2][i]) / 0.3);
-      if (t <= 0) { e.style.transform = ''; e.style.opacity = ''; return; }
+      if (t <= 0) { e.style.transform = ''; e.style.opacity = ''; e.style.filter = ''; return; }
       const sy = t < 0.6 ? Math.max(0.02, q(1 - t / 0.6, 6)) : 0.02, sx = t < 0.6 ? 1 : Math.max(0, q(1 - (t - 0.6) / 0.4, 4));
-      e.style.transform = 'translateX(' + jit(t) + 'px) scale(' + sx + ',' + sy + ')';
-      e.style.opacity = t >= 1 ? '0' : (R() < 0.15 ? '0.55' : '1');
+      e.style.transform = 'translateX(' + jit(t, i) + 'px) scale(' + sx + ',' + sy + ')';
+      e.style.opacity = t >= 1 ? '0' : '1';
+      // The picture brightens as it collapses to a line, like a tube switching off.
+      e.style.filter = t >= 1 ? '' : 'brightness(' + (1 + 1.6 * q(C(t / 0.6), 6)).toFixed(2) + ')';
     });
     ins.forEach(e => {
       const j = +e.getAttribute('data-morph-in'), t = C((p - [0.5, 0.6][j]) / 0.3);
       if (t >= 1) { e.style.transform = ''; e.style.opacity = ''; return; }
       const sx = t < 0.35 ? Math.max(0.02, q(t / 0.35, 4)) : 1, sy = t < 0.35 ? 0.02 : Math.max(0.02, q(0.02 + (t - 0.35) / 0.65, 6));
-      e.style.transform = 'translateX(' + jit(t) + 'px) scale(' + sx + ',' + sy + ')';
-      e.style.opacity = t <= 0 ? '0' : (R() < 0.15 ? '0.55' : '1');
+      e.style.transform = 'translateX(' + jit(t, j + 4) + 'px) scale(' + sx + ',' + sy + ')';
+      e.style.opacity = t <= 0 ? '0' : '1';
     });
     if (edges) edges.style.opacity = String(q(C((p - 0.88) / 0.12), 3));
   }
@@ -292,7 +533,7 @@ class Component extends DCLogic {
     const n = this.props.noise ?? 0.6;
     const cut = this.props.displayCut ?? '35';
     const fam = cut === 'Clean' ? "'Redaction'" : `'Redaction ${cut}'`;
-    return { ...this.heroLayout(), navTf: this.state.navHidden ? 'translateY(-130%)' : 'none', lightOpacity: 0.08 + n * 0.3, darkOpacity: 0.15 + n * 0.5, displayFont: `${fam}, 'Redaction', Georgia, serif` };
+    return { ...this.heroLayout(), lightOpacity: 0.08 + n * 0.3, darkOpacity: 0.15 + n * 0.5, displayFont: `${fam}, 'Redaction', Georgia, serif` };
   }
 }
 </script>

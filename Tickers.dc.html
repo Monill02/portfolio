@@ -9,14 +9,21 @@
 <x-dc>
 <helmet>
 <style>
-@font-face{font-family:'Redaction';src:url(fonts/Redaction-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
-@font-face{font-family:'Redaction 35';src:url(fonts/Redaction_35-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
-@font-face{font-family:'Redaction 50';src:url(fonts/Redaction_50-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+/* Fonts are declared once in index.html. */
+[data-ticker="a"] > a{transition:transform 420ms cubic-bezier(.2,.8,.2,1);}
+[data-ticker="a"] > a > div:last-child{transition:border-color 220ms ease;}
+[data-ticker="a"] > a:focus-visible{outline:2px solid #df5227;outline-offset:2px;}
+[data-ticker="t"] > article > span{transition:background-color 220ms ease;}
+@media (hover: hover){
+  [data-ticker="a"] > a:hover{transform:translateY(-6px);}
+  [data-ticker="a"] > a:hover > div:last-child{border-color:#ffffff;}
+  [data-ticker="t"] > article:hover > span{background:#df5227 !important;}
+}
 </style>
 </helmet>
 <div style="display:flex;flex-direction:column;gap:clamp(120px, 16.2vw, 280px);width:100vw;margin-left:calc(50% - 50vw);color:#eeeeee;font-family:'Redaction',Georgia,serif;">
 
-  <section id="articles" data-screen-label="Articles" aria-label="Articles" style="overflow:hidden;" onPointerEnter="{{ holdA }}" onPointerLeave="{{ releaseA }}">
+  <section id="articles" data-screen-label="Articles" aria-label="Articles" style="overflow:hidden;padding-top:8px;margin-top:-8px;" onPointerEnter="{{ holdA }}" onPointerLeave="{{ releaseA }}" onFocus="{{ holdA }}" onBlur="{{ releaseA }}">
     <div data-ticker="a" style="display:flex;width:max-content;will-change:transform;">
       <sc-for list="{{ articles }}" as="a" hint-placeholder-count="5">
         <a href="{{ a.href }}" aria-hidden="{{ a.hidden }}" tabindex="{{ a.tab }}" style="flex:0 0 auto;width:min(399px, 82vw);margin-right:4px;display:flex;flex-direction:column;color:#eeeeee;" style-hover="color:#ffffff;">
@@ -27,7 +34,7 @@
     </div>
   </section>
 
-  <section id="testimonials" data-screen-label="Testimonials" aria-label="Testimonials" style="overflow:hidden;" onPointerEnter="{{ holdT }}" onPointerLeave="{{ releaseT }}">
+  <section id="testimonials" data-screen-label="Testimonials" aria-label="Testimonials" style="overflow:hidden;" onPointerEnter="{{ holdT }}" onPointerLeave="{{ releaseT }}" onFocus="{{ holdT }}" onBlur="{{ releaseT }}">
     <div data-ticker="t" style="display:flex;gap:8px;width:max-content;padding-right:8px;will-change:transform;">
       <sc-for list="{{ testimonials }}" as="q" hint-placeholder-count="4">
         <article aria-hidden="{{ q.hidden }}" style="zoom:0.75;position:relative;flex:0 0 auto;width:min(464px, 88vw);padding:6px;display:flex;flex-direction:column;">
@@ -116,31 +123,42 @@ class Component extends DCLogic {
   componentDidMount() {
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const st = { a: { x: 0, v: SPEED.a }, t: { x: null, v: SPEED.t } };
+    // Track widths come from a ResizeObserver rather than reading scrollWidth
+    // every frame (which forced a layout per frame), and each ticker only
+    // moves while it is on screen.
+    const el = {}, half = {}, vis = { a: true, t: true };
+    const ro = this.ro = new ResizeObserver(es => es.forEach(e => { const k = e.target.getAttribute('data-ticker'); half[k] = e.target.scrollWidth / 2; }));
+    const io = this.io = new IntersectionObserver(es => es.forEach(e => { vis[e.target.getAttribute('data-ticker')] = e.isIntersecting; }), { rootMargin: '64px' });
     let last = performance.now(), lastRun = 0;
     const tick = now => {
       lastRun = performance.now();
       this.raf = requestAnimationFrame(tick);
       const dt = Math.min(0.12, (now - last) / 1000); last = now;
+      if (document.hidden) return;
       for (const k of ['a', 't']) {
-        const el = document.querySelector('[data-ticker="' + k + '"]');
-        if (!el) continue;
-        const half = el.scrollWidth / 2;
-        if (!half) continue;
+        if (!el[k] || !el[k].isConnected) {
+          el[k] = document.querySelector('[data-ticker="' + k + '"]');
+          if (!el[k]) continue;
+          half[k] = el[k].scrollWidth / 2; ro.observe(el[k]); io.observe(el[k]);
+        }
+        if (!vis[k] || !half[k]) continue;
         const s = st[k];
         const target = reduce ? 0 : this.hold[k] ? SPEED[k] * HOVER_SPEED : SPEED[k];
         s.v += (target - s.v) * Math.min(1, dt * 4);
-        if (s.x === null) s.x = -half;
+        const h = half[k];
+        if (s.x === null) s.x = -h;
         s.x += DIR[k] * s.v * dt;
-        if (s.x <= -half) s.x += half;
-        if (s.x > 0) s.x -= half;
-        el.style.transform = 'translate3d(' + s.x.toFixed(2) + 'px,0,0)';
+        if (s.x <= -h) s.x += h;
+        if (s.x > 0) s.x -= h;
+        el[k].style.transform = 'translate3d(' + s.x.toFixed(2) + 'px,0,0)';
       }
     };
     this.raf = requestAnimationFrame(tick);
-    this.watch = setInterval(() => { if (performance.now() - lastRun > 150) { cancelAnimationFrame(this.raf); tick(performance.now()); } }, 100);
+    // Keeps the tickers moving inside editor iframes that throttle rAF; idle on a normal page.
+    this.watch = setInterval(() => { if (!document.hidden && (vis.a || vis.t) && performance.now() - lastRun > 150) { cancelAnimationFrame(this.raf); tick(performance.now()); } }, 100);
   }
 
-  componentWillUnmount() { cancelAnimationFrame(this.raf); clearInterval(this.watch); }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); clearInterval(this.watch); if (this.ro) this.ro.disconnect(); if (this.io) this.io.disconnect(); }
 
   renderVals() {
     return {

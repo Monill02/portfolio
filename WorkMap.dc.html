@@ -7,6 +7,15 @@
 </head>
 <body>
 <x-dc>
+<helmet>
+<style>
+/* Hover a company: its box warms up, its connections light and the rest of the web recedes. */
+[data-workmap] [data-edge]{transition:stroke 240ms ease, stroke-width 240ms ease;}
+[data-workmap] [data-node] > div:first-child{transition:border-color 200ms ease, box-shadow 280ms ease;}
+[data-workmap] [data-node][data-hot]{z-index:3;}
+[data-workmap] [data-node][data-hot] > div:first-child{border-color:#ff8a5c !important;box-shadow:0 0 34px rgba(255,110,60,0.62), inset 0 0 22px rgba(217,90,52,0.24) !important;}
+</style>
+</helmet>
 <div ref="{{ sectionRef }}" data-workmap="1" style="position:relative;height:{{ rootH }};display:grid;grid-template-columns:{{ cols }};column-gap:32px;row-gap:56px;align-items:center;">
   <svg data-wm-edges="1" style="position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0;">
     <defs>
@@ -118,6 +127,12 @@ class Component extends DCLogic {
     const ptr = { x: 0, y: 0, tx: 0, ty: 0 };
     this.onMove = ev => { ptr.tx = ev.clientX - window.innerWidth / 2; ptr.ty = ev.clientY - window.innerHeight / 2; };
     window.addEventListener('pointermove', this.onMove);
+    // Geometry only changes on scroll (the hero morph rescales the clusters) or resize,
+    // so it is re-measured then instead of forcing a layout on every step.
+    let geo = null, geoAt = 0;
+    this.onDirty = () => { geo = null; };
+    window.addEventListener('scroll', this.onDirty, { passive: true });
+    window.addEventListener('resize', this.onDirty);
     const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const pos = NODES.map(() => ({ x: 0, y: 0 }));
     const lag = NODES.map(() => ({ x: 0, y: 0, vx: 0, vy: 0 }));
@@ -142,18 +157,33 @@ class Component extends DCLogic {
       }
       return geo;
     };
-    let last = -1, lastRun = 0;
+    // Stop-motion: one even 8fps cadence with 4px snapping. The positions and
+    // the line-noise seed advance on the same beat, and nothing runs while the
+    // map is off screen or the tab is hidden.
+    const STEP = 125, Q = 4;
+    let last = -1, lastRun = 0, beat = 0;
+    this.vis = true;
     const tick = now => {
       lastRun = performance.now();
       this.raf = requestAnimationFrame(tick);
+      if (!this.vis || document.hidden) return;
       let sec = this.sectionRef.current;
       if (!sec || !sec.isConnected) sec = document.querySelector('[data-workmap]');
       if (!sec) return;
-      if (now - last < (reduce ? 500 : 180)) return;
+      if (!this.io && 'IntersectionObserver' in window) {
+        this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; }, { rootMargin: '120px' });
+        this.io.observe(sec);
+        this.onOver = ev => { const n = ev.target.closest ? ev.target.closest('[data-node]') : null; this.setHot(sec, n ? +n.getAttribute('data-node') : -1); };
+        this.onOut = () => this.setHot(sec, -1);
+        sec.addEventListener('pointerover', this.onOver);
+        sec.addEventListener('pointerleave', this.onOut);
+        this.sec = sec;
+      }
+      if (now - last < (reduce ? 500 : STEP)) return;
       last = now;
-      const geo = fit(sec);
+      if (!geo || now - geoAt > 2000) { geo = fit(sec); geoAt = now; }
       if (!geo) return;
-      const t = now / 1000, Q = 6, snap = v => Math.round(v / Q) * Q;
+      const t = now / 1000, snap = v => Math.round(v / Q) * Q;
       ptr.x += (ptr.tx - ptr.x) * 0.15; ptr.y += (ptr.ty - ptr.y) * 0.15;
       const nodes = sec.querySelectorAll('[data-node]');
       const byIdx = {};
@@ -170,10 +200,9 @@ class Component extends DCLogic {
         }
         pos[i].x = g.ox + (n.x + HALF + dx) * g.s; pos[i].y = g.oy + (n.y + HALF + dy) * g.s;
       });
-      if (!reduce && now - (this.lastSeed || 0) > 140) {
-        this.lastSeed = now;
+      if (!reduce) {
         const tn = sec.querySelector('[data-noise]');
-        if (tn) tn.setAttribute('seed', String(8023 + Math.floor(now / 140) % 24));
+        if (tn) tn.setAttribute('seed', String(8023 + (beat++ % 24)));
       }
       const lines = sec.querySelectorAll('[data-edge]');
       lines.forEach(l => {
@@ -184,15 +213,32 @@ class Component extends DCLogic {
       });
     };
     this.raf = requestAnimationFrame(tick);
+    // Keeps the map moving inside editor iframes that throttle rAF; idle on a normal page.
     this.watch = setInterval(() => {
-      if (performance.now() - lastRun > 120) { cancelAnimationFrame(this.raf); tick(performance.now()); }
-    }, 60);
+      if (this.vis && !document.hidden && performance.now() - lastRun > 160) { cancelAnimationFrame(this.raf); tick(performance.now()); }
+    }, 80);
+  }
+
+  setHot(sec, i) {
+    if (i === this.hot) return;
+    this.hot = i;
+    sec.querySelectorAll('[data-node]').forEach(n => { if (+n.getAttribute('data-node') === i) n.setAttribute('data-hot', ''); else n.removeAttribute('data-hot'); });
+    sec.querySelectorAll('[data-edge]').forEach(l => {
+      const ed = EDGES[+l.getAttribute('data-edge')]; if (!ed) return;
+      const on = ed[0] === i || ed[1] === i;
+      l.style.stroke = i < 0 ? '' : on ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0.18)';
+      l.style.strokeWidth = i >= 0 && on ? '1.5' : '';
+    });
   }
 
   componentWillUnmount() {
     cancelAnimationFrame(this.raf);
     clearInterval(this.watch);
     window.removeEventListener('pointermove', this.onMove);
+    window.removeEventListener('scroll', this.onDirty);
+    window.removeEventListener('resize', this.onDirty);
+    if (this.io) this.io.disconnect();
+    if (this.sec) { this.sec.removeEventListener('pointerover', this.onOver); this.sec.removeEventListener('pointerleave', this.onOut); }
   }
 
   renderVals() {

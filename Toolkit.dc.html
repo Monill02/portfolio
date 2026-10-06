@@ -9,11 +9,14 @@
 <x-dc>
 <helmet>
 <style>
-@font-face{font-family:'Redaction';src:url(fonts/Redaction-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
-@font-face{font-family:'Redaction 10';src:url(fonts/Redaction_10-Bold.woff2) format('woff2');font-weight:700;font-style:normal;font-display:swap;}
-@font-face{font-family:'Redaction 20';src:url(fonts/Redaction_20-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
-@font-face{font-family:'Redaction 35';src:url(fonts/Redaction_35-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+/* Fonts are declared once in index.html. */
 html,body{margin:0;background:#1b1b1b;}
+/* LED rod: segments snap on and fade off like a lamp cooling. The lit state is
+   a pseudo-element faded with opacity, so the cycle never repaints. */
+[data-led-rod] > span{position:relative;background:#3a3a3a;}
+[data-led-rod] > span::after{content:"";position:absolute;inset:0;background:#e4e4e4;box-shadow:0 0 6px rgba(228,228,228,0.45), inset 0 0 0 1px rgba(255,255,255,0.35);opacity:0;transition:opacity 320ms ease;}
+[data-led-rod] > span[data-on]::after{opacity:1;transition-duration:50ms;}
+[data-fit]:focus-visible{outline:2px solid #df5227 !important;outline-offset:4px;}
 *{box-sizing:border-box;}
 a{color:#ececec;text-decoration:none;}
 a:hover{color:#ffffff;}
@@ -87,15 +90,19 @@ const rng = s => () => { s |= 0; s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s
 const f = n => Math.round(n * 10) / 10;
 
 function Rod(props) {
-  const n = props.n || 10, [k, setK] = React.useState(n);
+  const n = props.n || 10, [k, setK] = React.useState(n), ref = React.useRef(null);
   React.useEffect(() => {
     if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    const id = setInterval(() => setK(v => (v + 1) % (n + 5)), 260);
-    return () => clearInterval(id);
+    // Only cycles while the rod is on screen.
+    let id = 0;
+    const run = on => { clearInterval(id); id = on ? setInterval(() => setK(v => (v + 1) % (n + 5)), 260) : 0; };
+    const io = ref.current && 'IntersectionObserver' in window ? new IntersectionObserver(([e]) => run(e.isIntersecting)) : null;
+    if (io) io.observe(ref.current); else run(true);
+    return () => { clearInterval(id); if (io) io.disconnect(); };
   }, [n]);
   const lit = Math.min(k, n), full = k >= n, blink = full && (k - n) % 2 === 1;
-  return React.createElement('div', { 'aria-hidden': 'true', style: { display: 'flex', gap: '2px', width: '100%', height: '37px' } },
-    Array.from({ length: n }, (_, i) => React.createElement('span', { key: i, style: { flex: '1 1 0', background: i < lit && !blink ? '#d9d9d9' : '#3a3a3a' } })));
+  return React.createElement('div', { ref, 'data-led-rod': '', 'aria-hidden': 'true', style: { display: 'flex', gap: '2px', width: '100%', height: '37px' } },
+    Array.from({ length: n }, (_, i) => React.createElement('span', { key: i, 'data-on': i < lit && !blink ? '' : undefined, style: { flex: '1 1 0' } })));
 }
 
 class Component extends DCLogic {

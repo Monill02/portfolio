@@ -11,14 +11,19 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
-@font-face{font-family:'Redaction';src:url(fonts/Redaction-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
-@font-face{font-family:'Redaction';src:url(fonts/Redaction-Italic.woff2) format('woff2');font-weight:400;font-style:italic;font-display:swap;}
-@font-face{font-family:'Redaction';src:url(fonts/Redaction-Bold.woff2) format('woff2');font-weight:700;font-style:normal;font-display:swap;}
-@font-face{font-family:'Redaction 50';src:url(fonts/Redaction_50-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
-@font-face{font-family:'Redaction 35';src:url(fonts/Redaction_35-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
-@font-face{font-family:'Redaction 35';src:url(fonts/Redaction_35-Bold.woff2) format('woff2');font-weight:700;font-style:normal;font-display:swap;}
-@font-face{font-family:'Redaction 50';src:url(fonts/Redaction_50-Italic.woff2) format('woff2');font-weight:400;font-style:italic;font-display:swap;}
-@keyframes ftBlink{0%,100%{opacity:1}50%{opacity:.15}}
+/* Fonts are declared once in index.html. */
+/* Status LED breathes with a soft glow instead of hard-cutting on and off.
+   Only opacity animates (GPU); the glow is static and fades along with it. */
+@keyframes ftBlink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+[data-led]{box-shadow:0 0 7px rgba(32,222,7,0.7), 0 0 2px rgba(32,222,7,0.9);}
+[data-social]{transition:filter 220ms ease, transform 260ms cubic-bezier(.2,.8,.2,1);}
+[data-email]{transition:background-color 220ms ease, color 220ms ease, text-shadow 220ms ease;}
+[data-email] svg{transition:transform 260ms cubic-bezier(.2,.8,.2,1);}
+@media (hover: hover){
+  [data-social]:hover{filter:drop-shadow(0 0 10px rgba(255,255,255,0.85)) !important;transform:translateY(-2px);}
+  [data-email]:hover svg{transform:translateX(4px);}
+}
+[data-email]:active{transform:translateY(1px);}
 *{box-sizing:border-box;}
 a{color:#ffffff;text-decoration:none;}
 a:hover{color:#ffffff;}
@@ -39,13 +44,13 @@ a:hover{color:#ffffff;}
         <div data-role="body" style="position:absolute;left:0;top:73px;width:468px;height:290px;background:rgba(22,22,22,0.52);-webkit-backdrop-filter:blur(2.5px) brightness(0.75);backdrop-filter:blur(2.5px) brightness(0.75);border:1px solid #ffffff;border-top:0;box-shadow:inset 0 0 36px rgba(255,255,255,0.06);">
           <p style="position:absolute;left:23px;top:43px;margin:0;font-family:'Redaction 50','Redaction',Georgia,serif;font-style:italic;font-size:24px;line-height:29px;color:#faf7f4;white-space:nowrap;text-shadow:0 0 1px rgba(255,255,255,0.9),0 0 10px rgba(255,255,255,0.4);">What is the point of making something,<br>if we all end up making the same thing?</p>
           <div data-role="actions" style="position:absolute;left:24px;right:16px;bottom:19px;height:47px;display:flex;align-items:center;">
-            <a href="{{ xUrl }}" target="_blank" rel="noopener" aria-label="X" style="flex:none;width:36px;height:36px;margin-right:28px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 0 6px rgba(255,255,255,0.45));" style-focus="outline:2px solid #df5227;outline-offset:3px;">
+            <a href="{{ xUrl }}" target="_blank" rel="noopener" aria-label="X" data-social="x" style="flex:none;width:36px;height:36px;margin-right:28px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 0 6px rgba(255,255,255,0.45));" style-focus="outline:2px solid #df5227;outline-offset:3px;">
               <svg width="36" height="36" viewBox="0 0 40 40" fill="none" aria-hidden="true" style="display:block;"><path d="M25.8333 16.6667V15H27.5V13.3333H29.1667V11.6667H30.8333V10H32.5V8.33333H34.1667V6.66667H35.8333V5H37.5V3.33333H32.5V5H30.8333V6.66667H29.1667V8.33333H27.5V10H25.8333V11.6667H24.1667V13.3333H20.8333V11.6667H19.1667V10H17.5V6.66667H15.8333V5H14.1667V3.33333H2.5V5H4.16667V6.66667H5.83333V8.33333H7.5V11.6667H9.16667V13.3333H10.8333V16.6667H12.5V18.3333H14.1667V21.6667H15.8333V23.3333H14.1667V25H12.5V26.6667H10.8333V28.3333H9.16667V30H7.5V31.6667H5.83333V33.3333H4.16667V35H2.5V36.6667H7.5V35H9.16667V33.3333H10.8333V31.6667H12.5V30H14.1667V28.3333H15.8333V26.6667H19.1667V28.3333H20.8333V30H22.5V33.3333H24.1667V35H25.8333V36.6667H37.5V35H35.8333V33.3333H34.1667V31.6667H32.5V28.3333H30.8333V26.6667H29.1667V23.3333H27.5V21.6667H25.8333V18.3333H24.1667V16.6667H25.8333ZM25.8333 23.3333V25H27.5V28.3333H29.1667V30H30.8333V33.3333H25.8333V30H24.1667V28.3333H22.5V26.6667H20.8333V23.3333H19.1667V21.6667H17.5V20H15.8333V16.6667H14.1667V15H12.5V11.6667H10.8333V10H9.16667V6.66667H14.1667V8.33333H15.8333V11.6667H17.5V13.3333H19.1667V16.6667H20.8333V18.3333H22.5V20H24.1667V23.3333H25.8333Z" fill="#ffffff"></path></svg>
             </a>
-            <a href="{{ linkedinUrl }}" target="_blank" rel="noopener" aria-label="LinkedIn" style="flex:none;width:36px;height:36px;margin:0 23px 0 0;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 0 6px rgba(255,255,255,0.45));" style-focus="outline:2px solid #df5227;outline-offset:3px;">
+            <a href="{{ linkedinUrl }}" target="_blank" rel="noopener" aria-label="LinkedIn" data-social="linkedin" style="flex:none;width:36px;height:36px;margin:0 23px 0 0;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 0 6px rgba(255,255,255,0.45));" style-focus="outline:2px solid #df5227;outline-offset:3px;">
               <svg width="36" height="36" viewBox="0 0 40 40" fill="none" aria-hidden="true" style="display:block;"><path d="M36.666 3.33333V1.66667H3.33268V3.33333H1.66602V36.6667H3.33268V38.3333H36.666V36.6667H38.3327V3.33333H36.666ZM21.666 20V33.3333H16.666V15H21.666V16.6667H23.3327V15H29.9994V16.6667H31.666V33.3333H26.666V20H21.666ZM6.66602 13.3333V8.33333H11.666V13.3333H6.66602ZM11.666 15V33.3333H6.66602V15H11.666Z" fill="#ffffff"></path></svg>
             </a>
-            <a href="{{ emailUrl }}" aria-label="Email workwithmonil@gmail.com" style="flex:1 1 0;min-width:0;height:47px;display:flex;align-items:center;padding:0 17px 0 15px;background:rgba(150,150,150,0.55);color:#ffffff;text-shadow:0 0 8px rgba(255,255,255,0.55);box-shadow:0 0 14px rgba(255,255,255,0.12);font-family:'Redaction 50','Redaction',Georgia,serif;font-size:19.7px;line-height:1;white-space:nowrap;" style-hover="background:#ffffff;color:#181818;" style-focus="outline:2px solid #df5227;outline-offset:3px;"><span>workwithmonil@gmail.com</span><svg width="16" height="8" viewBox="0 0 16 8" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true" style="flex:none;margin:-1px 0 0 auto;display:block;"><path d="M0 4H15.4M12.2 1L15.4 4L12.2 7"></path></svg></a>
+            <a href="{{ emailUrl }}" aria-label="Email workwithmonil@gmail.com" data-email="1" style="flex:1 1 0;min-width:0;height:47px;display:flex;align-items:center;padding:0 17px 0 15px;background:rgba(150,150,150,0.55);color:#ffffff;text-shadow:0 0 8px rgba(255,255,255,0.55);box-shadow:0 0 14px rgba(255,255,255,0.12);font-family:'Redaction 50','Redaction',Georgia,serif;font-size:19.7px;line-height:1;white-space:nowrap;" style-hover="background:#ffffff;color:#181818;text-shadow:none;" style-focus="outline:2px solid #df5227;outline-offset:3px;"><span>workwithmonil@gmail.com</span><svg width="16" height="8" viewBox="0 0 16 8" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true" style="flex:none;margin:-1px 0 0 auto;display:block;"><path d="M0 4H15.4M12.2 1L15.4 4L12.2 7"></path></svg></a>
           </div>
           <span aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(0,0,0,0.28) 1px, transparent 1px),linear-gradient(90deg, rgba(0,0,0,0.28) 1px, transparent 1px);background-size:3px 3px;"></span>
           <span aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.05), rgba(0,0,0,0) 70%);"></span>
@@ -59,7 +64,7 @@ a:hover{color:#ffffff;}
   <div data-role="info" style="display:flex;justify-content:{{ infoJustify }};padding:{{ infoPad }};">
     <div style="zoom:{{ infoZoom }};width:{{ infoW }};display:flex;flex-wrap:wrap;justify-content:{{ infoJustify }};gap:{{ infoGap }};font-family:'Redaction 35','Redaction',Georgia,serif;font-size:14px;line-height:25px;color:#ffffff;">
       <div data-role="col-status" style="flex:none;width:140px;white-space:nowrap;">
-        <div style="display:flex;align-items:center;gap:8px;"><span aria-hidden="true" style="flex:none;width:12px;height:12px;background:#20de07;animation:{{ blink }};"></span><span>Open to new work</span></div>
+        <div style="display:flex;align-items:center;gap:8px;"><span aria-hidden="true" data-led="1" style="flex:none;width:12px;height:12px;background:#20de07;animation:{{ blink }};"></span><span>Open to new work</span></div>
         <div>Based out of New York</div>
         <div>Local time {{ localTime }}</div>
       </div>
@@ -96,7 +101,8 @@ class Component extends DCLogic {
   };
 
   ordinal(n) { n = Math.round(+n) || 0; const m = n % 100; return n + ((m >= 11 && m <= 13) ? 'th' : ({ 1: 'st', 2: 'nd', 3: 'rd' }[n % 10] || 'th')); }
-  fmtTime() { try { return new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }).format(new Date()); } catch (e) { return ''; } }
+  // Building an Intl formatter is slow; build it once.
+  fmtTime() { try { this.tf = this.tf || new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit', timeZone: 'America/New_York' }); return this.tf.format(new Date()); } catch (e) { return ''; } }
   base() { return Math.max(0, Math.round(+(this.props.visitorStart ?? 1001)) || 0); }
 
   initVisitor() {
@@ -122,7 +128,7 @@ class Component extends DCLogic {
   componentDidUpdate(prev) {
     if (prev && (prev.visitorStart !== this.props.visitorStart || prev.counterUrl !== this.props.counterUrl)) this.initVisitor();
   }
-  componentWillUnmount() { clearInterval(this.timeT); clearInterval(this.flT); clearTimeout(this.drT); clearTimeout(this.raf); if (this.ro) this.ro.disconnect(); if (this.io) this.io.disconnect(); }
+  componentWillUnmount() { clearInterval(this.timeT); clearInterval(this.flT); clearTimeout(this.drT); clearTimeout(this.raf); if (this.ro) this.ro.disconnect(); if (this.io) this.io.disconnect(); if (this.nearIO) this.nearIO.disconnect(); }
 
   loadDensity() {
     if (this.densP) return this.densP;
@@ -139,7 +145,20 @@ class Component extends DCLogic {
     });
     return this.densP;
   }
-  queueDraw() { clearTimeout(this.drT); this.drT = setTimeout(() => this.draw(), 60); }
+  // The ASCII hands are expensive to build (~0.5s of main thread on a slow
+  // phone), so they're only built once the footer is within a screen of the
+  // viewport instead of during page load. Resizes after that redraw as before.
+  queueDraw() {
+    clearTimeout(this.drT);
+    if (!this.near && this.cv && 'IntersectionObserver' in window) {
+      if (!this.nearIO) {
+        this.nearIO = new IntersectionObserver(es => { if (es[0].isIntersecting) { this.near = true; this.nearIO.disconnect(); this.queueDraw(); } }, { rootMargin: '100% 0px' });
+        this.nearIO.observe(this.cv);
+      }
+      return;
+    }
+    this.drT = setTimeout(() => this.draw(), 60);
+  }
   async draw() {
     const cv = this.cv, L = this.L; if (!cv || !L) return;
     const map = await this.loadDensity(); if (!map) return;
@@ -257,7 +276,7 @@ class Component extends DCLogic {
       winLeft: px(L.winLeft), winTop: px(L.winTop), winOp: st.winOn ? 1 : 0, winTf: st.winOn ? 'none' : 'scale(1, 0.04)', winPe: st.winOn ? 'auto' : 'none', winZoom: Math.round(L.zw * 1000) / 1000,
       hX: px(L.hX), hTop: px(L.hTop), hSize: px(L.hSize),
       infoPad: L.infoPad, infoZoom: Math.round(L.infoZoom * 1000) / 1000, infoW: px(L.infoW), infoGap: L.infoGap, infoJustify: L.infoJustify,
-      blink: st.reduce ? 'none' : 'ftBlink 2.4s steps(1) infinite',
+      blink: st.reduce ? 'none' : 'ftBlink 2.4s ease-in-out infinite',
       localTime: st.time || this.fmtTime(),
       visitorText: this.ordinal(n) + ' visitor',
       xUrl: p.xUrl || 'https://x.com/', linkedinUrl: p.linkedinUrl || 'https://www.linkedin.com/',
