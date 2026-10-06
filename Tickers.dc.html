@@ -19,7 +19,7 @@
   <section id="articles" data-screen-label="Articles" aria-label="Articles" style="overflow:hidden;" onPointerEnter="{{ holdA }}" onPointerLeave="{{ releaseA }}">
     <div data-ticker="a" style="display:flex;width:max-content;will-change:transform;">
       <sc-for list="{{ articles }}" as="a" hint-placeholder-count="5">
-        <a href="{{ a.href }}" aria-hidden="{{ a.hidden }}" tabindex="{{ a.tab }}" style="flex:0 0 auto;width:min(399px, 82vw);margin-right:-1px;display:flex;flex-direction:column;color:#eeeeee;" style-hover="color:#ffffff;">
+        <a href="{{ a.href }}" aria-hidden="{{ a.hidden }}" tabindex="{{ a.tab }}" style="flex:0 0 auto;width:min(399px, 82vw);margin-right:4px;display:flex;flex-direction:column;color:#eeeeee;" style-hover="color:#ffffff;">
           <div style="position:relative;height:182px;padding:18px 24px 0 24px;background-color:#ffffff;background-image:url(assets/noise-card.svg);background-size:240px 240px;color:#000000;font-family:'Redaction 35','Redaction',Georgia,serif;font-size:38px;line-height:42px;letter-spacing:-0.005em;text-wrap:pretty;overflow:hidden;">{{ a.title }}</div>
           <div style="height:70px;padding:14px 24px 0 24px;background:#000000;border:1px solid #595959;font-family:'Redaction 35','Redaction',Georgia,serif;font-size:16px;line-height:20px;color:#ffffff;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ a.blurb }}</div>
         </a>

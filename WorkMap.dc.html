@@ -7,8 +7,8 @@
 </head>
 <body>
 <x-dc>
-<div ref="{{ sectionRef }}" data-workmap="1" style="position:relative;display:flex;flex-wrap:wrap;align-items:stretch;gap:38px clamp(24px, 4.514vw, 78px);">
-  <svg style="position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0;">
+<div ref="{{ sectionRef }}" data-workmap="1" style="position:relative;height:{{ rootH }};display:grid;grid-template-columns:{{ cols }};column-gap:32px;row-gap:56px;align-items:center;">
+  <svg data-wm-edges="1" style="position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0;">
     <defs>
       <filter id="wm-line-noise" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
         <feTurbulence data-noise="1" type="fractalNoise" baseFrequency="0.115" numOctaves="3" seed="8023" stitchTiles="stitch" result="noise"></feTurbulence>
@@ -26,8 +26,8 @@
     </g>
   </svg>
 
-  <div data-role="col-left" style="flex:380 1 228px;min-width:0;position:relative;z-index:2;">
-    <div ref="{{ leftWrap }}" style="position:relative;width:100%;height:602px;">
+  <div data-role="col-left" style="min-width:0;position:relative;z-index:2;">
+    <div ref="{{ leftWrap }}" data-morph-in="0" style="position:relative;width:100%;height:602px;transform-origin:50% 50%;">
       <div data-stage="left" style="position:absolute;left:0;top:0;width:380px;height:602px;transform-origin:0 0;">
         <div style="position:absolute;left:-140px;top:-80px;right:-140px;bottom:-80px;pointer-events:none;background:radial-gradient(closest-side, rgba(214,86,46,0.20), rgba(214,86,46,0.07) 60%, rgba(214,86,46,0) 100%);"></div>
         <sc-for list="{{ leftBoxes }}" as="b" hint-placeholder-count="5">
@@ -50,16 +50,10 @@
     </div>
   </div>
 
-  <div data-role="col-center" style="flex:684 1 410px;min-width:0;position:relative;z-index:1;min-height:clamp(360px, 34.84vw, 602px);">
-    <div style="position:absolute;left:-14px;top:-14px;width:30px;height:30px;border-top:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
-    <div style="position:absolute;right:-14px;top:-14px;width:30px;height:30px;border-top:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
-    <div style="position:absolute;left:-14px;bottom:-14px;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
-    <div style="position:absolute;right:-14px;bottom:-14px;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
-    <div style="position:absolute;inset:0;border:2px solid #8e8e8e;background:linear-gradient(160deg,#323232 0%,#2b2b2b 60%,#282828 100%);"></div>
-  </div>
+  <div data-role="col-center" aria-hidden="true" style="display:{{ centerDisplay }};"></div>
 
-  <div data-role="col-right" style="flex:380 1 228px;min-width:0;position:relative;z-index:2;">
-    <div ref="{{ rightWrap }}" style="position:relative;width:100%;height:602px;">
+  <div data-role="col-right" style="min-width:0;position:relative;z-index:2;">
+    <div ref="{{ rightWrap }}" data-morph-in="1" style="position:relative;width:100%;height:602px;transform-origin:50% 50%;">
       <div data-stage="right" style="position:absolute;left:0;top:0;width:380px;height:602px;transform-origin:0 0;">
         <div style="position:absolute;left:-140px;top:-80px;right:-140px;bottom:-80px;pointer-events:none;background:radial-gradient(closest-side, rgba(214,86,46,0.20), rgba(214,86,46,0.07) 60%, rgba(214,86,46,0) 100%);"></div>
         <sc-for list="{{ rightBoxes }}" as="b" hint-placeholder-count="4">
@@ -138,16 +132,13 @@ class Component extends DCLogic {
         if (!w) return null;
         const boxes = side === 'left' ? LEFT : RIGHT;
         const minX = Math.min(...boxes.map(b => b.x)), maxX = Math.max(...boxes.map(b => b.x + 120));
-        const stacked = window.innerWidth < 760 || w > 460;
-        let s, tx;
-        if (stacked) { const bw = maxX - minX; s = Math.min(1, w / bw); tx = (w - bw * s) / 2 - minX * s; }
-        else { s = w / 380; tx = 0; }
+        const bw = maxX - minX, s = Math.min(this.props.narrow ? 1 : 1.12, w / bw), tx = (w - bw * s) / 2 - minX * s;
         const tf = 'translate(' + tx.toFixed(2) + 'px,0) scale(' + s.toFixed(4) + ')';
         if (stage.style.transform !== tf) stage.style.transform = tf;
         const hh = (602 * s).toFixed(2) + 'px';
         if (wrap.style.height !== hh) wrap.style.height = hh;
-        const wr = wrap.getBoundingClientRect();
-        geo[side] = { s, ox: wr.left - sr.left + tx, oy: wr.top - sr.top };
+        const wr = wrap.getBoundingClientRect(), zf = (sr.width / (sec.offsetWidth || 1)) || 1;
+        geo[side] = { s, ox: (wr.left - sr.left) / zf + tx, oy: (wr.top - sr.top) / zf };
       }
       return geo;
     };
@@ -207,6 +198,9 @@ class Component extends DCLogic {
   renderVals() {
     return {
       sectionRef: this.sectionRef,
+      rootH: this.props.narrow ? 'auto' : '100%',
+      cols: this.props.narrow ? 'minmax(0,1fr)' : '500px 561px 500px',
+      centerDisplay: this.props.narrow ? 'none' : 'block',
       leftWrap: this.leftWrap,
       rightWrap: this.rightWrap,
       leftBoxes: LEFT.map((b, i) => ({ ...b, ...look(b, 'left'), i })),
