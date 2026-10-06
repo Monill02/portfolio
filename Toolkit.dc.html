@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:'Redaction';src:url(fonts/Redaction-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction 10';src:url(fonts/Redaction_10-Bold.woff2) format('woff2');font-weight:700;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction 20';src:url(fonts/Redaction_20-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction 35';src:url(fonts/Redaction_35-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+html,body{margin:0;background:#1b1b1b;}
+*{box-sizing:border-box;}
+a{color:#ececec;text-decoration:none;}
+a:hover{color:#ffffff;}
+</style>
+</helmet>
+<section id="toolkit" ref="{{ rootRef }}" data-screen-label="Tools, Traits &amp; Strategies" style="display:block;color:#ececec;font-family:'Redaction',Georgia,serif;">
+<div data-role="stage" style="zoom:{{ zoom }};display:flex;flex-wrap:wrap;align-items:flex-start;">
+
+  <div data-role="accordion" onPointerEnter="{{ hold }}" onPointerLeave="{{ release }}" style="flex:1 1 730px;min-width:0;display:flex;flex-direction:column;">
+    <div style="height:52px;display:flex;align-items:center;padding:0 17px;border:1px solid #929292;margin-bottom:16px;font-family:'Redaction 35','Redaction',Georgia,serif;font-size:27px;line-height:32px;color:#ffffff;white-space:nowrap;overflow:hidden;">Tools, Traits, and strategies.</div>
+
+    <sc-for list="{{ items }}" as="it" hint-placeholder-count="5">
+      <div onPointerEnter="{{ it.enter }}" onPointerLeave="{{ it.leave }}" style="position:relative;margin-top:{{ it.mt }};">
+        <span style="position:absolute;right:-20px;width:1px;top:{{ it.railTop }};bottom:{{ it.railBottom }};background:#5c5c5c;display:{{ it.railDisplay }};"></span>
+        <span style="position:absolute;right:-20px;top:32px;width:20px;height:1px;background:{{ it.wire }};display:{{ it.railDisplay }};"></span>
+        <span style="position:absolute;right:-23px;top:29px;width:7px;height:7px;background:{{ it.wire }};display:{{ it.railDisplay }};"></span>
+
+        <div data-fit="1" tabindex="0" role="button" aria-expanded="{{ it.expanded }}" onFocus="{{ it.focus }}" style="position:relative;z-index:1;height:64px;border:1px solid #ffffff;cursor:default;outline:none;">
+          <div style="position:absolute;inset:0;display:flex;align-items:center;padding:0 24px;overflow:hidden;background:{{ it.bg }};color:{{ it.fg }};font-family:'Redaction',Georgia,serif;font-size:40px;line-height:1;white-space:nowrap;transition:background-color 300ms ease, color 300ms ease;"><span data-fit-text="1">{{ it.title }}</span></div>
+          <span aria-hidden="true" style="position:absolute;left:-7px;top:-7px;width:12px;height:12px;background:#d9d9d9;pointer-events:none;opacity:{{ it.cornerOp }};transition:opacity 300ms ease;"></span>
+          <span aria-hidden="true" style="position:absolute;right:-7px;top:-7px;width:12px;height:12px;background:#d9d9d9;pointer-events:none;opacity:{{ it.cornerOp }};transition:opacity 300ms ease;"></span>
+          <span aria-hidden="true" style="position:absolute;left:-7px;bottom:-7px;width:12px;height:12px;background:#d9d9d9;pointer-events:none;opacity:{{ it.cornerOp }};transition:opacity 300ms ease;"></span>
+          <span aria-hidden="true" style="position:absolute;right:-7px;bottom:-7px;width:12px;height:12px;background:#d9d9d9;pointer-events:none;opacity:{{ it.cornerOp }};transition:opacity 300ms ease;"></span>
+        </div>
+
+        <div style="position:relative;z-index:2;display:grid;grid-template-rows:{{ it.rows }};margin-top:{{ it.bodyMt }};transition:grid-template-rows 480ms cubic-bezier(0.2,0.7,0.2,1), margin-top 480ms cubic-bezier(0.2,0.7,0.2,1);">
+          <div style="overflow:hidden;min-height:0;">
+            <div style="height:213px;padding:0 0 0 61px;border:1px solid {{ accent }};overflow:hidden;">
+              <div style="position:relative;display:flex;flex-direction:column;align-items:flex-start;">
+                <sc-for list="{{ it.points }}" as="p" hint-placeholder-count="4">
+                  <div style="position:relative;max-width:100%;padding-top:{{ p.pt }};">
+                    <span style="position:absolute;left:-33px;width:1px;top:{{ p.trunkTop }};bottom:{{ p.trunkBottom }};background:#ffffff;"></span>
+                    <span style="position:absolute;left:-33px;width:33px;height:1px;top:{{ p.tick }};background:#ffffff;"></span>
+                    <div style="display:flex;align-items:center;gap:11.7px;min-height:33px;padding:3px 10px 3px 7.5px;background:#ffffff;color:#000000;font-family:'Redaction',Georgia,serif;font-size:20px;line-height:24px;">
+                      <svg width="18" height="16" viewBox="75 168.5 18 16" fill="none" style="flex:0 0 auto;"><path d="M75 170.5V181.3C75 182.42 75 182.98 75.218 183.408C75.4097 183.784 75.7155 184.09 76.0918 184.282C76.5192 184.5 77.079 184.5 78.1969 184.5H89.8031C90.921 184.5 91.48 184.5 91.9074 184.282C92.2837 184.09 92.5905 183.784 92.7822 183.408C93.0002 182.98 93.0002 182.42 93.0002 181.3L93.0002 173.7C93.0002 172.58 93.0002 172.02 92.7822 171.592C92.5905 171.215 92.2839 170.91 91.9076 170.718C91.4798 170.5 90.9201 170.5 89.8 170.5H84M75 170.5H84M75 170.5C75 169.395 75.8954 168.5 77 168.5H80.6745C81.1637 168.5 81.4089 168.5 81.639 168.555C81.8431 168.604 82.0379 168.685 82.2168 168.795C82.4186 168.919 82.5918 169.092 82.9375 169.438L84 170.5" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                      <span data-chip-text="1">{{ p.t }}</span>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div data-role="hardware" style="flex:{{ groupFlex }};min-width:0;display:flex;align-self:stretch;justify-content:{{ groupJustify }};margin-top:{{ groupGap }};">
+    <div data-role="connector" style="flex:0 0 145px;display:{{ connDisplay }};align-items:center;">{{ rod }}</div>
+    <div data-role="placeholder-card" style="position:relative;flex:0 0 auto;align-self:{{ cardAlign }};width:{{ cardW }};aspect-ratio:{{ cardAspect }};background:#181818;">
+      <span aria-hidden="true" style="position:absolute;left:-3px;top:-3px;width:7px;height:7px;background:#d9d9d9;"></span>
+      <span aria-hidden="true" style="position:absolute;right:-3px;top:-3px;width:7px;height:7px;background:#d9d9d9;"></span>
+      <span aria-hidden="true" style="position:absolute;left:-3px;bottom:-3px;width:7px;height:7px;background:#d9d9d9;"></span>
+      <span aria-hidden="true" style="position:absolute;right:-3px;bottom:-3px;width:7px;height:7px;background:#d9d9d9;"></span>
+    </div>
+  </div>
+</div>
+</section>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1600,&quot;height&quot;:900},&quot;accent&quot;:{&quot;editor&quot;:&quot;color&quot;,&quot;options&quot;:[&quot;#df5227&quot;,&quot;#ffb12e&quot;,&quot;#e9e9e9&quot;],&quot;default&quot;:&quot;#df5227&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Accordion&quot;},&quot;cycle&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;min&quot;:0,&quot;max&quot;:10,&quot;step&quot;:1,&quot;unit&quot;:&quot;s&quot;,&quot;default&quot;:3,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Accordion&quot;},&quot;scale&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;min&quot;:0.5,&quot;max&quot;:1,&quot;step&quot;:0.05,&quot;default&quot;:0.65,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Layout&quot;}}">
+const ITEMS = [
+  { title: 'Building 0 \u2192 1', points: ['Business deep dive to define north stars', 'UX audit to understand state of design and tech dependencies', 'Defining Qx goal and sprint structure', 'Build x iterate x ship x infiniti'] },
+  { title: 'Scaling 1 \u2192 n', points: ['Multi-pod management for shipping solutions across different verticals', 'Conducting user research and heavy A/B testing', 'Data and business driven optimization', 'Building artifacts, state machines, and team upskilling endeavors'] },
+  { title: 'Design System', points: ['UX audit to define the status quo and dependent touchpoints', 'Engineering deep dive to understand the state of prod', 'Building a contextual DS \u2192 scale'] },
+  { title: 'Cross-functional collaboration', points: ['Clearing design/dev ambiguity \u2192 clearing cross-functional bottlenecks', 'Delegation and outcome management'] },
+  { title: 'Design + tech debt management', points: ['Product x Business goals \u2192 Prioritization', 'Systems thinking principles for optimal timelines and processes'] }
+];
+const TRAITS = [['Speed/Iteration', 9], ['Care/Obsession', 10], ['Experience', 8], ['Curiosity', 10], ['High Agency', 9], ['Optimism', 7]];
+const pad = n => String(n).padStart(2, '0');
+const rng = s => () => { s |= 0; s = s + 0x6D2B79F5 | 0; let t = Math.imul(s ^ s >>> 15, 1 | s); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
+const f = n => Math.round(n * 10) / 10;
+
+function Rod(props) {
+  const n = props.n || 10, [k, setK] = React.useState(n);
+  React.useEffect(() => {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const id = setInterval(() => setK(v => (v + 1) % (n + 5)), 260);
+    return () => clearInterval(id);
+  }, [n]);
+  const lit = Math.min(k, n), full = k >= n, blink = full && (k - n) % 2 === 1;
+  return React.createElement('div', { 'aria-hidden': 'true', style: { display: 'flex', gap: '2px', width: '100%', height: '37px' } },
+    Array.from({ length: n }, (_, i) => React.createElement('span', { key: i, style: { flex: '1 1 0', background: i < lit && !blink ? '#d9d9d9' : '#3a3a3a' } })));
+}
+
+class Component extends DCLogic {
+  state = { active: 0, w: 1600 };
+  rootRef = React.createRef();
+  hover = false; visible = false; pa = 0; pc = undefined;
+
+  componentDidMount() {
+    const el = this.rootRef.current;
+    if (!el) return;
+    this.pc = this.props.cycle;
+    this.ro = new ResizeObserver(([e]) => { const w = e.contentRect.width; if (Math.abs(w - this.state.w) > 1) this.setState({ w }); this.fit(); });
+    this.fit(); document.fonts?.ready.then(() => this.fit());
+    this.ro.observe(el);
+    this.ro2 = new ResizeObserver(() => this.fit());
+    el.querySelectorAll('[data-role=accordion], [data-fit]').forEach(n => this.ro2.observe(n));
+    this.io = new IntersectionObserver(([e]) => { this.visible = e.isIntersecting; this.schedule(); }, { threshold: 0.15 });
+    this.io.observe(el.querySelector('[data-role=accordion]') || el);
+  }
+  componentDidUpdate() {
+    const c = this.props.cycle;
+    if (this.pa !== this.state.active || this.pc !== c) { this.pa = this.state.active; this.pc = c; this.schedule(); }
+    this.fit();
+  }
+  fit() {
+    this.fitChips();
+    this.rootRef.current?.querySelectorAll('[data-fit]').forEach(el => {
+      const t = el.querySelector('[data-fit-text]'); if (!t) return;
+      t.style.fontSize = '';
+      const cw = el.clientWidth - 50, sw = t.scrollWidth;
+      if (cw > 0 && sw > cw) t.style.fontSize = Math.max(20, Math.floor(40 * cw / sw)) + 'px';
+    });
+  }
+  fitChips() {
+    this.rootRef.current?.querySelectorAll('[data-chip-text]').forEach(s => {
+      s.style.width = '';
+      const rg = document.createRange(); rg.selectNodeContents(s);
+      const rs = [...rg.getClientRects()].filter(q => q.width > 0);
+      if (rs.length < 2) return;
+      const tops = rs.map(q => q.top);
+      if (Math.max(...tops) - Math.min(...tops) < 4) return;
+      const k = (s.getBoundingClientRect().width / (s.offsetWidth || 1)) || 1;
+      s.style.width = Math.ceil((Math.max(...rs.map(q => q.right)) - Math.min(...rs.map(q => q.left))) / k) + 1 + 'px';
+    });
+  }
+  componentWillUnmount() { this.ro?.disconnect(); this.ro2?.disconnect(); this.io?.disconnect(); clearTimeout(this.tm); clearTimeout(this.hi); }
+
+  schedule() {
+    clearTimeout(this.tm);
+    const secs = this.props.cycle ?? 3;
+    if (!secs || this.hover || !this.visible || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    this.tm = setTimeout(() => this.setState(s => ({ active: (s.active + 1) % ITEMS.length })), secs * 1000);
+  }
+  setActive(i) { if (this.state.active !== i) this.setState({ active: i }); else this.schedule(); }
+
+  renderVals() {
+    const act = this.state.active, N = ITEMS.length;
+    const accent = this.props.accent ?? '#df5227';
+    const sc = this.props.scale ?? 0.65, w = this.state.w;
+    const Z = Math.round((w >= 900 ? sc : w <= 560 ? 1 : 1 - (1 - sc) * (w - 560) / 340) * 1000) / 1000;
+    const we = w / Z, narrow = we < 1360;
+    const railDisplay = 'none';
+    const R = rng(99);
+    return {
+      rootRef: this.rootRef, rod: React.createElement(Rod, { n: 10 }),
+      accent,
+      num: pad(act + 1),
+      sysTitle: ITEMS[act].title,
+      items: ITEMS.map((it, i) => ({
+        title: it.title,
+        points: it.points.map((t, k, arr) => {
+          const pad0 = k === 0 ? 12.5 : 17, last = k === arr.length - 1;
+          return { t, pt: pad0 + 'px', tick: 'calc(50% + ' + pad0 / 2 + 'px)', trunkTop: k === 0 ? '-13.5px' : '0px', trunkBottom: last ? 'calc(50% - ' + pad0 / 2 + 'px)' : '0px' };
+        }),
+        mt: i === 0 ? '0px' : '-1px',
+        bg: i === act ? '#ffffff' : 'transparent',
+        fg: i === act ? '#000000' : '#ffffff',
+        expanded: i === act ? 'true' : 'false',
+        rows: i === act ? '1fr' : '0fr',
+        enter: () => { clearTimeout(this.hi); this.hi = setTimeout(() => this.setActive(i), 90); },
+        leave: () => clearTimeout(this.hi),
+        focus: () => this.setActive(i),
+        railTop: i === 0 ? '32px' : '0px', railBottom: i === N - 1 ? 'calc(100% - 33px)' : '0px',
+        bodyMt: i === act ? '-1px' : '0px', cornerOp: i === act ? '0' : '1',
+        wire: i === act ? accent : '#5c5c5c', railDisplay
+      })),
+      connDisplay: narrow ? 'none' : 'flex', cardAlign: narrow ? 'flex-start' : 'stretch',
+      groupFlex: narrow ? '1 1 100%' : '0 0 596px',
+      groupJustify: narrow ? 'center' : 'flex-start',
+      groupGap: narrow ? '48px' : '0px',
+      cardW: narrow ? 'min(100%, 451px)' : '451px', cardAspect: narrow ? '451 / 670' : 'auto', zoom: Z,
+      hold: () => { this.hover = true; clearTimeout(this.tm); },
+      release: () => { this.hover = false; this.schedule(); }
+    };
+  }
+}
+</script>
+</body>
+</html>

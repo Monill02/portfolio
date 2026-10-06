@@ -8,109 +8,167 @@
 <body>
 <x-dc>
 <helmet>
-<link href="https://fonts.cdnfonts.com/css/redaction" rel="stylesheet">
 <style>
+@font-face{font-family:'Redaction';src:url(fonts/Redaction-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction';src:url(fonts/Redaction-Italic.woff2) format('woff2');font-weight:400;font-style:italic;font-display:swap;}
+@font-face{font-family:'Redaction';src:url(fonts/Redaction-Bold.woff2) format('woff2');font-weight:700;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction 10';src:url(fonts/Redaction_10-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction 10';src:url(fonts/Redaction_10-Italic.woff2) format('woff2');font-weight:400;font-style:italic;font-display:swap;}
+@font-face{font-family:'Redaction 10';src:url(fonts/Redaction_10-Bold.woff2) format('woff2');font-weight:700;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction 20';src:url(fonts/Redaction_20-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction 20';src:url(fonts/Redaction_20-Italic.woff2) format('woff2');font-weight:400;font-style:italic;font-display:swap;}
+@font-face{font-family:'Redaction 20';src:url(fonts/Redaction_20-Bold.woff2) format('woff2');font-weight:700;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction 35';src:url(fonts/Redaction_35-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction 35';src:url(fonts/Redaction_35-Italic.woff2) format('woff2');font-weight:400;font-style:italic;font-display:swap;}
+@font-face{font-family:'Redaction 35';src:url(fonts/Redaction_35-Bold.woff2) format('woff2');font-weight:700;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction 50';src:url(fonts/Redaction_50-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction 50';src:url(fonts/Redaction_50-Italic.woff2) format('woff2');font-weight:400;font-style:italic;font-display:swap;}
+@font-face{font-family:'Redaction 50';src:url(fonts/Redaction_50-Bold.woff2) format('woff2');font-weight:700;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction 70';src:url(fonts/Redaction_70-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction 70';src:url(fonts/Redaction_70-Italic.woff2) format('woff2');font-weight:400;font-style:italic;font-display:swap;}
+@font-face{font-family:'Redaction 70';src:url(fonts/Redaction_70-Bold.woff2) format('woff2');font-weight:700;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction 100';src:url(fonts/Redaction_100-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction 100';src:url(fonts/Redaction_100-Italic.woff2) format('woff2');font-weight:400;font-style:italic;font-display:swap;}
+@font-face{font-family:'Redaction 100';src:url(fonts/Redaction_100-Bold.woff2) format('woff2');font-weight:700;font-style:normal;font-display:swap;}
 html,body{margin:0;background:#1b1b1b;}
 *{box-sizing:border-box;}
 a{color:#ececec;text-decoration:none;}
 a:hover{color:#ffffff;}
 </style>
 </helmet>
-<div style="position:relative;min-height:100vh;background:#1c1c1c;color:#ececec;font-family:'Redaction',Georgia,serif;overflow:hidden;">
+<div data-screen-label="Page" style="position:relative;min-height:100vh;background:#1c1c1c;color:#ececec;font-family:'Redaction',Georgia,serif;overflow:clip;">
   <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%, #262626 0%, #1d1d1d 55%, #151515 100%);"></div>
 
-  <div style="position:relative;max-width:1728px;margin:0 auto;padding:80px 62px 120px 64px;">
-    <header style="display:flex;align-items:flex-start;justify-content:space-between;gap:24px;">
-      <a href="#" style="width:40px;height:40px;border:2px solid #d8d8d8;display:flex;align-items:center;justify-content:center;overflow:hidden;">
-        <img src="assets/logo.png" alt="Logo" style="width:40px;height:40px;display:block;mix-blend-mode:lighten;">
-      </a>
-      <nav style="border:2px solid #9a9a9a;padding:3px;flex:0 1 684px;">
-        <div style="display:flex;border:2px solid #d6d6d6;height:46px;">
-          <a href="#work" style="flex:139 1 0;display:flex;align-items:center;justify-content:center;font-size:24px;border-right:2px solid #bdbdbd;letter-spacing:0.01em;" style-hover="background:#2a2a2a;">Work</a>
-          <a href="#articles" style="flex:162 1 0;display:flex;align-items:center;justify-content:center;font-size:24px;border-right:2px solid #bdbdbd;letter-spacing:0.01em;" style-hover="background:#2a2a2a;">Articles</a>
-          <a href="#testimonials" style="flex:213 1 0;display:flex;align-items:center;justify-content:center;font-size:24px;border-right:2px solid #bdbdbd;letter-spacing:0.01em;white-space:nowrap;" style-hover="background:#2a2a2a;">Testi-Monils</a>
-          <a href="#contact" style="flex:162 1 0;display:flex;align-items:center;justify-content:center;font-size:24px;letter-spacing:0.01em;" style-hover="background:#2a2a2a;">Contact</a>
+  <div data-role="page-gutter" style="position:relative;padding:0 clamp(20px, 3.7037vw, 64px);">
+    <div data-role="container" style="max-width:1600px;margin:0 auto;">
+
+      <header data-screen-label="Nav" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:clamp(24px, 4.63vw, 80px);">
+        <a href="#" aria-label="Home" style="flex:0 0 40px;width:40px;height:40px;border:2px solid #d8d8d8;display:flex;overflow:hidden;">
+          <img src="assets/logo.svg" alt="Logo" style="width:36px;height:36px;display:block;">
+        </a>
+        <nav style="flex:0 1 684px;min-width:0;border:1px solid #9a9a9a;padding:3px;">
+          <div style="display:flex;border:0.5px solid #d6d6d6;height:clamp(36px, 2.66vw, 46px);">
+            <a href="#work" style="flex:139 1 0;min-width:0;display:flex;align-items:center;justify-content:center;font-size:clamp(14px, 1.389vw, 24px);border-right:0.5px solid #bdbdbd;letter-spacing:0.01em;" style-hover="background:#2a2a2a;">Work</a>
+            <a href="#articles" style="flex:162 1 0;min-width:0;display:flex;align-items:center;justify-content:center;font-size:clamp(14px, 1.389vw, 24px);border-right:0.5px solid #bdbdbd;letter-spacing:0.01em;" style-hover="background:#2a2a2a;">Articles</a>
+            <a href="#testimonials" style="flex:213 1 0;min-width:0;display:flex;align-items:center;justify-content:center;font-size:clamp(14px, 1.389vw, 24px);border-right:0.5px solid #bdbdbd;letter-spacing:0.01em;white-space:nowrap;" style-hover="background:#2a2a2a;">Testi-Monils</a>
+            <a href="#contact" style="flex:162 1 0;min-width:0;display:flex;align-items:center;justify-content:center;font-size:clamp(14px, 1.389vw, 24px);letter-spacing:0.01em;" style-hover="background:#2a2a2a;">Contact</a>
+          </div>
+        </nav>
+        <a href="#" aria-label="Sparkle" style="flex:0 0 40px;width:40px;height:40px;border:2px solid #d8d8d8;display:flex;overflow:hidden;">
+          <img src="assets/spark.svg" alt="" style="width:40px;height:40px;margin:-2px;display:block;">
+        </a>
+      </header>
+
+      <main data-screen-label="Hero" style="display:flex;flex-wrap:wrap;align-items:stretch;gap:38px clamp(24px, 4.514vw, 78px);padding:clamp(32px, 3.94vw, 68px) 0 clamp(72px, 8.6vw, 149px);">
+
+        <div data-role="col-left" style="flex:380 1 228px;min-width:0;display:flex;flex-direction:column;gap:38px;">
+          <section style="flex:1 0 auto;min-height:282px;display:flex;flex-direction:column;border:2px solid #a8a8a8;padding:8px;">
+            <div style="position:relative;height:186px;flex-shrink:0;display:flex;flex-direction:column;">
+              <div style="position:absolute;left:0;top:0;width:30px;height:30px;border-top:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
+              <div style="position:absolute;right:0;top:0;width:30px;height:30px;border-top:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
+              <div style="position:absolute;left:0;bottom:0;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
+              <div style="position:absolute;right:0;bottom:0;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
+              <div style="flex:1;display:flex;align-items:flex-end;justify-content:center;margin:0 -8px;padding-bottom:0;">
+                <img src="assets/skyline.png" alt="New York skyline" style="display:block;width:100%;max-width:372px;height:auto;mix-blend-mode:lighten;">
+              </div>
+              <p style="margin:8px 0 14px;text-align:center;font-size:17px;line-height:22px;text-wrap:balance;">Currently based out of New York<br>and stuck on the L train</p>
+            </div>
+            <div style="margin-top:18px;padding:0 3px;">
+              <div style="font-size:11.5px;line-height:16px;color:#d4d4d4;">Alma Mater: New York Institute of Technology</div>
+              <div style="font-size:15.5px;line-height:22px;margin-top:5px;">Masters in UX/UI Design &amp; Development</div>
+            </div>
+          </section>
+
+          <section style="flex:1 0 auto;min-height:282px;display:flex;flex-direction:column;border:2px solid #a8a8a8;padding:8px;">
+            <div style="position:relative;height:186px;flex-shrink:0;display:flex;flex-direction:column;">
+              <div style="position:absolute;left:0;top:0;width:30px;height:30px;border-top:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
+              <div style="position:absolute;right:0;top:0;width:30px;height:30px;border-top:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
+              <div style="position:absolute;left:0;bottom:0;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
+              <div style="position:absolute;right:0;bottom:0;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
+              <div style="flex:1;display:flex;align-items:center;justify-content:center;padding-top:8px;">
+                <img src="assets/bots.svg" alt="Human and agent pixel icons" style="display:block;width:156px;max-width:100%;height:auto;">
+              </div>
+              <p style="margin:8px 0 14px;text-align:center;font-size:17px;line-height:22px;text-wrap:balance;">Building solutions for and with<br>humans and agents alike</p>
+            </div>
+            <div style="margin-top:14px;padding:0 3px;">
+              <div style="font-size:11.5px;line-height:16px;color:#d4d4d4;">Current tech stack:</div>
+              <img src="assets/stack.png" alt="ChatGPT, Perplexity, Cursor, Claude, Figma, Framer" style="display:block;margin:6px 0 0 -1px;width:236px;max-width:100%;height:auto;mix-blend-mode:lighten;">
+            </div>
+          </section>
         </div>
-      </nav>
-      <a href="#" style="width:40px;height:40px;border:2px solid #d8d8d8;display:flex;align-items:center;justify-content:center;overflow:hidden;">
-        <img src="assets/spark.png" alt="Sparkle" style="width:40px;height:40px;display:block;mix-blend-mode:lighten;">
-      </a>
-    </header>
 
-    <main style="margin-top:68px;display:flex;flex-wrap:wrap;justify-content:center;gap:40px 80px;">
-      <div style="flex:0 1 380px;display:flex;flex-direction:column;gap:38px;">
-        <section style="position:relative;height:282px;border:2px solid #a8a8a8;">
-          <div style="position:absolute;left:10px;top:10px;width:30px;height:30px;border-top:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
-          <div style="position:absolute;right:10px;top:10px;width:30px;height:30px;border-top:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
-          <div style="position:absolute;left:10px;top:166px;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
-          <div style="position:absolute;right:10px;top:166px;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
-          <img src="assets/skyline.png" alt="New York skyline" style="position:absolute;left:2px;top:46px;width:372px;height:84px;mix-blend-mode:lighten;">
-          <p style="position:absolute;left:0;right:0;top:138px;margin:0;text-align:center;font-size:17px;line-height:22px;">Currently based out of New York<br>and stuck on the L train</p>
-          <div style="position:absolute;left:11px;right:11px;top:216px;">
-            <div style="font-size:11.5px;line-height:16px;color:#d4d4d4;">Alma Mater: New York Institute of Technology</div>
-            <div style="font-size:15.5px;line-height:22px;margin-top:5px;">Masters in UX/UI Design &amp; Development</div>
-          </div>
-        </section>
-        <section style="position:relative;height:282px;border:2px solid #a8a8a8;">
-          <div style="position:absolute;left:10px;top:10px;width:30px;height:30px;border-top:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
-          <div style="position:absolute;right:10px;top:10px;width:30px;height:30px;border-top:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
-          <div style="position:absolute;left:10px;top:166px;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
-          <div style="position:absolute;right:10px;top:166px;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
-          <img src="assets/bots.png" alt="Human and agent pixel icons" style="position:absolute;left:105px;top:34px;width:166px;height:82px;mix-blend-mode:lighten;">
-          <p style="position:absolute;left:0;right:0;top:138px;margin:0;text-align:center;font-size:17px;line-height:22px;">Building solutions for and with<br>humans and agents alike</p>
-          <div style="position:absolute;left:11px;right:11px;top:212px;">
-            <div style="font-size:11.5px;line-height:16px;color:#d4d4d4;">Current tech stack:</div>
-            <img src="assets/stack.png" alt="ChatGPT, Perplexity, Cursor, Claude, Figma, Framer" style="display:block;margin-top:6px;width:236px;height:38px;mix-blend-mode:lighten;margin-left:-1px;">
-          </div>
-        </section>
+        <div data-role="col-center" style="flex:684 1 410px;min-width:0;position:relative;min-height:clamp(360px, 34.84vw, 602px);">
+          <div style="position:absolute;left:-14px;top:-14px;width:30px;height:30px;border-top:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
+          <div style="position:absolute;right:-14px;top:-14px;width:30px;height:30px;border-top:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
+          <div style="position:absolute;left:-14px;bottom:-14px;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
+          <div style="position:absolute;right:-14px;bottom:-14px;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
+          <div style="position:absolute;inset:0;border:2px solid #8e8e8e;background:linear-gradient(160deg,#323232 0%,#2b2b2b 60%,#282828 100%);"></div>
+        </div>
+
+        <div data-role="col-right" style="flex:380 1 228px;min-width:0;display:flex;flex-direction:column;gap:38px;">
+          <section style="flex:1 0 auto;min-height:282px;display:flex;flex-direction:column;border:2px solid #a8a8a8;padding:8px;">
+            <div style="position:relative;height:186px;flex-shrink:0;display:flex;flex-direction:column;">
+              <div style="position:absolute;left:0;top:0;width:30px;height:30px;border-top:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
+              <div style="position:absolute;right:0;top:0;width:30px;height:30px;border-top:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
+              <div style="position:absolute;left:0;bottom:0;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
+              <div style="position:absolute;right:0;bottom:0;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
+              <div style="flex:1;display:flex;align-items:center;justify-content:center;padding-top:8px;font-family:{{ displayFont }};font-weight:700;font-size:64px;line-height:1;letter-spacing:-0.01em;white-space:nowrap;padding-left:36px;padding-right:36px;">50+</div>
+              <p style="margin:8px 0 14px;text-align:center;font-size:17px;line-height:22px;">Products shipped across domains</p>
+            </div>
+            <div style="margin-top:16px;padding:0 3px;display:flex;flex-direction:column;gap:9px;font-size:15.5px;line-height:22px;">
+              <div style="display:flex;align-items:baseline;gap:2px;"><span>iOS &amp; Android Apps</span><span style="flex:1;border-bottom:1.5px dotted #cfcfcf;transform:translateY(-4px);"></span><span>20+</span></div>
+              <div style="display:flex;align-items:baseline;gap:2px;"><span>Websites &amp; Web Apps</span><span style="flex:1;border-bottom:1.5px dotted #cfcfcf;transform:translateY(-4px);"></span><span>30+</span></div>
+            </div>
+          </section>
+
+          <section style="flex:1 0 auto;min-height:282px;display:flex;flex-direction:column;border:2px solid #a8a8a8;padding:8px;">
+            <div style="position:relative;height:186px;flex-shrink:0;display:flex;flex-direction:column;">
+              <div style="position:absolute;left:0;top:0;width:30px;height:30px;border-top:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
+              <div style="position:absolute;right:0;top:0;width:30px;height:30px;border-top:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
+              <div style="position:absolute;left:0;bottom:0;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
+              <div style="position:absolute;right:0;bottom:0;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
+              <div style="flex:1;display:flex;align-items:center;justify-content:center;padding-top:8px;font-family:{{ displayFont }};font-weight:700;font-size:64px;line-height:1;letter-spacing:-0.01em;white-space:nowrap;padding-left:36px;padding-right:36px;">6+ YoE</div>
+              <p style="margin:8px 0 14px;text-align:center;font-size:17px;line-height:22px;text-wrap:balance;">Working as a Product Consultant,<br>directly with founders and leadership</p>
+            </div>
+            <div style="margin-top:10px;padding:0 3px;">
+              <div style="font-size:11.5px;line-height:16px;color:#d4d4d4;">I specialized in:</div>
+              <div style="font-size:15.5px;line-height:19px;margin-top:6px;text-wrap:pretty;">Business-centric design, UX Audits, setting design systems and design → dev piplelines</div>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      <section data-screen-label="Work Map" style="padding:0 0 clamp(64px, 6.94vw, 120px);">
+        <dc-import name="WorkMap" hint-size="100%,602px"></dc-import>
+      </section>
+
+      <section id="work" data-screen-label="Case Studies" style="padding:0 0 clamp(64px, 6.94vw, 120px);">
+        <dc-import name="CaseStudies" hint-size="100%,760px"></dc-import>
+      </section>
+
+      <div data-screen-label="Articles + Testimonials" style="padding:0 0 clamp(64px, 6.94vw, 120px);">
+        <dc-import name="Tickers" hint-size="100%,900px"></dc-import>
       </div>
 
-      <div style="flex:0 1 684px;position:relative;align-self:flex-start;">
-        <div style="position:absolute;left:-14px;top:-14px;width:30px;height:30px;border-top:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
-        <div style="position:absolute;right:-14px;top:-14px;width:30px;height:30px;border-top:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
-        <div style="position:absolute;left:-14px;bottom:-14px;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
-        <div style="position:absolute;right:-14px;bottom:-14px;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
-        <div style="height:602px;border:2px solid #8e8e8e;background:linear-gradient(160deg,#323232 0%,#2b2b2b 60%,#282828 100%);"></div>
+      <div data-screen-label="Tools, Traits &amp; Strategies" style="padding:0 0 clamp(64px, 6.94vw, 120px);">
+        <dc-import name="Toolkit" hint-size="100%,585px"></dc-import>
       </div>
 
-      <div style="flex:0 1 380px;display:flex;flex-direction:column;gap:38px;">
-        <section style="position:relative;height:282px;border:2px solid #a8a8a8;">
-          <div style="position:absolute;left:10px;top:10px;width:30px;height:30px;border-top:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
-          <div style="position:absolute;right:10px;top:10px;width:30px;height:30px;border-top:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
-          <div style="position:absolute;left:10px;top:166px;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
-          <div style="position:absolute;right:10px;top:166px;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
-          <div style="position:absolute;left:0;right:0;top:40px;text-align:center;font-family:'Redaction 35','Redaction',Georgia,serif;font-weight:700;font-size:76px;line-height:90px;letter-spacing:-0.01em;">50+</div>
-          <p style="position:absolute;left:0;right:0;top:138px;margin:0;text-align:center;font-size:17px;line-height:22px;">Products shipped across domains</p>
-          <div style="position:absolute;left:11px;right:13px;top:214px;display:flex;flex-direction:column;gap:9px;font-size:15.5px;line-height:22px;">
-            <div style="display:flex;align-items:baseline;"><span>iOS &amp; Android Apps</span><span style="flex:1;border-bottom:1.5px dotted #cfcfcf;margin:0 2px;transform:translateY(-4px);"></span><span>20+</span></div>
-            <div style="display:flex;align-items:baseline;"><span>Websites &amp; Web Apps</span><span style="flex:1;border-bottom:1.5px dotted #cfcfcf;margin:0 2px;transform:translateY(-4px);"></span><span>30+</span></div>
-          </div>
-        </section>
-        <section style="position:relative;height:282px;border:2px solid #a8a8a8;">
-          <div style="position:absolute;left:10px;top:10px;width:30px;height:30px;border-top:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
-          <div style="position:absolute;right:10px;top:10px;width:30px;height:30px;border-top:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
-          <div style="position:absolute;left:10px;top:166px;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
-          <div style="position:absolute;right:10px;top:166px;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
-          <div style="position:absolute;left:0;right:0;top:40px;text-align:center;font-family:'Redaction 35','Redaction',Georgia,serif;font-weight:700;font-size:76px;line-height:90px;letter-spacing:-0.01em;white-space:nowrap;">6+ YoE</div>
-          <p style="position:absolute;left:0;right:0;top:138px;margin:0;text-align:center;font-size:17px;line-height:22px;">Working as a Product Consultant,<br>directly with founders and leadership</p>
-          <div style="position:absolute;left:11px;right:11px;top:208px;">
-            <div style="font-size:11.5px;line-height:16px;color:#d4d4d4;">I specialized in:</div>
-            <div style="font-size:15.5px;line-height:19px;margin-top:6px;text-wrap:pretty;">Business-centric design, UX Audits, setting design systems and design → dev piplelines</div>
-          </div>
-        </section>
-      </div>
-    </main>
+      <dc-import name="Footer" hint-size="100%,860px"></dc-import>
+    </div>
   </div>
 
   <div style="position:absolute;inset:0;pointer-events:none;opacity:{{ lightOpacity }};background-image:url(assets/noise-light.svg);background-size:200px 200px;"></div>
   <div style="position:absolute;inset:0;pointer-events:none;opacity:{{ darkOpacity }};background-image:url(assets/noise-dark.svg);background-size:200px 200px;"></div>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;noise&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:0.5,&quot;min&quot;:0,&quot;max&quot;:1,&quot;step&quot;:0.05,&quot;tsType&quot;:&quot;number&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;noise&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:0.6,&quot;min&quot;:0,&quot;max&quot;:1,&quot;step&quot;:0.05,&quot;tsType&quot;:&quot;number&quot;},&quot;displayCut&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Clean&quot;,&quot;10&quot;,&quot;20&quot;,&quot;35&quot;,&quot;50&quot;,&quot;70&quot;,&quot;100&quot;],&quot;default&quot;:&quot;35&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Type&quot;}}">
 class Component extends DCLogic {
   renderVals() {
     const n = this.props.noise ?? 0.6;
-    return { lightOpacity: 0.08 + n * 0.3, darkOpacity: 0.15 + n * 0.5 };
+    const cut = this.props.displayCut ?? '35';
+    const fam = cut === 'Clean' ? "'Redaction'" : `'Redaction ${cut}'`;
+    return { lightOpacity: 0.08 + n * 0.3, darkOpacity: 0.15 + n * 0.5, displayFont: `${fam}, 'Redaction', Georgia, serif` };
   }
 }
 </script>

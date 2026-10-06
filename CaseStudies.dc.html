@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:'Redaction';src:url(fonts/Redaction-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction 10';src:url(fonts/Redaction_10-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction 35';src:url(fonts/Redaction_35-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction 70';src:url(fonts/Redaction_70-Bold.woff2) format('woff2');font-weight:700;font-style:normal;font-display:swap;}
+</style>
+</helmet>
+<div data-cs-track="1" ref="{{ trackRef }}" style="position:relative;height:{{ trackHeight }};">
+  <div style="position:{{ stickyPos }};top:{{ stickyTop }};height:{{ stickyHeight }};display:flex;align-items:center;">
+    <div data-cs-card="1" style="width:100%;display:flex;flex-direction:column;padding:0 1px 1px 0;color:#eeeeee;font-family:'Redaction 35','Redaction',Georgia,serif;">
+
+      <div data-screen-label="Case Bar" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 25px;min-height:59px;padding:8px 16px 8px 17px;border:1px solid #929292;margin:0 -1px -1px 0;">
+        <h2 data-anim="1" style="margin:0;min-width:0;font-family:'Redaction 10','Redaction',Georgia,serif;font-weight:400;font-size:28px;line-height:32px;letter-spacing:0;color:#ffffff;text-wrap:balance;">{{ c.title }}</h2>
+        <div style="display:flex;gap:8px;">
+          <sc-for list="{{ c.tags }}" as="t" hint-placeholder-count="3">
+            <span data-anim="1" style="position:relative;display:flex;padding:2px;">
+              <svg preserveAspectRatio="none" style="position:absolute;left:0.5px;top:0.5px;width:calc(100% - 1px);height:calc(100% - 1px);overflow:visible;"><rect x="0" y="0" width="100%" height="100%" fill="none" stroke="#df5227" stroke-width="1" pathLength="100" stroke-dasharray="20.4 1.8 16.5 3 31 2.3 18.1 2.4 4.5"></rect></svg>
+              <span style="position:relative;overflow:hidden;display:flex;align-items:center;height:37px;padding:0 10px;background:#df5227;color:#ffffff;font-family:'Redaction 70','Redaction',Georgia,serif;font-weight:700;font-size:14px;line-height:1;white-space:nowrap;">
+                <span style="position:relative;">{{ t }}</span>
+                <span style="position:absolute;inset:0;background-image:url(assets/noise-dark.svg);background-size:200px 200px;opacity:0.35;pointer-events:none;"></span>
+              </span>
+            </span>
+          </sc-for>
+        </div>
+        <div aria-label="Case studies" style="position:relative;margin-left:auto;display:flex;gap:4px;padding:2px;">
+          <sc-for list="{{ squares }}" as="sq" hint-placeholder-count="4">
+            <button type="button" aria-label="{{ sq.label }}" aria-current="{{ sq.on }}" onClick="{{ sq.go }}" style="position:relative;width:24px;height:24px;padding:0;border:0;background:transparent;cursor:pointer;overflow:hidden;">
+              <span style="position:absolute;inset:0;background:#d9d9d9;opacity:0.3;"></span>
+              <span data-fill="{{ sq.i }}" style="position:absolute;inset:0;background:#d9d9d9;transform-origin:0 50%;transform:scaleX(0);"></span>
+              <span style="position:absolute;inset:0;background-image:url(assets/noise-dark.svg);background-size:200px 200px;opacity:0.35;"></span>
+            </button>
+          </sc-for>
+          <span aria-hidden="true" style="position:absolute;left:2px;top:2px;width:24px;height:24px;pointer-events:none;transform:translateX({{ bracketX }});transition:transform 520ms cubic-bezier(.2,.8,.2,1);">
+            <span style="position:absolute;left:-2px;top:-2px;width:8px;height:8px;border-top:1px solid #ffffff;border-left:1px solid #ffffff;"></span>
+            <span style="position:absolute;right:-2px;bottom:-2px;width:8px;height:8px;border-bottom:1px solid #ffffff;border-right:1px solid #ffffff;"></span>
+          </span>
+        </div>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;">
+        <div style="flex:1 1 560px;min-width:0;display:flex;flex-direction:column;">
+
+          <div data-screen-label="Goals" style="min-height:345px;padding:16px 16px 28px 15px;border:1px solid #929292;margin:0 -1px -1px 0;">
+            <div data-anim="1" style="display:inline-flex;align-items:center;gap:10px;height:32px;padding:0 6px 0 6px;background:#ffffff;color:#000000;font-size:20px;line-height:1;white-space:nowrap;">
+              <svg width="20" height="18" viewBox="47 123 20 18" fill="none" style="flex:0 0 auto;"><path d="M48 126V136.8C48 137.92 48 138.48 48.218 138.908C48.4097 139.284 48.7155 139.59 49.0918 139.782C49.5192 140 50.079 140 51.1969 140H62.8031C63.921 140 64.48 140 64.9074 139.782C65.2837 139.59 65.5905 139.284 65.7822 138.908C66.0002 138.48 66.0002 137.92 66.0002 136.8L66.0002 129.2C66.0002 128.08 66.0002 127.52 65.7822 127.092C65.5905 126.715 65.2839 126.41 64.9076 126.218C64.4798 126 63.9201 126 62.8 126H57M48 126H57M48 126C48 124.895 48.8954 124 50 124H53.6745C54.1637 124 54.4089 124 54.639 124.055C54.8431 124.104 55.0379 124.185 55.2168 124.295C55.4186 124.419 55.5918 124.592 55.9375 124.938L57 126" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+              <span>[Core] Goals</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:8px;padding-left:24px;margin-top:8px;">
+              <sc-for list="{{ c.goals }}" as="g" hint-placeholder-count="2">
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                  <div style="display:flex;"><div data-anim="1" style="display:inline-flex;align-items:center;gap:10px;max-width:100%;min-height:34px;padding:4px 6px;border:1px solid #ffffff;font-size:20px;line-height:24px;">
+                    <svg width="20" height="18" viewBox="47 123 20 18" fill="none" style="flex:0 0 auto;"><path d="M48 126V136.8C48 137.92 48 138.48 48.218 138.908C48.4097 139.284 48.7155 139.59 49.0918 139.782C49.5192 140 50.079 140 51.1969 140H62.8031C63.921 140 64.48 140 64.9074 139.782C65.2837 139.59 65.5905 139.284 65.7822 138.908C66.0002 138.48 66.0002 137.92 66.0002 136.8L66.0002 129.2C66.0002 128.08 66.0002 127.52 65.7822 127.092C65.5905 126.715 65.2839 126.41 64.9076 126.218C64.4798 126 63.9201 126 62.8 126H57M48 126H57M48 126C48 124.895 48.8954 124 50 124H53.6745C54.1637 124 54.4089 124 54.639 124.055C54.8431 124.104 55.0379 124.185 55.2168 124.295C55.4186 124.419 55.5918 124.592 55.9375 124.938L57 126" stroke="#eeeeee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    <span>{{ g.label }}</span>
+                  </div></div>
+                  <div style="display:flex;flex-direction:column;gap:8px;padding-left:24px;">
+                    <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="2">
+                      <div style="position:relative;display:flex;">
+                        <sc-if value="{{ it.full }}" hint-placeholder-val="{{ true }}"><span data-line="1" style="position:absolute;left:-12px;top:-8px;bottom:0;width:1px;background:#ffffff;transform-origin:50% 0;"></span></sc-if>
+                        <sc-if value="{{ it.bridge }}" hint-placeholder-val="{{ false }}"><span data-line="1" style="position:absolute;left:-12px;top:-8px;bottom:-8px;width:1px;background:#ffffff;transform-origin:50% 0;"></span></sc-if>
+                        <sc-if value="{{ it.end }}" hint-placeholder-val="{{ false }}"><span data-line="1" style="position:absolute;left:-12px;top:-8px;height:calc(50% + 9px);width:1px;background:#ffffff;transform-origin:50% 0;"></span></sc-if>
+                        <span data-line="1" style="position:absolute;left:-12px;top:50%;width:12px;height:1px;background:#ffffff;transform-origin:0 50%;"></span>
+                        <div data-anim="1" style="display:inline-flex;align-items:center;gap:10px;max-width:100%;min-height:34px;padding:4px 6px;border:1px solid {{ it.stroke }};font-size:20px;line-height:24px;">
+                          <svg width="20" height="18" viewBox="47 123 20 18" fill="none" style="flex:0 0 auto;"><path d="M48 126V136.8C48 137.92 48 138.48 48.218 138.908C48.4097 139.284 48.7155 139.59 49.0918 139.782C49.5192 140 50.079 140 51.1969 140H62.8031C63.921 140 64.48 140 64.9074 139.782C65.2837 139.59 65.5905 139.284 65.7822 138.908C66.0002 138.48 66.0002 137.92 66.0002 136.8L66.0002 129.2C66.0002 128.08 66.0002 127.52 65.7822 127.092C65.5905 126.715 65.2839 126.41 64.9076 126.218C64.4798 126 63.9201 126 62.8 126H57M48 126H57M48 126C48 124.895 48.8954 124 50 124H53.6745C54.1637 124 54.4089 124 54.639 124.055C54.8431 124.104 55.0379 124.185 55.2168 124.295C55.4186 124.419 55.5918 124.592 55.9375 124.938L57 126" stroke="#eeeeee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                          <span>{{ it.t }}</span>
+                        </div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-wrap:wrap;">
+            <div data-screen-label="Outcomes" style="flex:1 1 300px;min-width:0;min-height:358px;padding:15px 15px 22px 15px;border:1px solid #929292;margin:0 -1px -1px 0;display:flex;flex-direction:column;">
+              <div style="display:flex;"><div data-anim="1" style="display:inline-flex;align-items:center;gap:10px;height:32px;padding:0 6px;background:#ffffff;color:#000000;font-size:20px;line-height:1;white-space:nowrap;">
+                <svg width="20" height="18" viewBox="47 123 20 18" fill="none" style="flex:0 0 auto;"><path d="M48 126V136.8C48 137.92 48 138.48 48.218 138.908C48.4097 139.284 48.7155 139.59 49.0918 139.782C49.5192 140 50.079 140 51.1969 140H62.8031C63.921 140 64.48 140 64.9074 139.782C65.2837 139.59 65.5905 139.284 65.7822 138.908C66.0002 138.48 66.0002 137.92 66.0002 136.8L66.0002 129.2C66.0002 128.08 66.0002 127.52 65.7822 127.092C65.5905 126.715 65.2839 126.41 64.9076 126.218C64.4798 126 63.9201 126 62.8 126H57M48 126H57M48 126C48 124.895 48.8954 124 50 124H53.6745C54.1637 124 54.4089 124 54.639 124.055C54.8431 124.104 55.0379 124.185 55.2168 124.295C55.4186 124.419 55.5918 124.592 55.9375 124.938L57 126" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                <span>[Core] Outcomes</span>
+              </div></div>
+              <div data-anim="1" style="position:relative;margin-top:11px;min-height:172px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px 36px 26px;text-align:center;">
+                <span style="position:absolute;left:0;top:0;width:28px;height:28px;border-top:3px solid #ffffff;border-left:3px solid #ffffff;"></span>
+                <span style="position:absolute;right:0;top:0;width:28px;height:28px;border-top:3px solid #ffffff;border-right:3px solid #ffffff;"></span>
+                <span style="position:absolute;left:0;bottom:0;width:28px;height:28px;border-bottom:3px solid #ffffff;border-left:3px solid #ffffff;"></span>
+                <span style="position:absolute;right:0;bottom:0;width:28px;height:28px;border-bottom:3px solid #ffffff;border-right:3px solid #ffffff;"></span>
+                <div style="font-family:'Redaction 35','Redaction',Georgia,serif;font-size:80px;line-height:72px;letter-spacing:-0.01em;color:#ffffff;white-space:nowrap;">{{ c.outcome.value }}</div>
+                <div style="font-family:'Redaction',Georgia,serif;font-size:18px;line-height:22px;color:#ffffff;text-wrap:balance;">{{ c.outcome.caption }}</div>
+              </div>
+              <div style="margin-top:22px;display:flex;flex-direction:column;gap:5px;font-size:16px;line-height:22px;color:#ffffff;">
+                <sc-for list="{{ c.outcome.stats }}" as="s" hint-placeholder-count="3">
+                  <div data-anim="1" style="display:flex;align-items:baseline;gap:2px;">
+                    <span>{{ s.k }}</span>
+                    <span style="flex:1;min-width:12px;height:2px;background-image:linear-gradient(90deg,#ffffff 0 1.7px,transparent 1.7px);background-size:3.92px 2px;background-repeat:repeat-x;"></span>
+                    <span>{{ s.v }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+
+            <div data-screen-label="Team" style="flex:1 1 300px;min-width:0;min-height:358px;padding:15px 16px 16px 15px;border:1px solid #929292;margin:0 -1px -1px 0;">
+              <div data-anim="1" style="display:inline-flex;align-items:center;gap:10px;height:32px;padding:0 6px;background:#ffffff;color:#000000;font-size:20px;line-height:1;white-space:nowrap;">
+                <svg width="20" height="18" viewBox="47 123 20 18" fill="none" style="flex:0 0 auto;"><path d="M48 126V136.8C48 137.92 48 138.48 48.218 138.908C48.4097 139.284 48.7155 139.59 49.0918 139.782C49.5192 140 50.079 140 51.1969 140H62.8031C63.921 140 64.48 140 64.9074 139.782C65.2837 139.59 65.5905 139.284 65.7822 138.908C66.0002 138.48 66.0002 137.92 66.0002 136.8L66.0002 129.2C66.0002 128.08 66.0002 127.52 65.7822 127.092C65.5905 126.715 65.2839 126.41 64.9076 126.218C64.4798 126 63.9201 126 62.8 126H57M48 126H57M48 126C48 124.895 48.8954 124 50 124H53.6745C54.1637 124 54.4089 124 54.639 124.055C54.8431 124.104 55.0379 124.185 55.2168 124.295C55.4186 124.419 55.5918 124.592 55.9375 124.938L57 126" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                <span>[Core] Team</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px;padding-left:24px;margin-top:8px;">
+                <sc-for list="{{ c.team }}" as="g" hint-placeholder-count="2">
+                  <div style="display:flex;flex-direction:column;gap:8px;">
+                    <div style="display:flex;"><div data-anim="1" style="display:inline-flex;align-items:center;gap:10px;max-width:100%;min-height:34px;padding:4px 6px;border:1px solid #ffffff;font-size:20px;line-height:24px;">
+                      <svg width="20" height="18" viewBox="47 123 20 18" fill="none" style="flex:0 0 auto;"><path d="M48 126V136.8C48 137.92 48 138.48 48.218 138.908C48.4097 139.284 48.7155 139.59 49.0918 139.782C49.5192 140 50.079 140 51.1969 140H62.8031C63.921 140 64.48 140 64.9074 139.782C65.2837 139.59 65.5905 139.284 65.7822 138.908C66.0002 138.48 66.0002 137.92 66.0002 136.8L66.0002 129.2C66.0002 128.08 66.0002 127.52 65.7822 127.092C65.5905 126.715 65.2839 126.41 64.9076 126.218C64.4798 126 63.9201 126 62.8 126H57M48 126H57M48 126C48 124.895 48.8954 124 50 124H53.6745C54.1637 124 54.4089 124 54.639 124.055C54.8431 124.104 55.0379 124.185 55.2168 124.295C55.4186 124.419 55.5918 124.592 55.9375 124.938L57 126" stroke="#eeeeee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                      <span>{{ g.label }}</span>
+                    </div></div>
+                    <div style="display:flex;flex-direction:column;gap:8px;padding-left:24px;">
+                      <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="2">
+                        <div style="position:relative;display:flex;">
+                          <sc-if value="{{ it.full }}" hint-placeholder-val="{{ true }}"><span data-line="1" style="position:absolute;left:-12px;top:-8px;bottom:0;width:1px;background:#ffffff;transform-origin:50% 0;"></span></sc-if>
+                          <sc-if value="{{ it.bridge }}" hint-placeholder-val="{{ false }}"><span data-line="1" style="position:absolute;left:-12px;top:-8px;bottom:-8px;width:1px;background:#ffffff;transform-origin:50% 0;"></span></sc-if>
+                          <sc-if value="{{ it.end }}" hint-placeholder-val="{{ false }}"><span data-line="1" style="position:absolute;left:-12px;top:-8px;height:calc(50% + 9px);width:1px;background:#ffffff;transform-origin:50% 0;"></span></sc-if>
+                          <span data-line="1" style="position:absolute;left:-12px;top:50%;width:12px;height:1px;background:#ffffff;transform-origin:0 50%;"></span>
+                          <div data-anim="1" style="display:inline-flex;align-items:center;gap:10px;max-width:100%;min-height:34px;padding:4px 6px;border:1px solid {{ it.stroke }};font-size:20px;line-height:24px;">
+                            <svg width="20" height="18" viewBox="47 123 20 18" fill="none" style="flex:0 0 auto;"><path d="M48 126V136.8C48 137.92 48 138.48 48.218 138.908C48.4097 139.284 48.7155 139.59 49.0918 139.782C49.5192 140 50.079 140 51.1969 140H62.8031C63.921 140 64.48 140 64.9074 139.782C65.2837 139.59 65.5905 139.284 65.7822 138.908C66.0002 138.48 66.0002 137.92 66.0002 136.8L66.0002 129.2C66.0002 128.08 66.0002 127.52 65.7822 127.092C65.5905 126.715 65.2839 126.41 64.9076 126.218C64.4798 126 63.9201 126 62.8 126H57M48 126H57M48 126C48 124.895 48.8954 124 50 124H53.6745C54.1637 124 54.4089 124 54.639 124.055C54.8431 124.104 55.0379 124.185 55.2168 124.295C55.4186 124.419 55.5918 124.592 55.9375 124.938L57 126" stroke="#eeeeee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            <span>{{ it.t }}</span>
+                          </div>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div data-screen-label="Case Visual" style="flex:1 1 560px;min-width:0;min-height:360px;border:1px solid #929292;margin:0 -1px -1px 0;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const WEALTHDESK = {
+  title: 'Wealth Management for India\u2019s 1 Billion Retail Investors',
+  tags: ['Fintech', 'B2B2C', '0 \u2192 1'],
+  goals: [
+    { label: 'Business Goals', items: ['Investment innovation via advisory and research licenses', 'Make advisory investment accessible for India\u2019s 1 Billion retail investors'] },
+    { label: 'Product Goals', items: ['Build a wealth creation marketplace for investors, advisors and brokers', 'Build a suite of investment tools for vertical customer acquisition'] }
+  ],
+  outcome: { value: '$75Mn', caption: 'Acquisition post 18 months of 0\u21921', stats: [{ k: 'Product Verticals', v: '5+' }, { k: 'AUM', v: '$10Mn' }, { k: 'MAU', v: '100K' }] },
+  team: [
+    { label: 'My team', items: [{ t: '1 Lead Designer (Me)', me: true }, '1 Project Manager'] },
+    { label: 'Client-side team', items: ['Founder + c suite exec', '3 Product Designers', '6 Full-stack Engineers'] }
+  ]
+};
+// Cases 2–4 duplicate case 1 until their content is ready.
+const CASES = [WEALTHDESK, WEALTHDESK, WEALTHDESK, WEALTHDESK];
+const SCROLL_PER_CASE = 75; // vh of scroll per case study
+const MAX_VH = 0.9; // card never taller than 90% of the viewport
+
+const tree = groups => groups.map((g, gi) => ({
+  label: g.label,
+  items: g.items.map((raw, ii) => {
+    const it = typeof raw === 'string' ? { t: raw } : raw;
+    const lastItem = ii === g.items.length - 1, lastGroup = gi === groups.length - 1;
+    return { t: it.t, stroke: it.me ? '#df5227' : '#ffffff', full: !lastItem, bridge: lastItem && !lastGroup, end: lastItem && lastGroup };
+  })
+}));
+const SHAPED = CASES.map(c => ({ ...c, goals: tree(c.goals), team: tree(c.team) }));
+
+class Component extends DCLogic {
+  state = { idx: 0, mobile: false };
+  trackRef = React.createRef();
+
+  track() {
+    const t = this.trackRef.current;
+    return t && t.isConnected ? t : document.querySelector('[data-cs-track]');
+  }
+
+  componentDidMount() {
+    this.reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    this.mql = window.matchMedia('(max-width: 760px)');
+    this.onMql = () => this.setState({ mobile: this.mql.matches }, () => this.update());
+    this.mql.addEventListener('change', this.onMql);
+    this.onScroll = () => { this.lastY = window.scrollY; this.update(); };
+    this.poll = setInterval(() => { if (window.scrollY !== this.lastY) this.onScroll(); }, 90);
+    window.addEventListener('scroll', this.onScroll, { passive: true });
+    this.onResize = () => { this.z = 1; this.update(); };
+    window.addEventListener('resize', this.onResize);
+    this.setState({ mobile: this.mql.matches }, () => this.update());
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { this.z = 1; this.update(); });
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.poll);
+    window.removeEventListener('scroll', this.onScroll);
+    window.removeEventListener('resize', this.onResize);
+    if (this.mql) this.mql.removeEventListener('change', this.onMql);
+  }
+
+  componentDidUpdate() {
+    const idx = this.state.idx;
+    if (this.shownIdx === undefined) { this.shownIdx = idx; return; }
+    if (this.shownIdx !== idx) { this.shownIdx = idx; this.animateIn(); this.paintFill(idx, this.local || 0); }
+  }
+
+  update() {
+    const tr = this.track();
+    if (!tr) return;
+    const n = CASES.length;
+    if (this.state.mobile) {
+      const card = tr.querySelector('[data-cs-card]');
+      if (card) this.fit(card, window.innerHeight);
+      this.local = 1; this.paintFill(this.state.idx, 1); return;
+    }
+    const card = tr.querySelector('[data-cs-card]');
+    const vh = window.innerHeight;
+    if (card) this.fit(card, vh);
+    const ch = card ? card.getBoundingClientRect().height : vh;
+    const top = Math.min(0, Math.round(vh - ch - 24));
+    const stickH = Math.max(vh, ch + 48);
+    const trackH = Math.round(stickH + n * vh * SCROLL_PER_CASE / 100);
+    if (!this.state.geo || this.state.geo.top !== top || this.state.geo.trackH !== trackH) { this.setState({ geo: { top, trackH, stickH } }); }
+    const dist = Math.max(1, trackH - stickH);
+    const p = Math.min(dist, Math.max(0, top - tr.getBoundingClientRect().top));
+    const per = dist / n;
+    const idx = Math.min(n - 1, Math.floor(p / per));
+    this.local = Math.min(1, (p - idx * per) / per);
+    if (idx !== this.state.idx) this.setState({ idx });
+    this.paintFill(idx, this.local);
+  }
+
+  // Scales the whole card (type included) so it never exceeds MAX_VH of the viewport.
+  fit(card, vh) {
+    const target = vh * MAX_VH;
+    if (this.state.mobile) {
+      card.style.zoom = ''; card.style.width = '';
+      card.style.maxHeight = target + 'px'; card.style.overflowY = 'auto';
+      this.z = 1; return;
+    }
+    card.style.maxHeight = ''; card.style.overflowY = '';
+    let z = this.z || 1;
+    for (let k = 0; k < 5; k++) {
+      const h = card.getBoundingClientRect().height;
+      const nz = Math.max(0.45, Math.min(1, (z * target) / h));
+      if (Math.abs(nz - z) < 0.002 && h <= target + 1) break;
+      z = nz;
+      card.style.zoom = String(z);
+      card.style.width = (100 / z) + '%';
+    }
+    this.z = z;
+  }
+
+  paintFill(idx, local) {
+    const tr = this.track();
+    if (!tr) return;
+    tr.querySelectorAll('[data-fill]').forEach(el => {
+      const i = +el.getAttribute('data-fill');
+      const v = i < idx ? 1 : i === idx ? local : 0;
+      el.style.transform = 'scaleX(' + v.toFixed(4) + ')';
+    });
+  }
+
+  animateIn() {
+    const tr = this.track();
+    if (!tr || this.reduce || !tr.animate) return;
+    const ease = 'cubic-bezier(.2,.75,.2,1)';
+    tr.querySelectorAll('[data-anim]').forEach((el, k) => {
+      el.animate([{ opacity: 0, transform: 'translateY(8px)', filter: 'blur(2px)' }, { opacity: 1, transform: 'none', filter: 'none' }],
+        { duration: 520, delay: k * 22, easing: ease, fill: 'backwards' });
+    });
+    tr.querySelectorAll('[data-line]').forEach((el, k) => {
+      const v = el.style.height === '1px' ? 'scaleX(0)' : 'scaleY(0)';
+      el.animate([{ transform: v }, { transform: 'none' }], { duration: 480, delay: 80 + k * 18, easing: ease, fill: 'backwards' });
+    });
+  }
+
+  goTo(i) {
+    if (this.state.mobile) { this.setState({ idx: i }); return; }
+    const tr = this.track();
+    if (!tr) return;
+    const g = this.state.geo || { top: 0, trackH: tr.offsetHeight, stickH: window.innerHeight };
+    const dist = Math.max(1, g.trackH - g.stickH);
+    const start = tr.getBoundingClientRect().top + window.scrollY - g.top;
+    window.scrollTo({ top: start + (i * dist) / CASES.length + 2, behavior: this.reduce ? 'auto' : 'smooth' });
+  }
+
+  renderVals() {
+    const { idx, mobile, geo } = this.state;
+    const n = CASES.length;
+    return {
+      trackRef: this.trackRef,
+      c: SHAPED[idx],
+      trackHeight: mobile ? 'auto' : geo ? geo.trackH + 'px' : 'calc(100vh + ' + n * SCROLL_PER_CASE + 'vh)',
+      stickyPos: mobile ? 'relative' : 'sticky',
+      stickyHeight: mobile ? 'auto' : geo ? geo.stickH + 'px' : '100vh',
+      stickyTop: mobile ? '0px' : geo ? geo.top + 'px' : '0px',
+      bracketX: idx * 28 + 'px',
+      squares: CASES.map((_, i) => ({ i, on: i === idx ? 'true' : 'false', label: 'Case study ' + (i + 1), go: () => this.goTo(i) }))
+    };
+  }
+}
+</script>
+</body>
+</html>

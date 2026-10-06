@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:'Redaction';src:url(fonts/Redaction-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction 35';src:url(fonts/Redaction_35-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction 50';src:url(fonts/Redaction_50-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
+</style>
+</helmet>
+<div style="display:flex;flex-direction:column;gap:clamp(120px, 16.2vw, 280px);width:100vw;margin-left:calc(50% - 50vw);color:#eeeeee;font-family:'Redaction',Georgia,serif;">
+
+  <section id="articles" data-screen-label="Articles" aria-label="Articles" style="overflow:hidden;" onPointerEnter="{{ holdA }}" onPointerLeave="{{ releaseA }}">
+    <div data-ticker="a" style="display:flex;width:max-content;will-change:transform;">
+      <sc-for list="{{ articles }}" as="a" hint-placeholder-count="5">
+        <a href="{{ a.href }}" aria-hidden="{{ a.hidden }}" tabindex="{{ a.tab }}" style="flex:0 0 auto;width:min(399px, 82vw);margin-right:-1px;display:flex;flex-direction:column;color:#eeeeee;" style-hover="color:#ffffff;">
+          <div style="position:relative;height:182px;padding:18px 24px 0 24px;background-color:#ffffff;background-image:url(assets/noise-card.svg);background-size:240px 240px;color:#000000;font-family:'Redaction 35','Redaction',Georgia,serif;font-size:38px;line-height:42px;letter-spacing:-0.005em;text-wrap:pretty;overflow:hidden;">{{ a.title }}</div>
+          <div style="height:70px;padding:14px 24px 0 24px;background:#000000;border:1px solid #595959;font-family:'Redaction 35','Redaction',Georgia,serif;font-size:16px;line-height:20px;color:#ffffff;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ a.blurb }}</div>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="testimonials" data-screen-label="Testimonials" aria-label="Testimonials" style="overflow:hidden;" onPointerEnter="{{ holdT }}" onPointerLeave="{{ releaseT }}">
+    <div data-ticker="t" style="display:flex;gap:8px;width:max-content;padding-right:8px;will-change:transform;">
+      <sc-for list="{{ testimonials }}" as="q" hint-placeholder-count="4">
+        <article aria-hidden="{{ q.hidden }}" style="zoom:0.75;position:relative;flex:0 0 auto;width:min(464px, 88vw);padding:6px;display:flex;flex-direction:column;">
+          <span style="position:absolute;left:0;top:0;width:12px;height:12px;background:#d9d9d9;z-index:1;"></span>
+          <span style="position:absolute;right:0;top:0;width:12px;height:12px;background:#d9d9d9;z-index:1;"></span>
+          <span style="position:absolute;left:0;top:74px;width:12px;height:12px;background:#d9d9d9;z-index:1;"></span>
+          <span style="position:absolute;right:0;top:74px;width:12px;height:12px;background:#d9d9d9;z-index:1;"></span>
+
+          <div style="height:74px;display:flex;align-items:center;padding:0 16px;border:1px solid #929292;font-family:'Redaction 50','Redaction',Georgia,serif;font-size:18px;line-height:22px;color:#ffffff;">{{ q.role }}</div>
+          <div style="height:88px;margin-top:-1px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 16px;border:1px solid #929292;">
+            <span style="font-family:'Redaction 50','Redaction',Georgia,serif;font-size:28px;line-height:32px;color:#ffffff;">{{ q.name }}</span>
+            <a href="{{ q.linkedin }}" target="_blank" rel="noopener" aria-label="LinkedIn" tabindex="{{ q.tab }}" style="flex:0 0 32px;display:flex;" style-hover="opacity:0.75;">
+              <svg width="32" height="32" viewBox="409 107 32 32" fill="none"><path d="M441 110.05H439.47V135.95H441V110.05Z" fill="white"></path><path d="M439.47 135.95H437.95V137.48H439.47V135.95Z" fill="white"></path><path d="M439.47 108.52H437.95V110.05H439.47V108.52Z" fill="white"></path><path d="M437.95 111.57H436.42V134.43H437.95V111.57Z" fill="white"></path><path d="M437.95 137.48H412.04V139H437.95V137.48Z" fill="white"></path><path d="M436.42 134.43H413.57V135.95H436.42V134.43Z" fill="white"></path><path d="M431.85 122.24H430.33V120.71H427.28V122.24H425.76V120.71H422.71V129.86H425.76V125.29H427.28V123.76H428.81V125.29H430.33V129.86H433.38V123.76H431.85V122.24Z" fill="white"></path><path d="M419.66 120.71H416.61V129.86H419.66V120.71Z" fill="white"></path><path d="M419.66 116.14H416.61V119.19H419.66V116.14Z" fill="white"></path><path d="M436.42 110.05H413.57V111.57H436.42V110.05Z" fill="white"></path><path d="M437.95 107H412.04V108.52H437.95V107Z" fill="white"></path><path d="M413.57 111.57H412.04V134.43H413.57V111.57Z" fill="white"></path><path d="M412.04 135.95H410.52V137.48H412.04V135.95Z" fill="white"></path><path d="M412.04 108.52H410.52V110.05H412.04V108.52Z" fill="white"></path><path d="M410.52 110.05H409V135.95H410.52V110.05Z" fill="white"></path></svg>
+            </a>
+          </div>
+
+          <div style="display:flex;margin-top:-1px;">
+            <div style="position:relative;flex:1 1 0;min-width:0;aspect-ratio:1;border:1px solid #929292;">
+              <span style="position:absolute;left:15px;top:15px;width:18px;height:18px;border-top:2px solid #ffffff;border-left:2px solid #ffffff;"></span>
+              <span style="position:absolute;right:15px;top:15px;width:18px;height:18px;border-top:2px solid #ffffff;border-right:2px solid #ffffff;"></span>
+              <span style="position:absolute;left:15px;bottom:15px;width:18px;height:18px;border-bottom:2px solid #ffffff;border-left:2px solid #ffffff;"></span>
+              <span style="position:absolute;right:15px;bottom:15px;width:18px;height:18px;border-bottom:2px solid #ffffff;border-right:2px solid #ffffff;"></span>
+              <div style="position:absolute;inset:24px;background:#000000;border:1px solid #595959;overflow:hidden;">
+                <sc-if value="{{ q.photo }}" hint-placeholder-val="{{ false }}"><img src="{{ q.photo }}" alt="{{ q.name }}" style="display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1);"></sc-if>
+              </div>
+            </div>
+            <div style="flex:1 1 0;min-width:0;aspect-ratio:1;margin-left:-1px;border:1px solid #929292;padding:37px 12px 0 20px;overflow:hidden;font-family:'Redaction 35','Redaction',Georgia,serif;">
+              <div style="display:inline-flex;align-items:center;gap:8px;height:27px;padding:0 6px;background:#ffffff;color:#000000;font-size:14px;line-height:1;white-space:nowrap;">
+                <svg width="16" height="14.4" viewBox="47 123 20 18" fill="none" style="flex:0 0 auto;"><path d="M48 126V136.8C48 137.92 48 138.48 48.218 138.908C48.4097 139.284 48.7155 139.59 49.0918 139.782C49.5192 140 50.079 140 51.1969 140H62.8031C63.921 140 64.48 140 64.9074 139.782C65.2837 139.59 65.5905 139.284 65.7822 138.908C66.0002 138.48 66.0002 137.92 66.0002 136.8L66.0002 129.2C66.0002 128.08 66.0002 127.52 65.7822 127.092C65.5905 126.715 65.2839 126.41 64.9076 126.218C64.4798 126 63.9201 126 62.8 126H57M48 126H57M48 126C48 124.895 48.8954 124 50 124H53.6745C54.1637 124 54.4089 124 54.639 124.055C54.8431 124.104 55.0379 124.185 55.2168 124.295C55.4186 124.419 55.5918 124.592 55.9375 124.938L57 126" stroke="#000000" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                <span>[Collab] Outcomes</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:13px;padding-left:24px;margin-top:13px;">
+                <sc-for list="{{ q.outcomes }}" as="o" hint-placeholder-count="3">
+                  <div style="position:relative;display:flex;">
+                    <sc-if value="{{ o.mid }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;left:-12px;top:-13px;bottom:0;width:1px;background:#ffffff;"></span></sc-if>
+                    <sc-if value="{{ o.end }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:-12px;top:-13px;height:calc(50% + 13.5px);width:1px;background:#ffffff;"></span></sc-if>
+                    <span style="position:absolute;left:-12px;top:50%;width:12px;height:1px;background:#ffffff;"></span>
+                    <div style="display:inline-flex;align-items:center;gap:8px;max-width:100%;min-height:29px;padding:3px 6px;border:1px solid #ffffff;font-size:14px;line-height:18px;color:#ffffff;white-space:nowrap;">
+                      <svg width="16" height="14.4" viewBox="47 123 20 18" fill="none" style="flex:0 0 auto;"><path d="M48 126V136.8C48 137.92 48 138.48 48.218 138.908C48.4097 139.284 48.7155 139.59 49.0918 139.782C49.5192 140 50.079 140 51.1969 140H62.8031C63.921 140 64.48 140 64.9074 139.782C65.2837 139.59 65.5905 139.284 65.7822 138.908C66.0002 138.48 66.0002 137.92 66.0002 136.8L66.0002 129.2C66.0002 128.08 66.0002 127.52 65.7822 127.092C65.5905 126.715 65.2839 126.41 64.9076 126.218C64.4798 126 63.9201 126 62.8 126H57M48 126H57M48 126C48 124.895 48.8954 124 50 124H53.6745C54.1637 124 54.4089 124 54.639 124.055C54.8431 124.104 55.0379 124.185 55.2168 124.295C55.4186 124.419 55.5918 124.592 55.9375 124.938L57 126" stroke="#eeeeee" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                      <span>{{ o.t }}</span>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+
+          <div style="flex:1 0 201px;margin-top:-1px;padding:16px 10px 18px 10px;border:1px solid #929292;font-size:19px;line-height:24px;color:#ffffff;text-wrap:pretty;">{{ q.quote }}</div>
+        </article>
+      </sc-for>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const ARTICLES = [
+  { title: 'Positioning myself as an AI-boomer', blurb: 'Unlike the urban dictionary, the boomer here has a different context.', href: '#' },
+  { title: 'Undying optimism or nothing', blurb: 'Nihilists, here me out for a second.', href: '#' },
+  { title: 'Dissecting the UX of Home Depot & Lowe\u2019s', blurb: 'I am beginning to understand the consumeristic state of America.', href: '#' },
+  { title: 'Guide to being efficiently annoying by Spotify', blurb: 'Today, I\u2019ll explore how Spotify strategically utilizes design & in-depth user insights to intentionally annoy its users.', href: '#' },
+  { title: 'My secret to pitching solutions', blurb: 'Never again hear \u201clet\u2019s revisit this in the next sprint\u201d', href: '#' }
+];
+const NIHAR = {
+  role: 'Managed me at THEM Consulting',
+  name: 'Nihar Bhusari',
+  linkedin: '#',
+  photo: '',
+  outcomes: ['0\u21921\u2192$75Mn Acq', '4 Design Systems', '5k\u2192100K MAU'],
+  quote: 'If you are looking for someone who is hungry to learn, has immense ownership and is overflowing with creativity, Monil is your guy. He went above and beyond for every task he worked on, and displayed a penchant for strategic thought behind every design tied to the firm\u2019s bottom line.'
+};
+// Duplicate entries until more testimonials are added.
+const TESTIMONIALS = [NIHAR, NIHAR, NIHAR, NIHAR];
+const SPEED = { a: 70, t: 58 }; // px per second
+const HOVER_SPEED = 0.25;        // fraction of SPEED while hovered
+const DIR = { a: -1, t: 1 };    // articles right→left, testimonials left→right
+
+const loop = (list, minCount) => {
+  const set = [];
+  while (set.length < minCount) set.push(...list);
+  return [0, 1].flatMap(copy => set.map(it => ({ ...it, hidden: copy ? 'true' : 'false', tab: copy ? '-1' : '0' })));
+};
+
+class Component extends DCLogic {
+  hold = { a: false, t: false };
+
+  componentDidMount() {
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const st = { a: { x: 0, v: SPEED.a }, t: { x: null, v: SPEED.t } };
+    let last = performance.now(), lastRun = 0;
+    const tick = now => {
+      lastRun = performance.now();
+      this.raf = requestAnimationFrame(tick);
+      const dt = Math.min(0.12, (now - last) / 1000); last = now;
+      for (const k of ['a', 't']) {
+        const el = document.querySelector('[data-ticker="' + k + '"]');
+        if (!el) continue;
+        const half = el.scrollWidth / 2;
+        if (!half) continue;
+        const s = st[k];
+        const target = reduce ? 0 : this.hold[k] ? SPEED[k] * HOVER_SPEED : SPEED[k];
+        s.v += (target - s.v) * Math.min(1, dt * 4);
+        if (s.x === null) s.x = -half;
+        s.x += DIR[k] * s.v * dt;
+        if (s.x <= -half) s.x += half;
+        if (s.x > 0) s.x -= half;
+        el.style.transform = 'translate3d(' + s.x.toFixed(2) + 'px,0,0)';
+      }
+    };
+    this.raf = requestAnimationFrame(tick);
+    this.watch = setInterval(() => { if (performance.now() - lastRun > 150) { cancelAnimationFrame(this.raf); tick(performance.now()); } }, 100);
+  }
+
+  componentWillUnmount() { cancelAnimationFrame(this.raf); clearInterval(this.watch); }
+
+  renderVals() {
+    return {
+      articles: loop(ARTICLES, 5),
+      testimonials: loop(TESTIMONIALS.map(q => ({ ...q, outcomes: q.outcomes.map((t, i) => ({ t, mid: i < q.outcomes.length - 1, end: i === q.outcomes.length - 1 })) })), 4),
+      holdA: () => { this.hold.a = true; }, releaseA: () => { this.hold.a = false; },
+      holdT: () => { this.hold.t = true; }, releaseT: () => { this.hold.t = false; }
+    };
+  }
+}
+</script>
+</body>
+</html>

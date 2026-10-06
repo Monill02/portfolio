@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<div ref="{{ sectionRef }}" data-workmap="1" style="position:relative;display:flex;flex-wrap:wrap;align-items:stretch;gap:38px clamp(24px, 4.514vw, 78px);">
+  <svg style="position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0;">
+    <defs>
+      <filter id="wm-line-noise" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
+        <feTurbulence data-noise="1" type="fractalNoise" baseFrequency="0.115" numOctaves="3" seed="8023" stitchTiles="stitch" result="noise"></feTurbulence>
+        <feColorMatrix in="noise" type="luminanceToAlpha" result="lum"></feColorMatrix>
+        <feComponentTransfer in="lum" result="mask">
+          <feFuncA type="discrete" tableValues="1 0.22"></feFuncA>
+        </feComponentTransfer>
+        <feComposite in="SourceGraphic" in2="mask" operator="in"></feComposite>
+      </filter>
+    </defs>
+    <g filter="url(#wm-line-noise)">
+      <sc-for list="{{ edges }}" as="e" hint-placeholder-count="0">
+        <line data-edge="{{ $index }}" x1="0" y1="0" x2="0" y2="0" stroke="rgba(255,255,255,0.82)" stroke-width="1"></line>
+      </sc-for>
+    </g>
+  </svg>
+
+  <div data-role="col-left" style="flex:380 1 228px;min-width:0;position:relative;z-index:2;">
+    <div ref="{{ leftWrap }}" style="position:relative;width:100%;height:602px;">
+      <div data-stage="left" style="position:absolute;left:0;top:0;width:380px;height:602px;transform-origin:0 0;">
+        <div style="position:absolute;left:-140px;top:-80px;right:-140px;bottom:-80px;pointer-events:none;background:radial-gradient(closest-side, rgba(214,86,46,0.20), rgba(214,86,46,0.07) 60%, rgba(214,86,46,0) 100%);"></div>
+        <sc-for list="{{ leftBoxes }}" as="b" hint-placeholder-count="5">
+          <div data-node="{{ b.i }}" style="position:absolute;left:{{ b.x }}px;top:{{ b.y }}px;width:120px;height:120px;will-change:transform;">
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 50%, #1e0b06 0%, #180905 80%);border:1px solid #d95a34;box-shadow:0 0 24px rgba(217,90,52,0.38), inset 0 0 18px rgba(217,90,52,0.12);">
+              <img src="{{ b.logo }}" alt="{{ b.name }}" style="display:block;width:{{ b.w }}px;height:auto;max-width:{{ b.mw }}px;mix-blend-mode:lighten;filter:{{ b.fx }};-webkit-mask-image:{{ b.mask }};mask-image:{{ b.mask }};">
+            </div>
+            <div style="position:absolute;left:{{ b.lx }}px;top:{{ b.ly }}px;padding:2px;">
+              <svg width="100%" height="100%" preserveAspectRatio="none" style="position:absolute;inset:0;overflow:visible;">
+                <rect x="0.5" y="0.5" width="calc(100% - 1px)" height="calc(100% - 1px)" fill="none" stroke="#df5227" stroke-width="1" pathLength="100" stroke-dasharray="24.6 2.3 16.8 0.8 33.3 3 15.3 0.5 3.4"></rect>
+              </svg>
+              <div style="position:relative;overflow:hidden;background:#c44a25;box-shadow:inset 0 0 0 1px rgba(255,190,160,0.22);padding:9px 14px;white-space:nowrap;color:#dcd1cb;font-family:'Redaction 10','Redaction',Georgia,serif;font-weight:700;font-size:15px;line-height:20px;letter-spacing:0.01em;">
+                <div style="position:absolute;inset:0;background-image:url(assets/noise-dark.svg);background-size:200px 200px;opacity:0.35;pointer-events:none;"></div>
+                <span style="position:relative;">{{ b.label }}</span>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <div data-role="col-center" style="flex:684 1 410px;min-width:0;position:relative;z-index:1;min-height:clamp(360px, 34.84vw, 602px);">
+    <div style="position:absolute;left:-14px;top:-14px;width:30px;height:30px;border-top:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
+    <div style="position:absolute;right:-14px;top:-14px;width:30px;height:30px;border-top:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
+    <div style="position:absolute;left:-14px;bottom:-14px;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-left:3px solid #e6e6e6;"></div>
+    <div style="position:absolute;right:-14px;bottom:-14px;width:30px;height:30px;border-bottom:3px solid #e6e6e6;border-right:3px solid #e6e6e6;"></div>
+    <div style="position:absolute;inset:0;border:2px solid #8e8e8e;background:linear-gradient(160deg,#323232 0%,#2b2b2b 60%,#282828 100%);"></div>
+  </div>
+
+  <div data-role="col-right" style="flex:380 1 228px;min-width:0;position:relative;z-index:2;">
+    <div ref="{{ rightWrap }}" style="position:relative;width:100%;height:602px;">
+      <div data-stage="right" style="position:absolute;left:0;top:0;width:380px;height:602px;transform-origin:0 0;">
+        <div style="position:absolute;left:-140px;top:-80px;right:-140px;bottom:-80px;pointer-events:none;background:radial-gradient(closest-side, rgba(214,86,46,0.20), rgba(214,86,46,0.07) 60%, rgba(214,86,46,0) 100%);"></div>
+        <sc-for list="{{ rightBoxes }}" as="b" hint-placeholder-count="4">
+          <div data-node="{{ b.i }}" style="position:absolute;left:{{ b.x }}px;top:{{ b.y }}px;width:120px;height:120px;will-change:transform;">
+            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 50%, #1e0b06 0%, #180905 80%);border:1px solid #d95a34;box-shadow:0 0 24px rgba(217,90,52,0.38), inset 0 0 18px rgba(217,90,52,0.12);">
+              <img src="{{ b.logo }}" alt="{{ b.name }}" style="display:block;width:{{ b.w }}px;height:auto;max-width:{{ b.mw }}px;mix-blend-mode:lighten;filter:{{ b.fx }};-webkit-mask-image:{{ b.mask }};mask-image:{{ b.mask }};">
+            </div>
+            <div style="position:absolute;left:{{ b.lx }}px;top:{{ b.ly }}px;padding:2px;">
+              <svg width="100%" height="100%" preserveAspectRatio="none" style="position:absolute;inset:0;overflow:visible;">
+                <rect x="0.5" y="0.5" width="calc(100% - 1px)" height="calc(100% - 1px)" fill="none" stroke="#df5227" stroke-width="1" pathLength="100" stroke-dasharray="24.6 2.3 16.8 0.8 33.3 3 15.3 0.5 3.4"></rect>
+              </svg>
+              <div style="position:relative;overflow:hidden;background:#c44a25;box-shadow:inset 0 0 0 1px rgba(255,190,160,0.22);padding:9px 14px;white-space:nowrap;color:#dcd1cb;font-family:'Redaction 10','Redaction',Georgia,serif;font-weight:700;font-size:15px;line-height:20px;letter-spacing:0.01em;">
+                <div style="position:absolute;inset:0;background-image:url(assets/noise-dark.svg);background-size:200px 200px;opacity:0.35;pointer-events:none;"></div>
+                <span style="position:relative;">{{ b.label }}</span>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+const LEFT = [
+  { name: 'Genie AI', label: 'AI SaaS Consulting', svg: true, logo: 'assets/logos/genie-ai.svg', w: 120, ow: 92, x: 60, y: 54, lx: -59, ly: -22 },
+  { name: 'Open Library', label: 'Open Source Digital library', svg: true, logo: 'assets/logos/open-library.svg', w: 120, ow: 108, x: 239, y: 122, lx: -13, ly: -42 },
+  { name: 'PAC Group', label: 'AI SaaS Consulting', logo: 'assets/logos/pac.png', w: 108, x: 4, y: 265, lx: 30, ly: -30 },
+  { name: 'OmniSynk AI', label: 'Resource Management', logo: 'assets/logos/omnisynk.png', w: 106, x: 324, y: 287, lx: -13, ly: -28 },
+  { name: "L'Oréal", label: 'Hackathon', svg: true, logo: 'assets/logos/loreal.svg', w: 120, ow: 108, x: 151, y: 447, lx: -34, ly: -22 }
+];
+const RIGHT = [
+  { name: 'THEM Consulting', label: 'Fintech Agency', svg: true, logo: 'assets/logos/them-consulting.svg', w: 120, ow: 104, x: 80, y: 52, lx: 41, ly: -24 },
+  { name: 'IndiaBonds', label: 'Bond Market', logo: 'assets/logos/indiabonds.png', w: 106, x: -48, y: 253, lx: 38, ly: -24 },
+  { name: 'WealthDesk', label: 'Investment Marketplace', svg: true, logo: 'assets/logos/wealthdesk.svg', w: 120, ow: 108, x: 253, y: 257, lx: -13, ly: -22 },
+  { name: 'PayTM', label: 'Fintech', svg: true, logo: 'assets/logos/paytm.svg', w: 120, ow: 104, x: 169, y: 446, lx: -32, ly: -20 }
+];
+const NODES = LEFT.map(b => ({ ...b, side: 'left' })).concat(RIGHT.map(b => ({ ...b, side: 'right' })));
+// 0 Genie, 1 OpenLib, 2 PAC, 3 Omni, 4 L'Oréal | 5 THEM, 6 IndiaBonds, 7 WealthDesk, 8 PayTM
+const EDGES = [
+  [0,1],[0,2],[0,3],[0,4],[1,2],[1,3],[1,4],[2,3],[2,4],[3,4],
+  [5,6],[5,7],[5,8],[6,7],[6,8],[7,8],
+  [1,5],[1,6],[1,7],[3,5],[3,6],[3,8],[4,6],[4,8],[0,5],[2,6]
+];
+const HALF = 60;
+const GLOW = 'drop-shadow(0 0 4px rgba(255,236,226,0.55)) drop-shadow(0 0 10px rgba(255,120,80,0.35))';
+const FADE = 'radial-gradient(ellipse 50% 50% at 50% 50%, #000 84%, transparent 100%)';
+const look = (b, side) => b.svg
+  ? { mw: 120, fx: GLOW, mask: 'none' }
+  : { mw: 108, fx: side === 'right' ? 'contrast(1.7) brightness(0.85)' : 'none', mask: FADE };
+
+class Component extends DCLogic {
+  sectionRef = React.createRef();
+  leftWrap = React.createRef();
+  rightWrap = React.createRef();
+
+  componentDidMount() {
+    const motion = NODES.map((_, i) => {
+      const r = k => { const v = Math.sin((i + 1) * 12.9898 * (k + 3)) * 43758.5453; return v - Math.floor(v); };
+      return { ax: 27 + r(1) * 6, ay: 26 + r(2) * 6, w1: 0.6 + r(3) * 0.3, w2: 1.0 + r(4) * 0.5, w3: 0.25 + r(8) * 0.15, p1: r(5) * 6.28, p2: r(6) * 6.28, p3: r(9) * 6.28, depth: 0.05 + r(7) * 0.05 };
+    });
+    const ptr = { x: 0, y: 0, tx: 0, ty: 0 };
+    this.onMove = ev => { ptr.tx = ev.clientX - window.innerWidth / 2; ptr.ty = ev.clientY - window.innerHeight / 2; };
+    window.addEventListener('pointermove', this.onMove);
+    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const pos = NODES.map(() => ({ x: 0, y: 0 }));
+    const lag = NODES.map(() => ({ x: 0, y: 0, vx: 0, vy: 0 }));
+    const fit = sec => {
+      const sr = sec.getBoundingClientRect();
+      const geo = {};
+      for (const side of ['left', 'right']) {
+        const stage = sec.querySelector('[data-stage="' + side + '"]');
+        const wrap = stage && stage.parentElement;
+        if (!wrap) return null;
+        const w = wrap.clientWidth;
+        if (!w) return null;
+        const boxes = side === 'left' ? LEFT : RIGHT;
+        const minX = Math.min(...boxes.map(b => b.x)), maxX = Math.max(...boxes.map(b => b.x + 120));
+        const stacked = window.innerWidth < 760 || w > 460;
+        let s, tx;
+        if (stacked) { const bw = maxX - minX; s = Math.min(1, w / bw); tx = (w - bw * s) / 2 - minX * s; }
+        else { s = w / 380; tx = 0; }
+        const tf = 'translate(' + tx.toFixed(2) + 'px,0) scale(' + s.toFixed(4) + ')';
+        if (stage.style.transform !== tf) stage.style.transform = tf;
+        const hh = (602 * s).toFixed(2) + 'px';
+        if (wrap.style.height !== hh) wrap.style.height = hh;
+        const wr = wrap.getBoundingClientRect();
+        geo[side] = { s, ox: wr.left - sr.left + tx, oy: wr.top - sr.top };
+      }
+      return geo;
+    };
+    let last = -1, lastRun = 0;
+    const tick = now => {
+      lastRun = performance.now();
+      this.raf = requestAnimationFrame(tick);
+      let sec = this.sectionRef.current;
+      if (!sec || !sec.isConnected) sec = document.querySelector('[data-workmap]');
+      if (!sec) return;
+      if (now - last < (reduce ? 500 : 180)) return;
+      last = now;
+      const geo = fit(sec);
+      if (!geo) return;
+      const t = now / 1000, Q = 6, snap = v => Math.round(v / Q) * Q;
+      ptr.x += (ptr.tx - ptr.x) * 0.15; ptr.y += (ptr.ty - ptr.y) * 0.15;
+      const nodes = sec.querySelectorAll('[data-node]');
+      const byIdx = {};
+      nodes.forEach(n => { byIdx[n.getAttribute('data-node')] = n; });
+      NODES.forEach((n, i) => {
+        const m = motion[i], g = geo[n.side];
+        const dx = reduce ? 0 : snap(m.ax * (Math.sin(t * m.w1 + m.p1) + 0.45 * Math.sin(t * m.w2 + m.p2) + 0.6 * Math.sin(t * m.w3 + m.p3)) + ptr.x * m.depth);
+        const dy = reduce ? 0 : snap(m.ay * (Math.cos(t * m.w1 * 0.9 + m.p2) + 0.45 * Math.sin(t * m.w2 * 1.1 + m.p1) + 0.6 * Math.cos(t * m.w3 * 1.2 + m.p3)) + ptr.y * m.depth);
+        const el = byIdx[i];
+        if (el) {
+          el.style.transform = 'translate3d(' + dx + 'px,' + dy + 'px,0)';
+          const lab = el.children[1];
+          if (lab) lab.style.transform = 'none';
+        }
+        pos[i].x = g.ox + (n.x + HALF + dx) * g.s; pos[i].y = g.oy + (n.y + HALF + dy) * g.s;
+      });
+      if (!reduce && now - (this.lastSeed || 0) > 140) {
+        this.lastSeed = now;
+        const tn = sec.querySelector('[data-noise]');
+        if (tn) tn.setAttribute('seed', String(8023 + Math.floor(now / 140) % 24));
+      }
+      const lines = sec.querySelectorAll('[data-edge]');
+      lines.forEach(l => {
+        const k = +l.getAttribute('data-edge'); const ed = EDGES[k]; if (!ed) return;
+        const [a, b] = ed;
+        l.setAttribute('x1', pos[a].x.toFixed(2)); l.setAttribute('y1', pos[a].y.toFixed(2));
+        l.setAttribute('x2', pos[b].x.toFixed(2)); l.setAttribute('y2', pos[b].y.toFixed(2));
+      });
+    };
+    this.raf = requestAnimationFrame(tick);
+    this.watch = setInterval(() => {
+      if (performance.now() - lastRun > 120) { cancelAnimationFrame(this.raf); tick(performance.now()); }
+    }, 60);
+  }
+
+  componentWillUnmount() {
+    cancelAnimationFrame(this.raf);
+    clearInterval(this.watch);
+    window.removeEventListener('pointermove', this.onMove);
+  }
+
+  renderVals() {
+    return {
+      sectionRef: this.sectionRef,
+      leftWrap: this.leftWrap,
+      rightWrap: this.rightWrap,
+      leftBoxes: LEFT.map((b, i) => ({ ...b, ...look(b, 'left'), i })),
+      rightBoxes: RIGHT.map((b, i) => ({ ...b, ...look(b, 'right'), i: i + LEFT.length })),
+      edges: EDGES.map(([a, b]) => ({ a, b }))
+    };
+  }
+}
+</script>
+</body>
+</html>
