@@ -8,15 +8,11 @@
 <body>
 <x-dc>
 <helmet>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 @font-face{font-family:'Redaction';src:url(fonts/Redaction-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
-@font-face{font-family:'Redaction';src:url(fonts/Redaction-Italic.woff2) format('woff2');font-weight:400;font-style:italic;font-display:swap;}
 @font-face{font-family:'Redaction';src:url(fonts/Redaction-Bold.woff2) format('woff2');font-weight:700;font-style:normal;font-display:swap;}
-@font-face{font-family:'Redaction 50';src:url(fonts/Redaction_50-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
 @font-face{font-family:'Redaction 35';src:url(fonts/Redaction_35-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
-@font-face{font-family:'Redaction 35';src:url(fonts/Redaction_35-Bold.woff2) format('woff2');font-weight:700;font-style:normal;font-display:swap;}
+@font-face{font-family:'Redaction 50';src:url(fonts/Redaction_50-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
 @font-face{font-family:'Redaction 50';src:url(fonts/Redaction_50-Italic.woff2) format('woff2');font-weight:400;font-style:italic;font-display:swap;}
 @keyframes ftBlink{0%,100%{opacity:1}50%{opacity:.15}}
 *{box-sizing:border-box;}
@@ -24,69 +20,89 @@ a{color:#ffffff;text-decoration:none;}
 a:hover{color:#ffffff;}
 </style>
 </helmet>
-<footer id="contact" data-screen-label="Footer" ref="{{ rootRef }}" style="position:relative;display:block;width:{{ rootW }};margin-left:{{ rootML }};color:#ffffff;font-family:'Redaction',Georgia,serif;overflow:hidden;">
+<footer id="contact" data-screen-label="Footer" ref="{{ rootRef }}" style="position:relative;display:block;width:{{ rootW }};margin-left:{{ rootML }};background:#161616;color:#ffffff;font-family:'Redaction',Georgia,serif;overflow:hidden;">
+  <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;background-image:url(assets/noise-light.svg);background-size:200px 200px;opacity:0.12;"></div>
+  <div style="position:relative;max-width:1600px;margin:0 auto;padding:clamp(56px, 5vw, 88px) clamp(20px, 3.7vw, 64px) clamp(72px, 7vw, 120px);display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:80px;">
 
-  <div data-role="slab" style="position:relative;z-index:2;height:{{ slabH }};overflow:hidden;">
-    <canvas ref="{{ canvasRef }}" aria-hidden="true" style="position:absolute;top:0;left:{{ artLeft }};width:{{ artW }};height:{{ artH }};display:block;pointer-events:none;"></canvas>
-
-    <div data-role="window-pos" style="position:absolute;left:{{ winLeft }};top:{{ winTop }};opacity:{{ winOp }};transform:{{ winTf }};transform-origin:50% 50%;transition:opacity 420ms steps(6), transform 420ms steps(6);pointer-events:{{ winPe }};">
-      <div data-role="window" style="position:relative;width:468px;height:363px;zoom:{{ winZoom }};box-shadow:0 0 48px rgba(255,255,255,0.07);">
-        <div data-role="titlebar" style="position:absolute;left:0;top:0;width:468px;height:73px;display:flex;align-items:center;padding:2px 24px 0 23px;background:rgba(255,255,255,0.86);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);color:#181818;font-family:'Redaction 35','Redaction',Georgia,serif;font-size:32px;line-height:1;white-space:nowrap;box-shadow:0 0 18px rgba(255,255,255,0.28);">contact_monil.exe<span aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(0,0,0,0.16) 1px, transparent 1px),linear-gradient(90deg, rgba(0,0,0,0.16) 1px, transparent 1px);background-size:3px 3px;"></span></div>
-        <span aria-hidden="true" style="position:absolute;left:-7px;top:-6px;width:12px;height:12px;background:#df5227;"></span>
-        <span aria-hidden="true" style="position:absolute;left:463px;top:-6px;width:12px;height:12px;background:#df5227;"></span>
-        <span aria-hidden="true" style="position:absolute;left:-7px;top:67px;width:12px;height:12px;background:#df5227;"></span>
-        <span aria-hidden="true" style="position:absolute;left:463px;top:67px;width:12px;height:12px;background:#df5227;"></span>
-        <div data-role="body" style="position:absolute;left:0;top:73px;width:468px;height:290px;background:rgba(22,22,22,0.52);-webkit-backdrop-filter:blur(2.5px) brightness(0.75);backdrop-filter:blur(2.5px) brightness(0.75);border:1px solid #ffffff;border-top:0;box-shadow:inset 0 0 36px rgba(255,255,255,0.06);">
-          <p style="position:absolute;left:23px;top:43px;margin:0;font-family:'Redaction 50','Redaction',Georgia,serif;font-style:italic;font-size:24px;line-height:29px;color:#faf7f4;white-space:nowrap;text-shadow:0 0 1px rgba(255,255,255,0.9),0 0 10px rgba(255,255,255,0.4);">What is the point of making something,<br>if we all end up making the same thing?</p>
-          <div data-role="actions" style="position:absolute;left:24px;right:16px;bottom:19px;height:47px;display:flex;align-items:center;">
-            <a href="{{ xUrl }}" target="_blank" rel="noopener" aria-label="X" style="flex:none;width:36px;height:36px;margin-right:28px;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 0 6px rgba(255,255,255,0.45));" style-focus="outline:2px solid #df5227;outline-offset:3px;">
-              <svg width="36" height="36" viewBox="0 0 40 40" fill="none" aria-hidden="true" style="display:block;"><path d="M25.8333 16.6667V15H27.5V13.3333H29.1667V11.6667H30.8333V10H32.5V8.33333H34.1667V6.66667H35.8333V5H37.5V3.33333H32.5V5H30.8333V6.66667H29.1667V8.33333H27.5V10H25.8333V11.6667H24.1667V13.3333H20.8333V11.6667H19.1667V10H17.5V6.66667H15.8333V5H14.1667V3.33333H2.5V5H4.16667V6.66667H5.83333V8.33333H7.5V11.6667H9.16667V13.3333H10.8333V16.6667H12.5V18.3333H14.1667V21.6667H15.8333V23.3333H14.1667V25H12.5V26.6667H10.8333V28.3333H9.16667V30H7.5V31.6667H5.83333V33.3333H4.16667V35H2.5V36.6667H7.5V35H9.16667V33.3333H10.8333V31.6667H12.5V30H14.1667V28.3333H15.8333V26.6667H19.1667V28.3333H20.8333V30H22.5V33.3333H24.1667V35H25.8333V36.6667H37.5V35H35.8333V33.3333H34.1667V31.6667H32.5V28.3333H30.8333V26.6667H29.1667V23.3333H27.5V21.6667H25.8333V18.3333H24.1667V16.6667H25.8333ZM25.8333 23.3333V25H27.5V28.3333H29.1667V30H30.8333V33.3333H25.8333V30H24.1667V28.3333H22.5V26.6667H20.8333V23.3333H19.1667V21.6667H17.5V20H15.8333V16.6667H14.1667V15H12.5V11.6667H10.8333V10H9.16667V6.66667H14.1667V8.33333H15.8333V11.6667H17.5V13.3333H19.1667V16.6667H20.8333V18.3333H22.5V20H24.1667V23.3333H25.8333Z" fill="#ffffff"></path></svg>
-            </a>
-            <a href="{{ linkedinUrl }}" target="_blank" rel="noopener" aria-label="LinkedIn" style="flex:none;width:36px;height:36px;margin:0 23px 0 0;display:flex;align-items:center;justify-content:center;filter:drop-shadow(0 0 6px rgba(255,255,255,0.45));" style-focus="outline:2px solid #df5227;outline-offset:3px;">
-              <svg width="36" height="36" viewBox="0 0 40 40" fill="none" aria-hidden="true" style="display:block;"><path d="M36.666 3.33333V1.66667H3.33268V3.33333H1.66602V36.6667H3.33268V38.3333H36.666V36.6667H38.3327V3.33333H36.666ZM21.666 20V33.3333H16.666V15H21.666V16.6667H23.3327V15H29.9994V16.6667H31.666V33.3333H26.666V20H21.666ZM6.66602 13.3333V8.33333H11.666V13.3333H6.66602ZM11.666 15V33.3333H6.66602V15H11.666Z" fill="#ffffff"></path></svg>
-            </a>
-            <a href="{{ emailUrl }}" aria-label="Email workwithmonil@gmail.com" style="flex:1 1 0;min-width:0;height:47px;display:flex;align-items:center;padding:0 17px 0 15px;background:rgba(150,150,150,0.55);color:#ffffff;text-shadow:0 0 8px rgba(255,255,255,0.55);box-shadow:0 0 14px rgba(255,255,255,0.12);font-family:'Redaction 50','Redaction',Georgia,serif;font-size:19.7px;line-height:1;white-space:nowrap;" style-hover="background:#ffffff;color:#181818;" style-focus="outline:2px solid #df5227;outline-offset:3px;"><span>workwithmonil@gmail.com</span><svg width="16" height="8" viewBox="0 0 16 8" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true" style="flex:none;margin:-1px 0 0 auto;display:block;"><path d="M0 4H15.4M12.2 1L15.4 4L12.2 7"></path></svg></a>
-          </div>
-          <span aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(0,0,0,0.28) 1px, transparent 1px),linear-gradient(90deg, rgba(0,0,0,0.28) 1px, transparent 1px);background-size:3px 3px;"></span>
-          <span aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.05), rgba(0,0,0,0) 70%);"></span>
-        </div>
+    <div data-role="talk" style="flex:none;max-width:380px;display:flex;flex-direction:column;">
+      <h2 data-ft-scr="1" style="margin:0;font-family:'Redaction 50','Redaction',Georgia,serif;font-weight:400;font-size:clamp(56px, 5.4vw, 92px);line-height:1;letter-spacing:0;white-space:nowrap;color:#ececec;">Let’s Talk</h2>
+      <div style="margin-top:clamp(24px, 2.4vw, 40px);display:flex;flex-direction:column;gap:6px;font-family:'Redaction 35','Redaction',Georgia,serif;font-size:14px;line-height:19px;color:#ececec;">
+        <div style="display:flex;flex-wrap:wrap;gap:0 5px;"><span data-ft-scr="1">You are my</span><strong data-ft-scr="1" style="font-weight:700;">{{ visitorText }}</strong></div>
+        <p data-ft-scr="1" style="margin:0;text-wrap:pretty;">Thanks for passing by, this is your sign to enjoy a bag of chips ^_^</p>
       </div>
-    </div>
-
-    <h2 style="position:absolute;left:{{ hX }};top:{{ hTop }};margin:0;transform:translateX(-50%);font-family:'Redaction 50','Redaction',Georgia,serif;font-weight:400;font-size:{{ hSize }};line-height:1;letter-spacing:0;white-space:nowrap;color:#ffffff;">Let’s Talk</h2>
-  </div>
-
-  <div data-role="info" style="display:flex;justify-content:{{ infoJustify }};padding:{{ infoPad }};">
-    <div style="zoom:{{ infoZoom }};width:{{ infoW }};display:flex;flex-wrap:wrap;justify-content:{{ infoJustify }};gap:{{ infoGap }};font-family:'Redaction 35','Redaction',Georgia,serif;font-size:14px;line-height:25px;color:#ffffff;">
-      <div data-role="col-status" style="flex:none;width:140px;white-space:nowrap;">
-        <div style="display:flex;align-items:center;gap:8px;"><span aria-hidden="true" style="flex:none;width:12px;height:12px;background:#20de07;animation:{{ blink }};"></span><span>Open to new work</span></div>
-        <div>Based out of New York</div>
-        <div>Local time {{ localTime }}</div>
-      </div>
-      <nav aria-label="Footer" style="flex:none;width:72px;display:flex;flex-direction:column;white-space:nowrap;">
-        <a href="#work" style-hover="text-decoration:underline;text-underline-offset:4px;">Work</a>
-        <a href="#articles" style-hover="text-decoration:underline;text-underline-offset:4px;">Articles</a>
-        <a href="#testimonials" style-hover="text-decoration:underline;text-underline-offset:4px;">TestiMonils</a>
-        <a href="#contact" style-hover="text-decoration:underline;text-underline-offset:4px;">Contact</a>
-        <a href="{{ resumeUrl }}" style-hover="text-decoration:underline;text-underline-offset:4px;">Resume</a>
+      <nav aria-label="Footer" style="margin-top:clamp(28px, 2.6vw, 44px);display:flex;flex-wrap:wrap;gap:8px 22px;font-family:'Redaction 35','Redaction',Georgia,serif;font-size:14px;line-height:19px;">
+        <a data-ft-scr="1" href="#work" style-hover="text-decoration:underline;text-underline-offset:4px;">Work</a>
+        <a data-ft-scr="1" href="#articles" style-hover="text-decoration:underline;text-underline-offset:4px;">Articles</a>
+        <a data-ft-scr="1" href="#testimonials" style-hover="text-decoration:underline;text-underline-offset:4px;">TestiMonils</a>
+        <a data-ft-scr="1" href="#contact" style-hover="text-decoration:underline;text-underline-offset:4px;">Contact</a>
+        <a data-ft-scr="1" href="{{ resumeUrl }}" style-hover="text-decoration:underline;text-underline-offset:4px;">Resume</a>
       </nav>
-      <div data-role="col-visitor" style="flex:none;width:168px;">
-        <div style="white-space:nowrap;">You are the <strong style="font-weight:700;">{{ visitorText }}</strong></div>
-        <p style="margin:4px 0 0;font-size:14px;line-height:17px;">Thanks for passing by, this is your sign to enjoy a bag of chips</p>
-      </div>
     </div>
+
+    <div style="flex:none;padding:10px;zoom:{{ cardZoom }};">
+      <section data-ft-card="1" aria-label="Contact" style="position:relative;width:372px;height:282px;">
+        <div data-hud-screen="1" aria-hidden="true" style="position:absolute;left:0;top:0;width:372px;height:52px;background:#e3e3e3;overflow:hidden;">
+          <span style="position:absolute;inset:0;background-image:url(assets/noise-dark.svg);background-size:200px 200px;opacity:0.35;"></span>
+        </div>
+        <div data-hud-screen="1" aria-hidden="true" style="position:absolute;left:0;top:52px;width:372px;height:230px;background:#191919;"></div>
+        <div data-hud-outline="1" aria-hidden="true" style="position:absolute;inset:0;border:1px solid #ffffff;pointer-events:none;z-index:3;"></div>
+        <div data-hud-set="A" style="position:absolute;inset:0;z-index:2;">
+          <div style="position:absolute;left:0;top:0;width:372px;height:52px;display:flex;align-items:center;padding:0 18px;">
+            <span data-rv="1" data-scr="1" style="font-family:'Redaction 35','Redaction',Georgia,serif;font-size:26px;line-height:1;color:#1c1c1c;white-space:nowrap;">contact_monil.exe</span>
+          </div>
+          <div style="position:absolute;left:18px;right:18px;top:66px;display:flex;align-items:center;justify-content:space-between;gap:12px;font-family:'Redaction 35','Redaction',Georgia,serif;font-size:12px;line-height:16px;color:#ececec;">
+            <div style="display:flex;align-items:center;gap:6px;"><span data-rv="1" aria-hidden="true" style="flex:none;width:10px;height:10px;background:#20de07;outline:1px solid #0f7a03;animation:{{ blink }};"></span><span data-rv="1" data-scr="1">Open to new work</span></div>
+            <span data-rv="1" style="white-space:nowrap;">Local time {{ localTime }}</span>
+          </div>
+          <p data-rv="1" data-scr="1" style="position:absolute;left:18px;right:28px;top:134px;margin:0;font-family:'Redaction 50','Redaction',Georgia,serif;font-style:italic;font-size:19px;line-height:23px;color:#ececec;text-shadow:0 0 1px rgba(255,255,255,0.8),0 0 8px rgba(255,255,255,0.3);">What is the point of making something, if we all end up making the same thing?</p>
+          <div style="position:absolute;left:18px;right:18px;bottom:12px;height:47px;display:flex;align-items:center;gap:12px;">
+            <a data-rv="1" href="{{ xUrl }}" target="_blank" rel="noopener" aria-label="X" style="flex:none;width:30px;height:30px;display:flex;align-items:center;justify-content:center;" style-focus="outline:2px solid #df5227;outline-offset:3px;">
+              <svg width="28" height="28" viewBox="0 0 40 40" fill="none" aria-hidden="true" style="display:block;"><path d="M25.8333 16.6667V15H27.5V13.3333H29.1667V11.6667H30.8333V10H32.5V8.33333H34.1667V6.66667H35.8333V5H37.5V3.33333H32.5V5H30.8333V6.66667H29.1667V8.33333H27.5V10H25.8333V11.6667H24.1667V13.3333H20.8333V11.6667H19.1667V10H17.5V6.66667H15.8333V5H14.1667V3.33333H2.5V5H4.16667V6.66667H5.83333V8.33333H7.5V11.6667H9.16667V13.3333H10.8333V16.6667H12.5V18.3333H14.1667V21.6667H15.8333V23.3333H14.1667V25H12.5V26.6667H10.8333V28.3333H9.16667V30H7.5V31.6667H5.83333V33.3333H4.16667V35H2.5V36.6667H7.5V35H9.16667V33.3333H10.8333V31.6667H12.5V30H14.1667V28.3333H15.8333V26.6667H19.1667V28.3333H20.8333V30H22.5V33.3333H24.1667V35H25.8333V36.6667H37.5V35H35.8333V33.3333H34.1667V31.6667H32.5V28.3333H30.8333V26.6667H29.1667V23.3333H27.5V21.6667H25.8333V18.3333H24.1667V16.6667H25.8333ZM25.8333 23.3333V25H27.5V28.3333H29.1667V30H30.8333V33.3333H25.8333V30H24.1667V28.3333H22.5V26.6667H20.8333V23.3333H19.1667V21.6667H17.5V20H15.8333V16.6667H14.1667V15H12.5V11.6667H10.8333V10H9.16667V6.66667H14.1667V8.33333H15.8333V11.6667H17.5V13.3333H19.1667V16.6667H20.8333V18.3333H22.5V20H24.1667V23.3333H25.8333Z" fill="#ffffff"></path></svg>
+            </a>
+            <a data-rv="1" href="{{ linkedinUrl }}" target="_blank" rel="noopener" aria-label="LinkedIn" style="flex:none;width:30px;height:30px;display:flex;align-items:center;justify-content:center;" style-focus="outline:2px solid #df5227;outline-offset:3px;">
+              <svg width="28" height="28" viewBox="0 0 40 40" fill="none" aria-hidden="true" style="display:block;"><path d="M36.666 3.33333V1.66667H3.33268V3.33333H1.66602V36.6667H3.33268V38.3333H36.666V36.6667H38.3327V3.33333H36.666ZM21.666 20V33.3333H16.666V15H21.666V16.6667H23.3327V15H29.9994V16.6667H31.666V33.3333H26.666V20H21.666ZM6.66602 13.3333V8.33333H11.666V13.3333H6.66602ZM11.666 15V33.3333H6.66602V15H11.666Z" fill="#ffffff"></path></svg>
+            </a>
+            <a data-rv="1" href="{{ emailUrl }}" aria-label="Email workwithmonil@gmail.com" style="flex:1 1 0;min-width:0;height:47px;display:flex;align-items:center;gap:8px;padding:0 12px 0 12px;background:rgba(150,150,150,0.55);color:#ffffff;text-shadow:0 0 8px rgba(255,255,255,0.55);box-shadow:0 0 14px rgba(255,255,255,0.12);font-family:'Redaction 50','Redaction',Georgia,serif;font-size:16.8px;line-height:1;white-space:nowrap;" style-hover="background:#ffffff;color:#181818;" style-focus="outline:2px solid #df5227;outline-offset:3px;"><span data-rv="1" data-scr="1">workwithmonil@gmail.com</span><svg width="16" height="8" viewBox="0 0 16 8" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true" style="flex:none;margin:-1px 0 0 auto;display:block;"><path d="M0 4H15.4M12.2 1L15.4 4L12.2 7"></path></svg></a>
+          </div>
+        </div>
+        <div data-hud-boot="1" data-w="388" data-h="298" aria-hidden="true" style="position:absolute;left:-8px;top:-8px;width:388px;height:298px;pointer-events:none;z-index:4;">
+          <div data-hud-fill="1" style="position:absolute;inset:8px;background:#D9D9D9;opacity:0;transform-origin:50% 50%;"></div>
+          <span data-hud-arm="tl-h" style="position:absolute;left:0;top:0;width:16px;height:1.5px;background:#ffffff;transform-origin:0 0;"></span>
+          <span data-hud-arm="tl-v" style="position:absolute;left:0;top:0;width:1.5px;height:16px;background:#ffffff;transform-origin:0 0;"></span>
+          <span data-hud-arm="tr-h" style="position:absolute;right:0;top:0;width:16px;height:1.5px;background:#ffffff;transform-origin:100% 0;"></span>
+          <span data-hud-arm="tr-v" style="position:absolute;right:0;top:0;width:1.5px;height:16px;background:#ffffff;transform-origin:100% 0;"></span>
+          <span data-hud-arm="bl-h" style="position:absolute;left:0;bottom:0;width:16px;height:1.5px;background:#ffffff;transform-origin:0 100%;"></span>
+          <span data-hud-arm="bl-v" style="position:absolute;left:0;bottom:0;width:1.5px;height:16px;background:#ffffff;transform-origin:0 100%;"></span>
+          <span data-hud-arm="br-h" style="position:absolute;right:0;bottom:0;width:16px;height:1.5px;background:#ffffff;transform-origin:100% 100%;"></span>
+          <span data-hud-arm="br-v" style="position:absolute;right:0;bottom:0;width:1.5px;height:16px;background:#ffffff;transform-origin:100% 100%;"></span>
+        </div>
+      </section>
+    </div>
+
+    <a data-ft-folder="1" href="{{ resumeUrl }}" download="Monil-Resume" aria-label="Download resume" onMouseEnter="{{ openFolder }}" onMouseLeave="{{ closeFolder }}" onFocus="{{ openFolder }}" onBlur="{{ closeFolder }}" style="position:relative;flex:none;display:block;width:300px;height:310px;zoom:{{ cardZoom }};" style-focus="outline:2px solid #df5227;outline-offset:6px;">
+      <svg aria-hidden="true" width="292" height="300" viewBox="0 0 292 300" fill="none" style="position:absolute;left:8px;top:8px;overflow:visible;transform:{{ backTf }};transition:transform 220ms cubic-bezier(.2,.8,.2,1);">
+        <path d="M0.5 299.5V0.5H150.5V48.5H277.5V299.5Z" stroke="#ececec" stroke-width="0.75"></path>
+      </svg>
+      <div aria-hidden="true" style="position:absolute;left:8px;top:62px;width:278px;height:236px;background:#7f7f7f;clip-path:polygon(0 0, calc(100% - 36px) 0, 100% 36px, 100% 100%, 0 100%);transform:{{ paperTf }};transition:transform {{ paperDur }} cubic-bezier(.2,.8,.2,1) {{ paperDelay }};">
+        <span style="position:absolute;inset:0;background-image:url(assets/noise-dark.svg);background-size:200px 200px;opacity:0.3;"></span>
+        <span style="position:absolute;left:14px;top:12px;font-family:'Redaction 35','Redaction',Georgia,serif;font-size:22px;line-height:28px;color:#ffffff;white-space:nowrap;opacity:{{ labelOp }};transition:opacity 160ms steps(3) {{ paperDelay }};">Monil.Resume</span>
+      </div>
+      <div style="position:absolute;left:8px;top:56px;width:278px;height:248px;background:#d6d6d6;display:flex;align-items:center;justify-content:center;transform:{{ frontTf }};box-shadow:{{ frontShadow }};transition:transform 260ms cubic-bezier(.2,.8,.2,1), box-shadow 260ms ease;">
+        <span aria-hidden="true" style="position:absolute;inset:0;background-image:url(assets/noise-dark.svg);background-size:200px 200px;opacity:0.3;"></span>
+        <span style="position:relative;font-family:'Redaction 35','Redaction',Georgia,serif;font-size:22px;line-height:28px;color:#1c1c1c;opacity:{{ dlOp }};transition:opacity 180ms steps(3) {{ paperDelay }};">Click to download</span>
+      </div>
+    </a>
   </div>
 </footer>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1532,&quot;height&quot;:860},&quot;xUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://x.com/&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Links&quot;},&quot;linkedinUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://www.linkedin.com/&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Links&quot;},&quot;emailUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;mailto:workwithmonil@gmail.com&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Links&quot;},&quot;resumeUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;#&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Links&quot;},&quot;visitorStart&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:1001,&quot;min&quot;:0,&quot;max&quot;:999999,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Visitor counter&quot;},&quot;counterUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Visitor counter&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:520},&quot;xUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://x.com/&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Links&quot;},&quot;linkedinUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;https://www.linkedin.com/&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Links&quot;},&quot;emailUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;mailto:workwithmonil@gmail.com&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Links&quot;},&quot;resumeUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;#&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Links&quot;},&quot;visitorStart&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:1001,&quot;min&quot;:0,&quot;max&quot;:999999,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Visitor counter&quot;},&quot;counterUrl&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Visitor counter&quot;}}">
 class Component extends DCLogic {
   state = (() => {
     const w = typeof window !== 'undefined' ? (window.innerWidth || 1532) : 1532;
     const reduce = typeof window !== 'undefined' && !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-    return { w, reduce, time: '', n: null, winOn: reduce };
+    return { w, reduce, time: '', n: null, open: false };
   })();
 
-  canvasRef = el => { this.cv = el; if (el) this.queueDraw(); };
   rootRef = el => {
     this.root = el;
     if (el && !this.ro && typeof ResizeObserver !== 'undefined') {
@@ -118,150 +134,62 @@ class Component extends DCLogic {
     this.setState({ time: this.fmtTime() });
     this.timeT = setInterval(() => this.setState({ time: this.fmtTime() }), 20000);
     this.initVisitor();
+    const t0 = performance.now();
+    const wait = () => {
+      if (this.dead) return;
+      if (window.HUDMotion && this.root) return this.armReveal();
+      if (performance.now() - t0 > 4000) return;
+      this.waitRaf = requestAnimationFrame(wait);
+    };
+    wait();
+  }
+  // Appear when the footer scrolls into view: copy scrambles in like the other sections, the contact window boots like the
+  // section 1 cards, then the folder flickers on.
+  armReveal() {
+    const H = window.HUDMotion, root = this.root, card = root.querySelector('[data-ft-card]'), folder = root.querySelector('[data-ft-folder]');
+    const scr = Array.from(root.querySelectorAll('[data-ft-scr]'));
+    if (this.state.reduce || !('IntersectionObserver' in window)) return;
+    scr.forEach(e => (e.style.opacity = '0'));
+    if (card) H.prime(card, 'A');
+    if (folder) folder.style.opacity = '0';
+    this.io = new IntersectionObserver(es => {
+      if (!es[0].isIntersecting) return;
+      this.io.disconnect(); this.io = null;
+      const eng = (this.eng = new H.Engine()); eng.start();
+      H.fontsReady(root).then(() => {
+        if (this.dead) return;
+        scr.forEach((e, i) => H.textScramble(eng, e, { delay: i * 60, tag: e }));
+        if (card) H.bootUp(eng, card, { delay: 180, set: 'A', tag: card });
+        if (folder) H.flickerOn(eng, [folder], { delay: 520, tag: folder });
+      });
+    }, { threshold: 0.3 });
+    this.io.observe(root);
   }
   componentDidUpdate(prev) {
     if (prev && (prev.visitorStart !== this.props.visitorStart || prev.counterUrl !== this.props.counterUrl)) this.initVisitor();
   }
-  componentWillUnmount() { clearInterval(this.timeT); clearInterval(this.flT); clearTimeout(this.drT); clearTimeout(this.raf); if (this.ro) this.ro.disconnect(); if (this.io) this.io.disconnect(); }
-
-  loadDensity() {
-    if (this.densP) return this.densP;
-    this.densP = new Promise(res => {
-      const im = new Image();
-      im.onload = () => {
-        const A = im.width, B = im.height, c = document.createElement('canvas'); c.width = A; c.height = B;
-        const g = c.getContext('2d'); g.drawImage(im, 0, 0); const a = g.getImageData(0, 0, A, B).data;
-        const D = new Float32Array(A * B); for (let i = 0; i < A * B; i++) D[i] = a[i * 4 + 3] / 255;
-        res({ A, B, D });
-      };
-      im.onerror = () => res(null);
-      im.src = 'assets/hands-map.png';
-    });
-    return this.densP;
-  }
-  queueDraw() { clearTimeout(this.drT); this.drT = setTimeout(() => this.draw(), 60); }
-  async draw() {
-    const cv = this.cv, L = this.L; if (!cv || !L) return;
-    const map = await this.loadDensity(); if (!map) return;
-    try { await document.fonts.load('500 10px "IBM Plex Mono"'); } catch (e) {}
-    clearTimeout(this.raf); clearInterval(this.flT);
-    const W = L.artW, H = L.artH, dpr = Math.min(3, window.devicePixelRatio || 1);
-    cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
-    const handH = H * L.handScale, yOff = H * 0.08;
-    const fs = Math.max(9, Math.min(12.5, handH / 34)), cell = Math.round(fs * 0.98 * 2) / 2;
-    const cols = Math.ceil(W / cell) + 1, rows = Math.ceil(H / cell) + 1;
-    const { A, B, D } = map, m = B / handH, SPLIT = A * 0.517, gap = L.gap || 30;
-    const at = (x, y) => { if (y < 0 || y > B - 1.001 || x < 0 || x > A - 1.001) return 0; const x0 = x | 0, y0 = y | 0, fx = x - x0, fy = y - y0, i = y0 * A + x0; return (D[i] * (1 - fx) + D[i + 1] * fx) * (1 - fy) + (D[i + A] * (1 - fx) + D[i + A + 1] * fx) * fy; };
-    const cy = col => { let s = 0, n = 0; for (let y = 0; y < B; y++) { const v = D[y * A + col]; s += v * y; n += v; } return n ? s / n : B / 2; };
-    const e0 = 2, e1 = 40, sL = (cy(e1) - cy(e0)) / (e1 - e0), r0 = A - 3, r1 = A - 41, sR = (cy(r1) - cy(r0)) / (r1 - r0);
-    const sampleL = (x, y) => x >= e0 ? at(x, y) : at(e0, y - sL * (x - e0)) * Math.max(0.55, 1 + x / (A * 2));
-    const sampleR = (x, y) => x <= r0 ? at(x, y) : at(r0, y - sR * (x - r0)) * Math.max(0.55, 1 - (x - r0) / (A * 2));
-    let seed = 7; const rnd = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296; };
-    const WORDS = ['yes', 'no', 'maybe', 'ok', 'sure', 'try again', 'wait', 'stop', 'go on', 'fix this', 'why', 'how', 'explain', 'undo', 'redo', 'again', 'more', 'less', 'next', 'continue', 'keep going', 'not quite', 'almost', 'perfect', 'ship it', 'simplify', 'rewrite', 'shorter', 'thanks', 'please', 'hmm', 'actually', 'nope', 'yep', 'exactly', 'change it', 'bigger', 'smaller', 'tweak', 'clarify', 'one more', 'looks good', 'start over', 'what if', 'go deeper', 'summarize', 'not that', 'closer', 'done'];
-    const stream = n => { let t = ''; while (t.length < n) t += WORDS[(rnd() * WORDS.length) | 0] + ' '; return t; };
-    const mk = () => { const c = document.createElement('canvas'); c.width = cv.width; c.height = cv.height; const g = c.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.font = '500 ' + fs.toFixed(2) + 'px "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace'; g.textAlign = 'center'; g.textBaseline = 'middle'; return { c, g }; };
-    const Lc = mk(), Rc = mk(), Dc = mk();
-    Dc.g.fillStyle = 'rgba(255,255,255,0.055)';
-    const bits = [];
-    for (let r = 0; r < rows; r++) {
-      const y = (r + 0.5) * cell, srcY = (y - yOff) * m, line = stream(cols + 12), off = (rnd() * 10) | 0;
-      for (let c = 0; c < cols; c++) {
-        const x = (c + 0.5) * cell;
-        Dc.g.fillRect(x - 0.5, y - 0.5, 1, 1);
-        const lx = A * 0.454 + (x - W / 2 + gap) * m, rx = A * 0.575 + (x - W / 2 - gap) * m;
-        const dl = lx < SPLIT ? sampleL(lx, srcY) : 0, dr = rx >= SPLIT ? sampleR(rx, srcY) : 0;
-        const left = dl >= dr, d = left ? dl : dr;
-        if (d < 0.16) continue;
-        const T = left ? Lc.g : Rc.g, a = Math.min(1, 0.28 + 0.8 * d);
-        T.fillStyle = 'rgba(255,255,255,' + a.toFixed(3) + ')';
-        if (d > 0.66 && rnd() < 0.55) { const q = cell * 0.62; T.fillRect(x - q / 2, y - q / 2, q, q); continue; }
-        if (left) { const ch = line[c + off]; if (ch === ' ') continue; T.fillText(ch, x, y); }
-        else { T.fillText(rnd() < 0.5 ? '0' : '1', x, y); bits.push([x, y, a]); }
-      }
-    }
-    this.bits = bits; this.cell = { cw: cell, lh: cell };
-    const g = cv.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0);
-    const frame = off => { g.clearRect(0, 0, cv.width, cv.height); g.drawImage(Dc.c, 0, 0); g.drawImage(Lc.c, -Math.round(off * dpr), 0); g.drawImage(Rc.c, Math.round(off * dpr), 0); };
-    const finish = () => { frame(0); this.arrived = true; if (!this.state.winOn) this.setState({ winOn: true }); this.startFlicker(); };
-    if (this.state.reduce || this.arrived) { finish(); return; }
-    const dist = Math.round(W * 0.32 / cell) * cell, DUR = 1700;
-    frame(dist);
-    let t0 = 0;
-    const tick = () => {
-      if (this.vis === false || (this.vis === undefined && !document.hidden)) { this.raf = setTimeout(tick, 120); return; }
-      const t = performance.now(); if (!t0) t0 = t;
-      const p = Math.min(1, (t - t0) / DUR), e = 1 - Math.pow(1 - p, 3);
-      frame(Math.round(dist * (1 - e) / cell) * cell);
-      if (p < 1) this.raf = setTimeout(tick, 40); else finish();
-    };
-    this.ensureIO();
-    this.raf = setTimeout(tick, 40);
-  }
-  ensureIO() {
-    if (this.io || !this.cv) return;
-    if (!('IntersectionObserver' in window)) { this.vis = true; return; }
-    this.io = new IntersectionObserver(es => { this.vis = es[0].isIntersecting; }, { threshold: 0.3 });
-    this.io.observe(this.cv);
-  }
-  startFlicker() {
-    clearInterval(this.flT);
-    if (this.state.reduce || !this.cv || !this.bits || !this.bits.length) return;
-    const dpr = this.cv.width / (this.L.artW || 1), g = this.cv.getContext('2d'), { cw } = this.cell, n = Math.max(6, Math.round(this.bits.length * 0.012));
-    const fs = Math.max(9, Math.min(12.5, this.L.artH * this.L.handScale / 34));
-    this.flT = setInterval(() => {
-      if (this.vis === false) return;
-      g.setTransform(dpr, 0, 0, dpr, 0, 0); g.font = '500 ' + fs.toFixed(2) + 'px "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace'; g.textAlign = 'center'; g.textBaseline = 'middle';
-      for (let i = 0; i < n; i++) {
-        const b = this.bits[(Math.random() * this.bits.length) | 0];
-        g.clearRect(b[0] - cw / 2, b[1] - cw / 2, cw, cw);
-        g.fillStyle = 'rgba(255,255,255,0.055)'; g.fillRect(b[0] - 0.5, b[1] - 0.5, 1, 1);
-        g.fillStyle = 'rgba(255,255,255,' + b[2] + ')'; g.fillText(Math.random() < 0.5 ? '0' : '1', b[0], b[1]);
-      }
-      g.setTransform(1, 0, 0, 1, 0, 0);
-    }, 140);
-  }
-
-  layout(w) {
-    const k = w / 1532;
-    if (w >= 1060) {
-      const zw = Math.max(k, 0.78) * 0.65, zi = Math.max(k, 0.93), slabH = 629 * k;
-      return {
-        slabH, artLeft: 0, artW: w, artH: slabH, handScale: 0.66, gap: 46 * k,
-        winLeft: w / 2 - 234 * zw, winTop: slabH * 0.4 - 181.5 * zw, zw,
-        hX: w / 2, hTop: 619 * k - 0.8 * 74 * k, hSize: 74 * k,
-        infoPad: `${18.5 * zi}px 0 ${64 * zi}px ${w / 2 - 270 * zi}px`, infoZoom: zi, infoW: 540, infoGap: '0 80px', infoJustify: 'flex-start'
-      };
-    }
-    const zw = Math.max(0.6, Math.min(w < 600 ? 0.78 : 0.62, (w - 32) / 468)), zi = 1.07;
-    const Hb = Math.min(440, Math.max(268, 0.4106 * w)), artW = Hb * 332 / 136;
-    const f = Math.max(0, Math.min(1, (w - 390) / 378));
-    const winTop = Hb * (0.62 - 0.32 * f), winH = 363 * zw;
-    const hSize = Math.max(42, Math.min(56, 74 * k)), hTop = winTop + winH + 28;
-    return {
-      slabH: hTop + 0.8 * hSize + 18, artLeft: 0, artW: w, artH: Hb, handScale: 0.72, gap: 22,
-      winLeft: (w - 468 * zw) / 2, winTop, zw, hX: w / 2, hTop, hSize,
-      infoPad: '24px 0 56px 0', infoZoom: zi, infoW: Math.min(540, (w - 40) / zi), infoGap: '28px 48px', infoJustify: 'center'
-    };
-  }
+  componentWillUnmount() { this.dead = true; cancelAnimationFrame(this.waitRaf); clearInterval(this.timeT); if (this.ro) this.ro.disconnect(); if (this.io) this.io.disconnect(); if (this.eng) this.eng.stop(); }
 
   renderVals() {
-    const p = this.props, st = this.state, L = this.layout(Math.max(320, st.w));
-    const key = Math.round(L.artW) + 'x' + Math.round(L.artH) + 'g' + Math.round(L.gap || 0);
-    this.L = L; if (key !== this.drawKey) { this.drawKey = key; if (this.cv) this.queueDraw(); }
-    const px = v => (Math.round(v * 100) / 100) + 'px';
-    const n = st.n ?? (this.base() + 1);
+    const p = this.props, st = this.state, n = st.n ?? (this.base() + 1), o = st.open;
     return {
-      rootRef: this.rootRef, canvasRef: this.canvasRef,
+      rootRef: this.rootRef,
       rootW: String(p.bleed) === 'false' ? '100%' : '100vw', rootML: String(p.bleed) === 'false' ? '0' : 'calc(50% - 50vw)',
-      slabH: px(L.slabH), artLeft: px(L.artLeft), artW: px(L.artW), artH: px(L.artH),
-      winLeft: px(L.winLeft), winTop: px(L.winTop), winOp: st.winOn ? 1 : 0, winTf: st.winOn ? 'none' : 'scale(1, 0.04)', winPe: st.winOn ? 'auto' : 'none', winZoom: Math.round(L.zw * 1000) / 1000,
-      hX: px(L.hX), hTop: px(L.hTop), hSize: px(L.hSize),
-      infoPad: L.infoPad, infoZoom: Math.round(L.infoZoom * 1000) / 1000, infoW: px(L.infoW), infoGap: L.infoGap, infoJustify: L.infoJustify,
+      cardZoom: Math.round(Math.min(1, (st.w - 40) / 392) * 1000) / 1000,
       blink: st.reduce ? 'none' : 'ftBlink 2.4s steps(1) infinite',
       localTime: st.time || this.fmtTime(),
       visitorText: this.ordinal(n) + ' visitor',
       xUrl: p.xUrl || 'https://x.com/', linkedinUrl: p.linkedinUrl || 'https://www.linkedin.com/',
-      emailUrl: p.emailUrl || 'mailto:workwithmonil@gmail.com', resumeUrl: p.resumeUrl || '#'
+      emailUrl: p.emailUrl || 'mailto:workwithmonil@gmail.com', resumeUrl: p.resumeUrl || '#',
+      // Folder: back + paper peek out, then the paper slides up out of the folder while the front comes forward.
+      openFolder: () => { if (!this.state.open) this.setState({ open: true }); },
+      closeFolder: () => { if (this.state.open) this.setState({ open: false }); },
+      backTf: o ? 'translate(-8px,-4px)' : 'none',
+      paperTf: o ? 'translate(-8px,-104px)' : 'none',
+      paperDur: o ? '420ms' : '240ms', paperDelay: o ? '140ms' : '0ms',
+      frontTf: o ? 'translate(6px,10px) scale(1.03)' : 'none',
+      frontShadow: o ? '0 22px 44px rgba(0,0,0,0.55)' : 'none',
+      dlOp: o ? 1 : 0, labelOp: o ? 1 : 0
     };
   }
 }
