@@ -7,17 +7,8 @@
 </head>
 <body>
 <x-dc>
-<helmet>
-<style>
-/* Hover a company: its box warms up, its connections light and the rest of the web recedes. */
-[data-workmap] [data-edge]{transition:stroke 240ms ease, stroke-width 240ms ease;}
-[data-workmap] [data-node] > div:first-child{transition:border-color 200ms ease, box-shadow 280ms ease;}
-[data-workmap] [data-node][data-hot]{z-index:3;}
-[data-workmap] [data-node][data-hot] > div:first-child{border-color:#ff8a5c !important;box-shadow:0 0 34px rgba(255,110,60,0.62), inset 0 0 22px rgba(217,90,52,0.24) !important;}
-</style>
-</helmet>
 <div ref="{{ sectionRef }}" data-workmap="1" style="position:relative;height:{{ rootH }};display:grid;grid-template-columns:{{ cols }};column-gap:32px;row-gap:56px;align-items:center;">
-  <svg data-wm-edges="1" style="position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0;">
+  <svg style="position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0;">
     <defs>
       <filter id="wm-line-noise" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
         <feTurbulence data-noise="1" type="fractalNoise" baseFrequency="0.115" numOctaves="3" seed="8023" stitchTiles="stitch" result="noise"></feTurbulence>
@@ -36,22 +27,26 @@
   </svg>
 
   <div data-role="col-left" style="min-width:0;position:relative;z-index:2;">
-    <div ref="{{ leftWrap }}" data-morph-in="0" style="position:relative;width:100%;height:602px;transform-origin:50% 50%;">
+    <div ref="{{ leftWrap }}" style="position:relative;width:100%;height:602px;transform-origin:50% 50%;">
       <div data-stage="left" style="position:absolute;left:0;top:0;width:380px;height:602px;transform-origin:0 0;">
         <div style="position:absolute;left:-140px;top:-80px;right:-140px;bottom:-80px;pointer-events:none;background:radial-gradient(closest-side, rgba(214,86,46,0.20), rgba(214,86,46,0.07) 60%, rgba(214,86,46,0) 100%);"></div>
         <sc-for list="{{ leftBoxes }}" as="b" hint-placeholder-count="5">
           <div data-node="{{ b.i }}" style="position:absolute;left:{{ b.x }}px;top:{{ b.y }}px;width:120px;height:120px;will-change:transform;">
-            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 50%, #1e0b06 0%, #180905 80%);border:1px solid #d95a34;box-shadow:0 0 24px rgba(217,90,52,0.38), inset 0 0 18px rgba(217,90,52,0.12);">
+            <div data-hud-screen="1" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 50%, #1e0b06 0%, #180905 80%);border:1px solid #d95a34;box-shadow:0 0 24px rgba(217,90,52,0.38), inset 0 0 18px rgba(217,90,52,0.12);">
               <img src="{{ b.logo }}" alt="{{ b.name }}" style="display:block;width:{{ b.w }}px;height:auto;max-width:{{ b.mw }}px;mix-blend-mode:lighten;filter:{{ b.fx }};-webkit-mask-image:{{ b.mask }};mask-image:{{ b.mask }};">
             </div>
-            <div style="position:absolute;left:{{ b.lx }}px;top:{{ b.ly }}px;padding:2px;">
-              <svg width="100%" height="100%" preserveAspectRatio="none" style="position:absolute;inset:0;overflow:visible;">
+            <div data-wm-label="{{ b.i }}" style="position:absolute;left:{{ b.lx }}px;top:{{ b.ly }}px;padding:2px;">
+              <div data-lb-fill="1" aria-hidden="true" style="position:absolute;inset:0;z-index:2;background:#c44a25;opacity:0;transform:scale(0);transform-origin:50% 50%;pointer-events:none;"></div>
+              <svg data-lb-c="1" width="100%" height="100%" preserveAspectRatio="none" style="position:absolute;inset:0;overflow:visible;opacity:0;">
                 <rect x="0.5" y="0.5" width="calc(100% - 1px)" height="calc(100% - 1px)" fill="none" stroke="#df5227" stroke-width="1" pathLength="100" stroke-dasharray="24.6 2.3 16.8 0.8 33.3 3 15.3 0.5 3.4"></rect>
               </svg>
-              <div style="position:relative;overflow:hidden;background:#c44a25;box-shadow:inset 0 0 0 1px rgba(255,190,160,0.22);padding:9px 14px;white-space:nowrap;color:#dcd1cb;font-family:'Redaction 10','Redaction',Georgia,serif;font-weight:700;font-size:15px;line-height:20px;letter-spacing:0.01em;">
+              <div data-lb-c="1" style="position:relative;opacity:0;overflow:hidden;background:#c44a25;box-shadow:inset 0 0 0 1px rgba(255,190,160,0.22);padding:9px 14px;white-space:nowrap;color:#dcd1cb;font-family:'Redaction 10','Redaction',Georgia,serif;font-weight:700;font-size:15px;line-height:20px;letter-spacing:0.01em;">
                 <div style="position:absolute;inset:0;background-image:url(assets/noise-dark.svg);background-size:200px 200px;opacity:0.35;pointer-events:none;"></div>
                 <span style="position:relative;">{{ b.label }}</span>
               </div>
+            </div>
+            <div data-hud-boot="1" data-w="120" data-h="120" aria-hidden="true" style="position:absolute;left:0;top:0;width:120px;height:120px;pointer-events:none;z-index:3;">
+              <div data-hud-fill="1" style="position:absolute;inset:0;background:#D9D9D9;opacity:0;transform-origin:50% 50%;"></div>
             </div>
           </div>
         </sc-for>
@@ -62,22 +57,26 @@
   <div data-role="col-center" aria-hidden="true" style="display:{{ centerDisplay }};"></div>
 
   <div data-role="col-right" style="min-width:0;position:relative;z-index:2;">
-    <div ref="{{ rightWrap }}" data-morph-in="1" style="position:relative;width:100%;height:602px;transform-origin:50% 50%;">
+    <div ref="{{ rightWrap }}" style="position:relative;width:100%;height:602px;transform-origin:50% 50%;">
       <div data-stage="right" style="position:absolute;left:0;top:0;width:380px;height:602px;transform-origin:0 0;">
         <div style="position:absolute;left:-140px;top:-80px;right:-140px;bottom:-80px;pointer-events:none;background:radial-gradient(closest-side, rgba(214,86,46,0.20), rgba(214,86,46,0.07) 60%, rgba(214,86,46,0) 100%);"></div>
         <sc-for list="{{ rightBoxes }}" as="b" hint-placeholder-count="4">
           <div data-node="{{ b.i }}" style="position:absolute;left:{{ b.x }}px;top:{{ b.y }}px;width:120px;height:120px;will-change:transform;">
-            <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 50%, #1e0b06 0%, #180905 80%);border:1px solid #d95a34;box-shadow:0 0 24px rgba(217,90,52,0.38), inset 0 0 18px rgba(217,90,52,0.12);">
+            <div data-hud-screen="1" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 50%, #1e0b06 0%, #180905 80%);border:1px solid #d95a34;box-shadow:0 0 24px rgba(217,90,52,0.38), inset 0 0 18px rgba(217,90,52,0.12);">
               <img src="{{ b.logo }}" alt="{{ b.name }}" style="display:block;width:{{ b.w }}px;height:auto;max-width:{{ b.mw }}px;mix-blend-mode:lighten;filter:{{ b.fx }};-webkit-mask-image:{{ b.mask }};mask-image:{{ b.mask }};">
             </div>
-            <div style="position:absolute;left:{{ b.lx }}px;top:{{ b.ly }}px;padding:2px;">
-              <svg width="100%" height="100%" preserveAspectRatio="none" style="position:absolute;inset:0;overflow:visible;">
+            <div data-wm-label="{{ b.i }}" style="position:absolute;left:{{ b.lx }}px;top:{{ b.ly }}px;padding:2px;">
+              <div data-lb-fill="1" aria-hidden="true" style="position:absolute;inset:0;z-index:2;background:#c44a25;opacity:0;transform:scale(0);transform-origin:50% 50%;pointer-events:none;"></div>
+              <svg data-lb-c="1" width="100%" height="100%" preserveAspectRatio="none" style="position:absolute;inset:0;overflow:visible;opacity:0;">
                 <rect x="0.5" y="0.5" width="calc(100% - 1px)" height="calc(100% - 1px)" fill="none" stroke="#df5227" stroke-width="1" pathLength="100" stroke-dasharray="24.6 2.3 16.8 0.8 33.3 3 15.3 0.5 3.4"></rect>
               </svg>
-              <div style="position:relative;overflow:hidden;background:#c44a25;box-shadow:inset 0 0 0 1px rgba(255,190,160,0.22);padding:9px 14px;white-space:nowrap;color:#dcd1cb;font-family:'Redaction 10','Redaction',Georgia,serif;font-weight:700;font-size:15px;line-height:20px;letter-spacing:0.01em;">
+              <div data-lb-c="1" style="position:relative;opacity:0;overflow:hidden;background:#c44a25;box-shadow:inset 0 0 0 1px rgba(255,190,160,0.22);padding:9px 14px;white-space:nowrap;color:#dcd1cb;font-family:'Redaction 10','Redaction',Georgia,serif;font-weight:700;font-size:15px;line-height:20px;letter-spacing:0.01em;">
                 <div style="position:absolute;inset:0;background-image:url(assets/noise-dark.svg);background-size:200px 200px;opacity:0.35;pointer-events:none;"></div>
                 <span style="position:relative;">{{ b.label }}</span>
               </div>
+            </div>
+            <div data-hud-boot="1" data-w="120" data-h="120" aria-hidden="true" style="position:absolute;left:0;top:0;width:120px;height:120px;pointer-events:none;z-index:3;">
+              <div data-hud-fill="1" style="position:absolute;inset:0;background:#D9D9D9;opacity:0;transform-origin:50% 50%;"></div>
             </div>
           </div>
         </sc-for>
@@ -108,6 +107,51 @@ const EDGES = [
   [1,5],[1,6],[1,7],[3,5],[3,6],[3,8],[4,6],[4,8],[0,5],[2,6]
 ];
 const HALF = 60;
+// Sprouting: each side starts at the card nearest the centre column. Wave 1 is one wire to its nearest neighbour; each
+// following wave adds one more wire, sprouting from the cards the last wave reached, until the side is fully meshed.
+// Side waves share the first SIDE_SPAN of the scrub; the cross-links joining the two maps draw in the rest.
+const STARTS = [3, 6], SIDE_SPAN = 0.8;
+// PULL_LAG: share of the pull by which the farthest card trails the nearest one.
+const PULL_LAG = 0.45;
+const clamp01 = v => (v < 0 ? 0 : v > 1 ? 1 : v);
+const PLAN = (() => {
+  const plan = EDGES.map(() => null), key = (a, b) => (a < b ? a + '-' + b : b + '-' + a), idx = {};
+  EDGES.forEach(([a, b], k) => (idx[key(a, b)] = k));
+  const dist = (a, b) => Math.hypot(NODES[a].x - NODES[b].x, NODES[a].y - NODES[b].y);
+  STARTS.forEach(start => {
+    const side = NODES[start].side, nodes = NODES.map((n, i) => i).filter(i => NODES[i].side === side);
+    const sideEdges = EDGES.map((_, k) => k).filter(k => nodes.includes(EDGES[k][0]) && nodes.includes(EDGES[k][1]));
+    const used = new Set(), reached = new Set([start]), waves = []; let frontier = [start];
+    for (let w = 1; used.size < sideEdges.length && w < 20; w++) {
+      const wave = [], next = [], taken = k => used.has(k) || wave.some(x => x.k === k);
+      for (let j = 0; j < w && used.size + wave.length < sideEdges.length; j++) {
+        let best = null;
+        const r = j % frontier.length, srcs = frontier.slice(r).concat(frontier.slice(0, r));
+        for (const s of srcs) {
+          for (const t of nodes) {
+            if (reached.has(t) || next.includes(t)) continue;
+            const k = idx[key(s, t)]; if (k === undefined || taken(k)) continue;
+            const d = dist(s, t); if (!best || d < best.d) best = { s, t, k, d };
+          }
+          if (best) break;
+        }
+        if (!best) for (const k of sideEdges) {
+          if (taken(k)) continue;
+          const [a, b] = EDGES[k], s = frontier.includes(b) ? b : a, t = s === a ? b : a, d = dist(a, b);
+          if (!best || d < best.d) best = { s, t, k, d };
+        }
+        if (!best) break;
+        wave.push(best); if (!reached.has(best.t) && !next.includes(best.t)) next.push(best.t);
+      }
+      wave.forEach(x => used.add(x.k)); next.forEach(t => reached.add(t));
+      frontier = next.length ? next : Array.from(reached);
+      waves.push(wave);
+    }
+    waves.forEach((wv, i) => wv.forEach(x => (plan[x.k] = { a: x.s, b: x.t, s0: SIDE_SPAN * i / waves.length, s1: SIDE_SPAN * (i + 1) / waves.length })));
+  });
+  EDGES.forEach(([a, b], k) => { if (!plan[k]) plan[k] = { a, b, s0: SIDE_SPAN, s1: 1 }; });
+  return plan;
+})();
 const GLOW = 'drop-shadow(0 0 4px rgba(255,236,226,0.55)) drop-shadow(0 0 10px rgba(255,120,80,0.35))';
 const FADE = 'radial-gradient(ellipse 50% 50% at 50% 50%, #000 84%, transparent 100%)';
 const look = (b, side) => b.svg
@@ -119,25 +163,11 @@ class Component extends DCLogic {
   leftWrap = React.createRef();
   rightWrap = React.createRef();
 
+  // Wires are scroll-scrubbed by window.__wmSprout (0..1, written by the hero; absent = fully drawn). Card boot-in is run by the hero.
   componentDidMount() {
-    const motion = NODES.map((_, i) => {
-      const r = k => { const v = Math.sin((i + 1) * 12.9898 * (k + 3)) * 43758.5453; return v - Math.floor(v); };
-      return { ax: 27 + r(1) * 6, ay: 26 + r(2) * 6, w1: 0.6 + r(3) * 0.3, w2: 1.0 + r(4) * 0.5, w3: 0.25 + r(8) * 0.15, p1: r(5) * 6.28, p2: r(6) * 6.28, p3: r(9) * 6.28, depth: 0.05 + r(7) * 0.05 };
-    });
-    const ptr = { x: 0, y: 0, tx: 0, ty: 0 };
-    this.onMove = ev => { ptr.tx = ev.clientX - window.innerWidth / 2; ptr.ty = ev.clientY - window.innerHeight / 2; };
-    window.addEventListener('pointermove', this.onMove);
-    // Geometry only changes on scroll (the hero morph rescales the clusters) or resize,
-    // so it is re-measured then instead of forcing a layout on every step.
-    let geo = null, geoAt = 0;
-    this.onDirty = () => { geo = null; };
-    window.addEventListener('scroll', this.onDirty, { passive: true });
-    window.addEventListener('resize', this.onDirty);
-    const reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const pos = NODES.map(() => ({ x: 0, y: 0 }));
-    const lag = NODES.map(() => ({ x: 0, y: 0, vx: 0, vy: 0 }));
     const fit = sec => {
-      const sr = sec.getBoundingClientRect();
+      const sr = sec.getBoundingClientRect(), zf = (sr.width / (sec.offsetWidth || 1)) || 1;
       const geo = {};
       for (const side of ['left', 'right']) {
         const stage = sec.querySelector('[data-stage="' + side + '"]');
@@ -152,93 +182,120 @@ class Component extends DCLogic {
         if (stage.style.transform !== tf) stage.style.transform = tf;
         const hh = (602 * s).toFixed(2) + 'px';
         if (wrap.style.height !== hh) wrap.style.height = hh;
-        const wr = wrap.getBoundingClientRect(), zf = (sr.width / (sec.offsetWidth || 1)) || 1;
+        const wr = wrap.getBoundingClientRect();
         geo[side] = { s, ox: (wr.left - sr.left) / zf + tx, oy: (wr.top - sr.top) / zf };
       }
+      geo.key = sr.width.toFixed(1) + ',' + geo.left.ox.toFixed(1) + ',' + geo.right.ox.toFixed(1) + ',' + geo.left.s;
       return geo;
     };
-    // Stop-motion: one even 8fps cadence with 4px snapping. The positions and
-    // the line-noise seed advance on the same beat, and nothing runs while the
-    // map is off screen or the tab is hidden.
-    const STEP = 125, Q = 4;
-    let last = -1, lastRun = 0, beat = 0;
-    this.vis = true;
+    const seg = (p, a, b) => clamp01((p - a) / (b - a));
+    const ease = t => t * t * (3 - 2 * t);
+    let lastKey = '';
+    // Performance: the map only works while it is on screen, and its geometry (three rect
+    // reads that forced a full layout every frame) is re-measured only when something
+    // resizes. fit() is zoom-invariant, so ancestor zoom changes don't invalidate it.
+    let geo = null, vis = true, obs = null;
+    this.reduced = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    const dirty = () => { geo = null; };
+    window.addEventListener('resize', dirty); this.onDirty = dirty;
+    const observe = sec => {
+      if (obs === sec) return; obs = sec;
+      if (this.io) this.io.disconnect(); if (this.ro) this.ro.disconnect();
+      if (typeof IntersectionObserver !== 'undefined') { this.io = new IntersectionObserver(([e]) => { vis = e.isIntersecting; }, { rootMargin: '100px' }); this.io.observe(sec); }
+      if (typeof ResizeObserver !== 'undefined') { this.ro = new ResizeObserver(dirty); this.ro.observe(sec); sec.querySelectorAll('[data-stage]').forEach(s => s.parentElement && this.ro.observe(s.parentElement)); }
+      geo = null; this.lbKey = null;
+    };
     const tick = now => {
-      lastRun = performance.now();
       this.raf = requestAnimationFrame(tick);
-      if (!this.vis || document.hidden) return;
       let sec = this.sectionRef.current;
       if (!sec || !sec.isConnected) sec = document.querySelector('[data-workmap]');
       if (!sec) return;
-      if (!this.io && 'IntersectionObserver' in window) {
-        this.io = new IntersectionObserver(([e]) => { this.vis = e.isIntersecting; }, { rootMargin: '120px' });
-        this.io.observe(sec);
-        this.onOver = ev => { const n = ev.target.closest ? ev.target.closest('[data-node]') : null; this.setHot(sec, n ? +n.getAttribute('data-node') : -1); };
-        this.onOut = () => this.setHot(sec, -1);
-        sec.addEventListener('pointerover', this.onOver);
-        sec.addEventListener('pointerleave', this.onOut);
-        this.sec = sec;
-      }
-      if (now - last < (reduce ? 500 : STEP)) return;
-      last = now;
-      if (!geo || now - geoAt > 2000) { geo = fit(sec); geoAt = now; }
-      if (!geo) return;
-      const t = now / 1000, snap = v => Math.round(v / Q) * Q;
-      ptr.x += (ptr.tx - ptr.x) * 0.15; ptr.y += (ptr.ty - ptr.y) * 0.15;
-      const nodes = sec.querySelectorAll('[data-node]');
-      const byIdx = {};
-      nodes.forEach(n => { byIdx[n.getAttribute('data-node')] = n; });
-      NODES.forEach((n, i) => {
-        const m = motion[i], g = geo[n.side];
-        const dx = reduce ? 0 : snap(m.ax * (Math.sin(t * m.w1 + m.p1) + 0.45 * Math.sin(t * m.w2 + m.p2) + 0.6 * Math.sin(t * m.w3 + m.p3)) + ptr.x * m.depth);
-        const dy = reduce ? 0 : snap(m.ay * (Math.cos(t * m.w1 * 0.9 + m.p2) + 0.45 * Math.sin(t * m.w2 * 1.1 + m.p1) + 0.6 * Math.cos(t * m.w3 * 1.2 + m.p3)) + ptr.y * m.depth);
-        const el = byIdx[i];
-        if (el) {
-          el.style.transform = 'translate3d(' + dx + 'px,' + dy + 'px,0)';
-          const lab = el.children[1];
-          if (lab) lab.style.transform = 'none';
-        }
-        pos[i].x = g.ox + (n.x + HALF + dx) * g.s; pos[i].y = g.oy + (n.y + HALF + dy) * g.s;
-      });
-      if (!reduce) {
+      observe(sec);
+      if (!vis || document.hidden) return;
+      if (now - (this.lastSeed || 0) > 140) {
+        this.lastSeed = now;
         const tn = sec.querySelector('[data-noise]');
-        if (tn) tn.setAttribute('seed', String(8023 + (beat++ % 24)));
+        if (tn) tn.setAttribute('seed', String(8023 + Math.floor(now / 140) % 24));
       }
-      const lines = sec.querySelectorAll('[data-edge]');
-      lines.forEach(l => {
-        const k = +l.getAttribute('data-edge'); const ed = EDGES[k]; if (!ed) return;
-        const [a, b] = ed;
-        l.setAttribute('x1', pos[a].x.toFixed(2)); l.setAttribute('y1', pos[a].y.toFixed(2));
-        l.setAttribute('x2', pos[b].x.toFixed(2)); l.setAttribute('y2', pos[b].y.toFixed(2));
+      if (!geo) geo = fit(sec);
+      if (!geo) return;
+      this.animLabels(sec, now);
+      const P = typeof window.__wmSprout === 'number' ? window.__wmSprout : 1;
+      const PU = typeof window.__wmPull === 'number' ? window.__wmPull : 0;
+      const key = P.toFixed(4) + '|' + PU.toFixed(4) + '|' + geo.key;
+      if (key === lastKey) return;
+      lastKey = key;
+      // Pull (section 2 → 3): the wires reel every card in to the centre, behind the middle screen. Nearest cards go first.
+      const C = geo.C || (geo.C = { x: sec.offsetWidth / 2, y: sec.offsetHeight / 2 });
+      NODES.forEach((n, i) => { const g = geo[n.side]; pos[i].x = g.ox + (n.x + HALF) * g.s; pos[i].y = g.oy + (n.y + HALF) * g.s; });
+      if (!this.pullDelay) {
+        const order = NODES.map((_, i) => i).sort((a, b) => Math.hypot(pos[a].x - C.x, pos[a].y - C.y) - Math.hypot(pos[b].x - C.x, pos[b].y - C.y));
+        this.pullDelay = []; order.forEach((i, r) => (this.pullDelay[i] = PULL_LAG * r / (order.length - 1)));
+      }
+      const pk = NODES.map((_, i) => { const t = clamp01((PU - this.pullDelay[i]) / (1 - PULL_LAG)); return t * t * t; });
+      const list = sel => (geo[sel] && geo[sel].length && geo[sel][0].isConnected) ? geo[sel] : (geo[sel] = Array.from(sec.querySelectorAll(sel)));
+      list('[data-node]').forEach(el => {
+        const i = +el.getAttribute('data-node'), k = pk[i] || 0, g = geo[NODES[i].side];
+        const tf = k > 0 ? 'translate(' + ((C.x - pos[i].x) * k / g.s).toFixed(2) + 'px,' + ((C.y - pos[i].y) * k / g.s).toFixed(2) + 'px) scale(' + (1 - 0.4 * k).toFixed(4) + ')' : '';
+        if (el.style.transform !== tf) el.style.transform = tf;
+      });
+      NODES.forEach((_, i) => { const k = pk[i]; if (k > 0) { pos[i].x += (C.x - pos[i].x) * k; pos[i].y += (C.y - pos[i].y) * k; } });
+      // a card's label switches on once a wire touching it has fully connected
+      const linked = new Set();
+      if (PU <= 0.02) PLAN.forEach(pl => { if (pl && P >= pl.s1) { linked.add(pl.a); linked.add(pl.b); } });
+      this.labelWant = linked;
+      list('[data-edge]').forEach(ln => {
+        const pl = PLAN[+ln.getAttribute('data-edge')]; if (!pl) return;
+        const f = ease(seg(P, pl.s0, pl.s1)), A = pos[pl.a], B = pos[pl.b];
+        // Unchanged wires are left alone: re-setting the same coordinates still invalidates
+        // the SVG noise filter that every wire is drawn through.
+        const vv = f <= 0 ? 'hidden' : '', x1 = A.x.toFixed(2), y1 = A.y.toFixed(2), x2 = (A.x + (B.x - A.x) * f).toFixed(2), y2 = (A.y + (B.y - A.y) * f).toFixed(2), k = vv + x1 + y1 + x2 + y2;
+        if (ln.__k === k) return;
+        ln.__k = k;
+        ln.style.visibility = vv;
+        ln.setAttribute('x1', x1); ln.setAttribute('y1', y1);
+        ln.setAttribute('x2', x2); ln.setAttribute('y2', y2);
       });
     };
     this.raf = requestAnimationFrame(tick);
-    // Keeps the map moving inside editor iframes that throttle rAF; idle on a normal page.
-    this.watch = setInterval(() => {
-      if (this.vis && !document.hidden && performance.now() - lastRun > 160) { cancelAnimationFrame(this.raf); tick(performance.now()); }
-    }, 80);
   }
 
-  setHot(sec, i) {
-    if (i === this.hot) return;
-    this.hot = i;
-    sec.querySelectorAll('[data-node]').forEach(n => { if (+n.getAttribute('data-node') === i) n.setAttribute('data-hot', ''); else n.removeAttribute('data-hot'); });
-    sec.querySelectorAll('[data-edge]').forEach(l => {
-      const ed = EDGES[+l.getAttribute('data-edge')]; if (!ed) return;
-      const on = ed[0] === i || ed[1] === i;
-      l.style.stroke = i < 0 ? '' : on ? 'rgba(255,255,255,1)' : 'rgba(255,255,255,0.18)';
-      l.style.strokeWidth = i >= 0 && on ? '1.5' : '';
+  // Label boot mirrors the card boot: a grey fill scales out from the centre, flashes off, then the label flickers on.
+  // Closing plays it in reverse (flicker off, fill flashes and collapses).
+  animLabels(sec, now) {
+    const want = this.labelWant || new Set(), st = (this.lbState = this.lbState || {});
+    const H = window.HUDMotion, C = H && H.CONFIG && H.CONFIG.boot, S = (C && C.scaleDur) || 420;
+    // Skip the pass entirely while no label is mid-animation and none wants to change state
+    // (every value it would write is already in place).
+    const wk = Array.from(want).sort().join(',');
+    if (wk === this.lbKey && now > (this.lbBusyUntil || 0)) return;
+    if (wk !== this.lbKey) { this.lbKey = wk; this.lbBusyUntil = now + 160 + S + 260; }
+    const reduced = (H && this.reduced);
+    const ease = t => 1 - Math.pow(1 - t, 3), kf = (k, t) => { for (let i = 1; i < k.length; i++) if (t <= k[i][0]) { const [t0, v0] = k[i - 1], [t1, v1] = k[i]; return v0 + (v1 - v0) * ((t - t0) / (t1 - t0 || 1)); } return k[k.length - 1][1]; };
+    const ON = [[0, 0], [40, 1], [80, 0.3], [140, 1]], OFF = [[0, 1], [40, 0.3], [80, 1], [140, 0], [170, 0.5], [200, 0]];
+    sec.querySelectorAll('[data-wm-label]').forEach(el => {
+      const i = +el.getAttribute('data-wm-label'), on = want.has(i);
+      let o = st[i]; if (!o || o.el !== el) { o = st[i] = { el, on: false, t0: -1e9, fill: el.querySelector('[data-lb-fill]'), cs: Array.from(el.querySelectorAll('[data-lb-c]')) }; }
+      if (on !== o.on) { o.on = on; o.t0 = now; }
+      const t = now - o.t0;
+      let fs = 0, fo = 0, co;
+      if (reduced) co = on ? Math.min(1, t / 150) : Math.max(0, 1 - t / 150);
+      else if (on) {
+        if (t < S) { fs = ease(t / S); fo = kf([[0, 0], [S * 0.4, 0.25], [S * 0.8, 0.6], [S - 40, 1], [S, 1]], t); co = 0; }
+        else co = kf(ON, t - S);
+      } else {
+        co = kf(OFF, t);
+        if (t > 160 && t < 160 + S) { const k = t - 160; fs = 1 - ease(k / S); fo = kf([[0, 0], [S * 0.4, 0.6], [S - 40, 1], [S, 0]], k); }
+      }
+      const fsv = 'scale(' + fs.toFixed(4) + ')', fov = fo.toFixed(3), cov = co.toFixed(3);
+      if (o.fill && o.fill.style.transform !== fsv) { o.fill.style.transform = fsv; o.fill.style.opacity = fov; } else if (o.fill) o.fill.style.opacity = fov;
+      o.cs.forEach(c => { if (c.style.opacity !== cov) c.style.opacity = cov; });
     });
   }
-
   componentWillUnmount() {
     cancelAnimationFrame(this.raf);
-    clearInterval(this.watch);
-    window.removeEventListener('pointermove', this.onMove);
-    window.removeEventListener('scroll', this.onDirty);
+    if (this.io) this.io.disconnect(); if (this.ro) this.ro.disconnect();
     window.removeEventListener('resize', this.onDirty);
-    if (this.io) this.io.disconnect();
-    if (this.sec) { this.sec.removeEventListener('pointerover', this.onOver); this.sec.removeEventListener('pointerleave', this.onOut); }
   }
 
   renderVals() {

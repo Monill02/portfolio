@@ -7,15 +7,22 @@
 <meta name="description" content="Product consultant based in New York. 6+ years working directly with founders and leadership, 50+ products shipped across iOS, Android and the web.">
 <meta name="theme-color" content="#1b1b1b">
 <link rel="icon" href="assets/logo.svg" type="image/svg+xml">
-<!-- Fetch everything the runtime would otherwise discover one step at a time. -->
+<!-- Performance: start the critical downloads (React, the hero fonts) at parse time instead of
+     waiting for the runtime to boot and discover them one after another. The 3D figure and
+     three.js are deliberately not preloaded: on slow connections they delayed first paint;
+     glyph-figure.js fetches them in parallel as soon as it runs. -->
 <link rel="preconnect" href="https://unpkg.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preload" as="script" href="https://unpkg.com/react@18.3.1/umd/react.production.min.js" integrity="sha384-DGyLxAyjq0f9SPpVevD6IgztCFlnMF6oW/XQGmfe+IsZ8TqEiDrcHkMLKI6fiB/Z" crossorigin="anonymous">
 <link rel="preload" as="script" href="https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js" integrity="sha384-gTGxhz21lVGYNMcdJOyq01Edg0jhn/c22nsx0kyqP0TxaV5WVdsSH1fSDUf5YJj1" crossorigin="anonymous">
 <link rel="preload" as="font" type="font/woff2" href="fonts/Redaction-Regular.woff2" crossorigin>
 <link rel="preload" as="font" type="font/woff2" href="fonts/Redaction_35-Bold.woff2" crossorigin>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<!-- Declared here, outside the runtime-managed <helmet>: the runtime re-creates helmet styles during boot, which re-declared every face and downloaded each font twice. -->
+<!-- IBM Plex Mono is only used by the 3D figure (seconds after load), so it must not block first paint. -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap" media="print" onload="this.media='all'">
+<!-- Fonts are declared here, outside the runtime-managed <helmet>: the runtime re-creates
+     helmet styles during boot, which re-declared every face and downloaded each font twice. -->
 <style>
 @font-face{font-family:'Redaction';src:url(fonts/Redaction-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
 @font-face{font-family:'Redaction';src:url(fonts/Redaction-Italic.woff2) format('woff2');font-weight:400;font-style:italic;font-display:swap;}
@@ -39,9 +46,6 @@
 @font-face{font-family:'Redaction 100';src:url(fonts/Redaction_100-Italic.woff2) format('woff2');font-weight:400;font-style:italic;font-display:swap;}
 @font-face{font-family:'Redaction 100';src:url(fonts/Redaction_100-Bold.woff2) format('woff2');font-weight:700;font-style:normal;font-display:swap;}
 </style>
-<!-- Hold the page until every section has mounted and the fonts are in, then fade it up once. -->
-<style>html,body{margin:0;background:#1b1b1b;}html.dc-boot #dc-root{opacity:0;}#dc-root{transition:opacity 700ms cubic-bezier(.2,.8,.2,1);}</style>
-<script>document.documentElement.classList.add('dc-boot');setTimeout(function(){document.documentElement.classList.remove('dc-boot');},3500);</script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -52,48 +56,11 @@ html,body{margin:0;background:#1b1b1b;}
 *{box-sizing:border-box;}
 a{color:#ececec;text-decoration:none;}
 a:hover{color:#ffffff;}
-::selection{background:#df5227;color:#ffffff;}
-:focus-visible{outline:2px solid #df5227;outline-offset:3px;}
-@media (prefers-reduced-motion: no-preference){ html{scroll-behavior:smooth;} }
-#articles,#testimonials,#contact{scroll-margin-top:96px;}
-
-/* CRT: the roll bar now travels fully off-screen instead of popping out at 93%. */
-@keyframes crtRoll{0%{transform:translateY(-100%)}100%{transform:translateY(560%)}}
-@media (prefers-reduced-motion: reduce){ [data-crt-anim]{animation:none !important;} }
-[data-role="crt"] [data-crt-content]{will-change:transform;}
-[data-role="crt"][data-glitch] [data-crt-content] p,
-[data-role="crt"][data-glitch] [data-crt-content] div{text-shadow:-1.5px 0 rgba(255,46,96,0.6), 1.5px 0 rgba(46,214,255,0.6), 0 0 8px rgba(255,255,255,0.3) !important;}
-[data-role="crt"][data-glitch] [data-crt-content] img{filter:drop-shadow(-1.5px 0 rgba(255,46,96,0.7)) drop-shadow(1.5px 0 rgba(46,214,255,0.7)) drop-shadow(0 0 6px rgba(255,255,255,0.22)) !important;}
-[data-crt-tear]{mix-blend-mode:screen;}
-[data-crt-flicker]{will-change:opacity;}
-
-/* Nav: direction-aware hide, hover fill, sliding bracket on the current section. */
-[data-nav]{transition:transform 420ms cubic-bezier(.2,.8,.2,1);will-change:transform;}
-[data-nav][data-hidden]{transform:translateY(-130%);}
-[data-nav]:has(:focus-visible){transform:none;}
-[data-nav-link]{position:relative;color:#c9c9c9;transition:color 180ms ease, background-color 180ms ease;}
-[data-nav-link][aria-current="true"]{color:#ffffff;}
-[data-nav-link]:active{background:#303030;transition-duration:0ms;}
-[data-nav-link]:focus-visible{outline:1px solid #df5227;outline-offset:-5px;}
-[data-nav-ind]{position:absolute;left:0;top:4px;bottom:4px;width:0;pointer-events:none;opacity:0;transition:transform 520ms cubic-bezier(.2,.8,.2,1), width 520ms cubic-bezier(.2,.8,.2,1), opacity 240ms ease;}
-[data-nav-ind]::before,[data-nav-ind]::after{content:"";position:absolute;width:8px;height:8px;}
-[data-nav-ind]::before{left:0;top:0;border-top:1px solid #ffffff;border-left:1px solid #ffffff;}
-[data-nav-ind]::after{right:0;bottom:0;border-bottom:1px solid #ffffff;border-right:1px solid #ffffff;}
-[data-nav-btn]{transition:border-color 180ms ease, background-color 180ms ease;}
-[data-nav-btn] img{transition:transform 520ms cubic-bezier(.2,.8,.2,1), filter 180ms ease;}
-/* Phones: the labels overflowed their cells and ran into each other. Size cells to their labels instead. */
-@media (max-width: 480px){
-  [data-nav]{gap:8px !important;}
-  [data-nav-link]{flex:1 1 auto !important;padding:0 4px;font-size:13px !important;letter-spacing:0 !important;white-space:nowrap;}
-}
-@media (max-width: 350px){ [data-nav-link]{font-size:11.5px !important;padding:0 3px;} }
-@media (hover: hover){
-  [data-nav-link]:hover{color:#ffffff;background:#262626;}
-  [data-nav-btn]:hover{border-color:#ffffff !important;background:#262626 !important;}
-  [data-nav-btn]:hover img{filter:brightness(1.2);}
-  [data-nav-btn="spark"]:hover img{transform:rotate(90deg);}
-}
+@keyframes crtRoll{0%{transform:translateY(-110%)}100%{transform:translateY(420%)}}
+@media (prefers-reduced-motion: reduce){[data-crt-anim]{animation:none !important;}}
 </style>
+<script src="hud-motion.js"></script>
+<script src="glyph-figure.js"></script>
 </helmet>
 <div data-screen-label="Page" style="position:relative;min-height:100vh;background:#1c1c1c;color:#ececec;font-family:'Redaction',Georgia,serif;overflow:clip;">
   <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%, #262626 0%, #1d1d1d 55%, #151515 100%);"></div>
@@ -101,142 +68,284 @@ a:hover{color:#ffffff;}
   <div data-role="page-gutter" style="position:relative;padding:0 clamp(20px, 3.7037vw, 64px);">
     <div data-role="container" style="max-width:1600px;margin:0 auto;">
 
-      <header data-nav="1" data-screen-label="Nav" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:clamp(20px, 2.778vw, 48px);pointer-events:none;">
-        <a href="#" aria-label="Home" data-nav-btn="home" style="pointer-events:auto;background:#1c1c1c;flex:0 0 40px;width:40px;height:40px;border:2px solid #d8d8d8;display:flex;overflow:hidden;">
-          <img src="assets/logo.svg" alt="Logo" width="36" height="36" style="width:36px;height:36px;display:block;">
+      <header data-role="nav" data-screen-label="Nav" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:clamp(8px, 0.6vw, 12px);pointer-events:none;transform:{{ navTf }};transition:transform 180ms steps(4);">
+        <a href="#" aria-label="Home" style="pointer-events:auto;background:#1c1c1c;flex:0 0 40px;width:40px;height:40px;border:2px solid #d8d8d8;display:flex;overflow:hidden;">
+          <img src="assets/logo.svg" alt="Logo" style="width:36px;height:36px;display:block;">
         </a>
         <nav aria-label="Primary" style="pointer-events:auto;background:#1c1c1c;flex:0 1 684px;min-width:0;border:1px solid #9a9a9a;padding:3px;">
-          <div style="position:relative;display:flex;border:0.5px solid #d6d6d6;height:clamp(36px, 2.66vw, 46px);">
-            <a href="#work" data-nav-link="1" style="flex:139 1 0;min-width:0;display:flex;align-items:center;justify-content:center;font-size:clamp(14px, 1.389vw, 24px);border-right:0.5px solid #bdbdbd;letter-spacing:0.01em;">Work</a>
-            <a href="#articles" data-nav-link="1" style="flex:162 1 0;min-width:0;display:flex;align-items:center;justify-content:center;font-size:clamp(14px, 1.389vw, 24px);border-right:0.5px solid #bdbdbd;letter-spacing:0.01em;">Articles</a>
-            <a href="#testimonials" data-nav-link="1" style="flex:213 1 0;min-width:0;display:flex;align-items:center;justify-content:center;font-size:clamp(14px, 1.389vw, 24px);border-right:0.5px solid #bdbdbd;letter-spacing:0.01em;white-space:nowrap;">Testi-Monils</a>
-            <a href="#contact" data-nav-link="1" style="flex:162 1 0;min-width:0;display:flex;align-items:center;justify-content:center;font-size:clamp(14px, 1.389vw, 24px);letter-spacing:0.01em;">Contact</a>
-            <span data-nav-ind="1" aria-hidden="true"></span>
+          <div style="display:flex;border:0.5px solid #d6d6d6;height:clamp(36px, 2.66vw, 46px);">
+            <sc-for list="{{ navItems }}" as="it" hint-placeholder-count="4">
+              <a href="{{ it.href }}" onClick="{{ it.go }}" aria-current="{{ it.cur }}" style="position:relative;flex:{{ it.flex }};min-width:0;display:flex;align-items:center;justify-content:center;font-size:clamp(14px, 1.389vw, 24px);white-space:nowrap;letter-spacing:0.01em;color:{{ it.fg }};background:{{ it.bg }};border-right:{{ it.div }};">
+                <sc-if value="{{ it.noise }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position:absolute;inset:0;background-image:url(assets/noise-dark.svg);background-size:200px 200px;opacity:0.35;pointer-events:none;"></span></sc-if>
+                <span style="position:relative;">{{ it.label }}</span>
+              </a>
+            </sc-for>
           </div>
         </nav>
-        <a href="#" aria-label="Sparkle" data-nav-btn="spark" style="pointer-events:auto;background:#1c1c1c;flex:0 0 40px;width:40px;height:40px;border:2px solid #d8d8d8;display:flex;overflow:hidden;">
-          <img src="assets/spark.svg" alt="" width="40" height="40" style="width:40px;height:40px;margin:-2px;display:block;">
+        <a href="#" aria-label="Sparkle" style="pointer-events:auto;background:#1c1c1c;flex:0 0 40px;width:40px;height:40px;border:2px solid #d8d8d8;display:flex;overflow:hidden;">
+          <img src="assets/spark.svg" alt="" style="width:40px;height:40px;margin:-2px;display:block;">
         </a>
       </header>
 
-      <div ref="{{ heroRef }}" data-role="hero-fit" style="display:flex;justify-content:center;padding:{{ heroPad }};">
+      <div data-role="hero-pin" style="position:relative;height:{{ pinH }};">
+      <div ref="{{ heroRef }}" data-role="hero-fit" style="position:{{ pinPos }};z-index:2;top:{{ pinTop }};height:{{ pinInnerH }};display:flex;align-items:center;justify-content:center;padding:{{ heroPad }};">
       <main data-screen-label="Hero" data-role="stage" style="zoom:{{ heroZoom }};width:{{ heroW }};flex:none;max-width:100%;display:grid;grid-template-columns:{{ heroCols }};grid-template-rows:{{ heroRows }};column-gap:32px;row-gap:{{ rowGap }};">
-        <div data-role="col-left" style="grid-column:{{ lCol }};grid-row:{{ lRow }};align-self:center;min-width:0;display:flex;flex-direction:column;gap:48px;">
-          <section data-morph-out="0" style="height:{{ cardH }};transform-origin:50% 50%;display:flex;flex-direction:column;border:0.5px solid #ffffff;padding:8px;">
-            <div data-role="crt" style="position:relative;flex:none;height:186px;overflow:hidden;background:rgba(217,217,217,0.3);">
-              <div data-crt-content="1" style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;color:#ffffff;">
-                <div style="flex:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px;"><div style="font-family:{{ displayFont }};font-weight:700;font-size:84px;line-height:0.86;letter-spacing:-0.01em;white-space:nowrap;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">50+</div></div>
-                <div style="flex:none;padding:0 16px 34px;"><p style="margin:0;text-align:center;font-size:17px;line-height:22px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Products shipped across domains</p></div>
-              </div>
-              <div aria-hidden="true" data-crt-scan="1" style="position:absolute;inset:0;z-index:2;pointer-events:none;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
-              <canvas data-crt-noise="1" width="240" height="96" aria-hidden="true" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;pointer-events:none;"></canvas>
-              <div aria-hidden="true" data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 7.3s linear infinite;animation-delay:-1.2s;"></div>
-              <div aria-hidden="true" style="position:absolute;inset:0;z-index:5;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 12px rgba(0,0,0,0.3);"></div>
-              <div aria-hidden="true" data-crt-flicker="1" style="position:absolute;inset:0;z-index:6;pointer-events:none;background:#000000;opacity:0;"></div>
-              <div aria-hidden="true" data-crt-tear="1" style="position:absolute;left:0;right:0;top:40%;height:2px;z-index:6;pointer-events:none;background:rgba(255,255,255,0.5);opacity:0;"></div>
-              <span aria-hidden="true" style="position:absolute;left:0;top:0;border-top:1px solid #ffffff;border-left:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
-              <span aria-hidden="true" style="position:absolute;right:0;top:0;border-top:1px solid #ffffff;border-right:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
-              <span aria-hidden="true" style="position:absolute;left:0;bottom:0;border-bottom:1px solid #ffffff;border-left:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
-              <span aria-hidden="true" style="position:absolute;right:0;bottom:0;border-bottom:1px solid #ffffff;border-right:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
-            </div>
-            <div style="flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;padding:6px 4px 2px;">
-              <div style="display:flex;flex-direction:column;gap:9px;font-size:15.5px;line-height:22px;">
-                <div style="display:flex;align-items:baseline;gap:2px;"><span>iOS &amp; Android Apps</span><span style="flex:1;border-bottom:1.5px dotted #cfcfcf;transform:translateY(-4px);"></span><span>20+</span></div>
-                <div style="display:flex;align-items:baseline;gap:2px;"><span>Websites &amp; Web Apps</span><span style="flex:1;border-bottom:1.5px dotted #cfcfcf;transform:translateY(-4px);"></span><span>30+</span></div>
-              </div>
-            </div>
+        <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
+          <section data-screen-label="Work Map" data-role="wm-pull" style="grid-column:1 / -1;grid-row:1;position:relative;z-index:0;transform-origin:50% 50%;min-width:0;height:692px;">
+            <dc-import name="WorkMap" narrow="{{ narrow }}" hint-size="100%,692px"></dc-import>
           </section>
-          <section data-morph-out="1" style="height:{{ cardH }};transform-origin:50% 50%;display:flex;flex-direction:column;border:0.5px solid #ffffff;padding:8px;">
-            <div data-role="crt" style="position:relative;flex:none;height:186px;overflow:hidden;background:rgba(217,217,217,0.3);">
-              <div data-crt-content="1" style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;color:#ffffff;">
-                <div style="flex:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px;"><div style="font-family:{{ displayFont }};font-weight:700;font-size:84px;line-height:0.86;letter-spacing:-0.01em;white-space:nowrap;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">6+ YoE</div></div>
-                <div style="flex:none;padding:0 16px 34px;"><p style="margin:0;text-align:center;font-size:17px;line-height:22px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Working as a Product Consultant, directly with founders and cross-functional team</p></div>
+        </sc-if>
+
+        <div data-role="col-left" style="grid-column:{{ lCol }};grid-row:{{ lRow }};position:relative;z-index:2;align-self:center;min-width:0;display:flex;flex-direction:column;align-items:center;gap:{{ colGap }};">
+
+          <section data-hud-card="0" style="position:relative;flex:none;width:500px;height:280px;zoom:{{ cardZoom }};">
+            <div data-hud-screen="1" aria-hidden="true" style="position:absolute;left:8px;top:8px;width:484px;height:186px;background:rgba(217,217,217,0.3);z-index:1;"></div>
+            <div data-hud-sets="1" data-crt-content="1" style="position:absolute;inset:0;z-index:2;">
+              <div data-hud-set="A" style="position:absolute;inset:8px;">
+                <div style="height:186px;display:flex;flex-direction:column;color:#ffffff;">
+                  <div style="flex:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px;"><div data-rv="1" data-scr="1" style="font-family:{{ displayFont }};font-weight:700;font-size:84px;line-height:0.86;letter-spacing:-0.01em;white-space:nowrap;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">50+</div></div>
+                  <div style="flex:none;padding:0 16px 20px;"><p data-rv="1" data-scr="1" style="margin:0;text-align:center;font-size:17px;line-height:22px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Products shipped across Fintech, PharmaTech, PropertyTech, eCommerce, PMS and Web3</p></div>
+                </div>
+                <div style="position:absolute;left:0;right:0;top:186px;bottom:0;display:flex;flex-direction:column;justify-content:center;padding:6px 4px 2px;">
+                  <div style="display:flex;flex-direction:column;gap:9px;font-size:15.5px;line-height:22px;">
+                    <div style="display:flex;align-items:baseline;gap:2px;"><span data-rv="1" data-scr="1">iOS &amp; Android Apps</span><span data-rv="1" style="flex:1;border-bottom:1.5px dotted #cfcfcf;transform:translateY(-4px);"></span><span data-rv="1" data-scr="1">20+</span></div>
+                    <div style="display:flex;align-items:baseline;gap:2px;"><span data-rv="1" data-scr="1">Websites &amp; Web Apps</span><span data-rv="1" style="flex:1;border-bottom:1.5px dotted #cfcfcf;transform:translateY(-4px);"></span><span data-rv="1" data-scr="1">30+</span></div>
+                  </div>
+                </div>
               </div>
-              <div aria-hidden="true" data-crt-scan="1" style="position:absolute;inset:0;z-index:2;pointer-events:none;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
-              <canvas data-crt-noise="1" width="240" height="96" aria-hidden="true" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;pointer-events:none;"></canvas>
-              <div aria-hidden="true" data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 9.1s linear infinite;animation-delay:-4.7s;"></div>
-              <div aria-hidden="true" style="position:absolute;inset:0;z-index:5;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 12px rgba(0,0,0,0.3);"></div>
-              <div aria-hidden="true" data-crt-flicker="1" style="position:absolute;inset:0;z-index:6;pointer-events:none;background:#000000;opacity:0;"></div>
-              <div aria-hidden="true" data-crt-tear="1" style="position:absolute;left:0;right:0;top:40%;height:2px;z-index:6;pointer-events:none;background:rgba(255,255,255,0.5);opacity:0;"></div>
-              <span aria-hidden="true" style="position:absolute;left:0;top:0;border-top:1px solid #ffffff;border-left:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
-              <span aria-hidden="true" style="position:absolute;right:0;top:0;border-top:1px solid #ffffff;border-right:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
-              <span aria-hidden="true" style="position:absolute;left:0;bottom:0;border-bottom:1px solid #ffffff;border-left:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
-              <span aria-hidden="true" style="position:absolute;right:0;bottom:0;border-bottom:1px solid #ffffff;border-right:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
+              <div data-hud-set="B" aria-hidden="true" style="position:absolute;inset:8px;opacity:0;">
+                <div style="height:186px;display:flex;flex-direction:column;color:#ffffff;">
+                  <div style="flex:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px;"><div data-rv="1" data-scr="1" style="font-family:{{ displayFont }};font-weight:700;font-size:72px;line-height:0.86;letter-spacing:-0.01em;white-space:nowrap;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Global Exp</div></div>
+                  <div style="flex:none;padding:0 16px 20px;"><p data-rv="1" data-scr="1" style="margin:0;text-align:center;font-size:17px;line-height:22px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">My design solutions are helping users from 5 different countries</p></div>
+                </div>
+                <div style="position:absolute;left:0;right:0;top:186px;bottom:0;display:flex;flex-direction:column;justify-content:center;padding:6px 4px 2px;">
+                  <div data-rv="1" data-scr="1" style="font-size:11.5px;line-height:16px;color:#d4d4d4;">Products built for</div>
+                  <div style="display:flex;gap:8px;margin-top:8px;">
+                    <img data-rv="1" src="assets/flags/us.svg" alt="United States" style="display:block;width:32px;height:32px;">
+                    <img data-rv="1" src="assets/flags/in.svg" alt="India" style="display:block;width:32px;height:32px;">
+                    <img data-rv="1" src="assets/flags/gb-eng.svg" alt="England" style="display:block;width:32px;height:32px;">
+                    <img data-rv="1" src="assets/flags/ae.svg" alt="United Arab Emirates" style="display:block;width:32px;height:32px;">
+                    <img data-rv="1" src="assets/flags/ca.svg" alt="Canada" style="display:block;width:32px;height:32px;">
+                  </div>
+                </div>
+              </div>
             </div>
-            <div style="flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;padding:6px 4px 2px;">
-              <div style="font-size:11.5px;line-height:16px;color:#d4d4d4;">I specialized in:</div>
-              <div style="font-size:15.5px;line-height:19px;margin-top:4px;text-wrap:pretty;">Business-centric design, UX Audits, setting design systems and design → dev piplelines</div>
+            <div data-role="crt" data-hud-screen="1" aria-hidden="true" style="position:absolute;left:8px;top:8px;width:484px;height:186px;overflow:hidden;pointer-events:none;z-index:3;">
+              <div style="position:absolute;inset:0;z-index:2;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
+              <canvas data-crt-noise="1" width="240" height="96" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;"></canvas>
+              <div data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 7.3s linear infinite;animation-delay:-1.2s;"></div>
+              <div style="position:absolute;inset:0;z-index:5;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 12px rgba(0,0,0,0.3);"></div>
+              <div data-crt-flicker="1" style="position:absolute;inset:0;z-index:6;background:#000000;opacity:0;"></div>
+              <div data-crt-tear="1" style="position:absolute;left:0;right:0;top:40%;height:2px;z-index:6;background:rgba(255,255,255,0.5);opacity:0;"></div>
             </div>
+            <div data-hud-boot="1" data-w="484" data-h="186" aria-hidden="true" style="position:absolute;left:8px;top:8px;width:484px;height:186px;pointer-events:none;z-index:4;">
+              <div data-hud-fill="1" style="position:absolute;inset:0;background:#D9D9D9;opacity:0;transform-origin:50% 50%;"></div>
+              <span data-hud-arm="tl-h" style="position:absolute;left:0;top:0;width:20px;height:{{ armPx }};background:#ffffff;transform-origin:0 0;"></span>
+              <span data-hud-arm="tl-v" style="position:absolute;left:0;top:0;width:{{ armPx }};height:20px;background:#ffffff;transform-origin:0 0;"></span>
+              <span data-hud-arm="tr-h" style="position:absolute;right:0;top:0;width:20px;height:{{ armPx }};background:#ffffff;transform-origin:100% 0;"></span>
+              <span data-hud-arm="tr-v" style="position:absolute;right:0;top:0;width:{{ armPx }};height:20px;background:#ffffff;transform-origin:100% 0;"></span>
+              <span data-hud-arm="bl-h" style="position:absolute;left:0;bottom:0;width:20px;height:{{ armPx }};background:#ffffff;transform-origin:0 100%;"></span>
+              <span data-hud-arm="bl-v" style="position:absolute;left:0;bottom:0;width:{{ armPx }};height:20px;background:#ffffff;transform-origin:0 100%;"></span>
+              <span data-hud-arm="br-h" style="position:absolute;right:0;bottom:0;width:20px;height:{{ armPx }};background:#ffffff;transform-origin:100% 100%;"></span>
+              <span data-hud-arm="br-v" style="position:absolute;right:0;bottom:0;width:{{ armPx }};height:20px;background:#ffffff;transform-origin:100% 100%;"></span>
+            </div>
+            <div data-hud-outline="1" aria-hidden="true" style="position:absolute;inset:0;border:0.5px solid #ffffff;pointer-events:none;z-index:5;"></div>
+          </section>
+
+          <section data-hud-card="2" style="position:relative;flex:none;width:500px;height:280px;zoom:{{ cardZoom }};">
+            <div data-hud-screen="1" aria-hidden="true" style="position:absolute;left:8px;top:8px;width:484px;height:186px;background:rgba(217,217,217,0.3);z-index:1;"></div>
+            <div data-hud-sets="1" data-crt-content="1" style="position:absolute;inset:0;z-index:2;">
+              <div data-hud-set="A" style="position:absolute;inset:8px;">
+                <div style="height:186px;display:flex;flex-direction:column;color:#ffffff;">
+                  <div style="flex:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px;"><div data-rv="1" data-scr="1" style="font-family:{{ displayFont }};font-weight:700;font-size:84px;line-height:0.86;letter-spacing:-0.01em;white-space:nowrap;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">6+ YoE</div></div>
+                  <div style="flex:none;padding:0 16px 20px;"><p data-rv="1" data-scr="1" style="margin:0;text-align:center;font-size:17px;line-height:22px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Working directly with founders, c-suite execs, cross-functional teams and engineers</p></div>
+                </div>
+                <div style="position:absolute;left:0;right:0;top:186px;bottom:0;display:flex;flex-direction:column;justify-content:center;padding:6px 4px 2px;">
+                  <div data-rv="1" data-scr="1" style="font-size:11.5px;line-height:16px;color:#d4d4d4;">My superpower:</div>
+                  <div data-rv="1" data-scr="1" style="font-size:15.5px;line-height:19px;margin-top:4px;text-wrap:pretty;">I’ve made it my business to understand different businesses. Design just happens to be one of my mediums to solve business problems</div>
+                </div>
+              </div>
+              <div data-hud-set="B" aria-hidden="true" style="position:absolute;inset:8px;opacity:0;">
+                <div style="height:186px;display:flex;flex-direction:column;color:#ffffff;">
+                  <div style="flex:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px;"><div data-rv="1" data-scr="1" style="font-family:{{ displayFont }};font-weight:700;font-size:72px;line-height:0.86;letter-spacing:-0.01em;white-space:nowrap;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">AI Native DS</div></div>
+                  <div style="flex:none;padding:0 16px 20px;"><p data-rv="1" data-scr="1" style="margin:0;text-align:center;font-size:17px;line-height:22px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Built and scaled 4 design systems used by humans and agents alike</p></div>
+                </div>
+                <div style="position:absolute;left:0;right:0;top:186px;bottom:0;display:flex;flex-direction:column;justify-content:center;padding:6px 4px 2px;">
+                  <div data-rv="1" data-scr="1" style="font-size:11.5px;line-height:16px;color:#d4d4d4;">Currently building:</div>
+                  <div data-rv="1" data-scr="1" style="font-size:15.5px;line-height:19px;margin-top:4px;text-wrap:pretty;">A white-labeled, agent friendly design system that can empower legacy companies revamp their digital ecosystem with AI</div>
+                </div>
+              </div>
+            </div>
+            <div data-role="crt" data-hud-screen="1" aria-hidden="true" style="position:absolute;left:8px;top:8px;width:484px;height:186px;overflow:hidden;pointer-events:none;z-index:3;">
+              <div style="position:absolute;inset:0;z-index:2;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
+              <canvas data-crt-noise="1" width="240" height="96" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;"></canvas>
+              <div data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 9.1s linear infinite;animation-delay:-4.7s;"></div>
+              <div style="position:absolute;inset:0;z-index:5;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 12px rgba(0,0,0,0.3);"></div>
+              <div data-crt-flicker="1" style="position:absolute;inset:0;z-index:6;background:#000000;opacity:0;"></div>
+              <div data-crt-tear="1" style="position:absolute;left:0;right:0;top:40%;height:2px;z-index:6;background:rgba(255,255,255,0.5);opacity:0;"></div>
+            </div>
+            <div data-hud-boot="1" data-w="484" data-h="186" aria-hidden="true" style="position:absolute;left:8px;top:8px;width:484px;height:186px;pointer-events:none;z-index:4;">
+              <div data-hud-fill="1" style="position:absolute;inset:0;background:#D9D9D9;opacity:0;transform-origin:50% 50%;"></div>
+              <span data-hud-arm="tl-h" style="position:absolute;left:0;top:0;width:20px;height:{{ armPx }};background:#ffffff;transform-origin:0 0;"></span>
+              <span data-hud-arm="tl-v" style="position:absolute;left:0;top:0;width:{{ armPx }};height:20px;background:#ffffff;transform-origin:0 0;"></span>
+              <span data-hud-arm="tr-h" style="position:absolute;right:0;top:0;width:20px;height:{{ armPx }};background:#ffffff;transform-origin:100% 0;"></span>
+              <span data-hud-arm="tr-v" style="position:absolute;right:0;top:0;width:{{ armPx }};height:20px;background:#ffffff;transform-origin:100% 0;"></span>
+              <span data-hud-arm="bl-h" style="position:absolute;left:0;bottom:0;width:20px;height:{{ armPx }};background:#ffffff;transform-origin:0 100%;"></span>
+              <span data-hud-arm="bl-v" style="position:absolute;left:0;bottom:0;width:{{ armPx }};height:20px;background:#ffffff;transform-origin:0 100%;"></span>
+              <span data-hud-arm="br-h" style="position:absolute;right:0;bottom:0;width:20px;height:{{ armPx }};background:#ffffff;transform-origin:100% 100%;"></span>
+              <span data-hud-arm="br-v" style="position:absolute;right:0;bottom:0;width:{{ armPx }};height:20px;background:#ffffff;transform-origin:100% 100%;"></span>
+            </div>
+            <div data-hud-outline="1" aria-hidden="true" style="position:absolute;inset:0;border:0.5px solid #ffffff;pointer-events:none;z-index:5;"></div>
           </section>
         </div>
-        <div data-role="col-center" style="grid-column:{{ cCol }};grid-row:{{ cRow }};width:100%;max-width:561px;justify-self:center;min-width:0;position:relative;z-index:3;">
-        <section data-role="crt" data-crt-center="1" style="position:sticky;top:{{ stickyTop }};width:100%;aspect-ratio:561 / 692;height:{{ centerH }};overflow:hidden;border:0.5px solid #ffffff;background:linear-gradient(rgba(171,171,171,0.17), rgba(171,171,171,0.17)), #141414;">
-              <div data-crt-content="1" style="position:relative;z-index:1;height:100%;"></div>
-              <div aria-hidden="true" data-crt-scan="1" style="position:absolute;inset:0;z-index:2;pointer-events:none;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
-              <canvas data-crt-noise="1" width="240" height="96" aria-hidden="true" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;pointer-events:none;"></canvas>
-              <div aria-hidden="true" data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 10.4s linear infinite;animation-delay:-3.3s;"></div>
-              <div aria-hidden="true" style="position:absolute;inset:0;z-index:5;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 12px rgba(0,0,0,0.3);"></div>
-              <div aria-hidden="true" data-crt-flicker="1" style="position:absolute;inset:0;z-index:6;pointer-events:none;background:#000000;opacity:0;"></div>
-              <div aria-hidden="true" data-crt-tear="1" style="position:absolute;left:0;right:0;top:40%;height:2px;z-index:6;pointer-events:none;background:rgba(255,255,255,0.5);opacity:0;"></div>
-              <span aria-hidden="true" style="position:absolute;left:6px;top:6px;border-top:1px solid #ffffff;border-left:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
-              <span aria-hidden="true" style="position:absolute;right:6px;top:6px;border-top:1px solid #ffffff;border-right:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
-              <span aria-hidden="true" style="position:absolute;left:6px;bottom:6px;border-bottom:1px solid #ffffff;border-left:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
-              <span aria-hidden="true" style="position:absolute;right:6px;bottom:6px;border-bottom:1px solid #ffffff;border-right:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
-        </section>
-        </div>
-        <div data-role="col-right" style="grid-column:{{ rCol }};grid-row:{{ rRow }};align-self:center;min-width:0;display:flex;flex-direction:column;gap:48px;">
-          <section data-morph-out="2" style="height:{{ cardH }};transform-origin:50% 50%;display:flex;flex-direction:column;border:0.5px solid #ffffff;padding:8px;">
-            <div data-role="crt" style="position:relative;flex:none;height:186px;overflow:hidden;background:rgba(217,217,217,0.3);">
-              <div data-crt-content="1" style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;color:#ffffff;">
-                <div style="flex:1;min-height:0;display:flex;align-items:flex-start;justify-content:center;"><img src="assets/skyline-alpha.png" alt="New York skyline" style="display:block;width:100%;height:112px;object-fit:cover;object-position:50% 100%;filter:drop-shadow(0 0 1.5px rgba(255,255,255,0.55)) drop-shadow(0 0 6px rgba(255,255,255,0.22));"></div>
-                <div style="flex:none;padding:0 16px 34px;"><p style="margin:0;text-align:center;font-size:17px;line-height:22px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Currently based out of New York and stuck on the L train</p></div>
-              </div>
-              <div aria-hidden="true" data-crt-scan="1" style="position:absolute;inset:0;z-index:2;pointer-events:none;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
-              <canvas data-crt-noise="1" width="240" height="96" aria-hidden="true" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;pointer-events:none;"></canvas>
-              <div aria-hidden="true" data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 6.4s linear infinite;animation-delay:-2.9s;"></div>
-              <div aria-hidden="true" style="position:absolute;inset:0;z-index:5;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 12px rgba(0,0,0,0.3);"></div>
-              <div aria-hidden="true" data-crt-flicker="1" style="position:absolute;inset:0;z-index:6;pointer-events:none;background:#000000;opacity:0;"></div>
-              <div aria-hidden="true" data-crt-tear="1" style="position:absolute;left:0;right:0;top:40%;height:2px;z-index:6;pointer-events:none;background:rgba(255,255,255,0.5);opacity:0;"></div>
-              <span aria-hidden="true" style="position:absolute;left:0;top:0;border-top:1px solid #ffffff;border-left:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
-              <span aria-hidden="true" style="position:absolute;right:0;top:0;border-top:1px solid #ffffff;border-right:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
-              <span aria-hidden="true" style="position:absolute;left:0;bottom:0;border-bottom:1px solid #ffffff;border-left:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
-              <span aria-hidden="true" style="position:absolute;right:0;bottom:0;border-bottom:1px solid #ffffff;border-right:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
+
+        <div data-role="col-center" style="grid-column:{{ cCol }};grid-row:{{ cRow }};width:100%;max-width:561px;justify-self:center;align-self:center;min-width:0;position:relative;z-index:3;">
+          <section data-crt-center="1" data-hud-center="1" style="position:relative;width:100%;aspect-ratio:561 / 692;height:{{ centerH }};overflow:hidden;">
+            <div data-hud-screen="1" aria-hidden="true" style="position:absolute;inset:0;z-index:1;background:linear-gradient(rgba(171,171,171,0.17), rgba(171,171,171,0.17)), #141414;"></div>
+            <div data-crt-content="1" data-figure-mount="1" style="position:absolute;inset:0;z-index:2;"></div>
+            <div data-bio-src="1" style="position:absolute;inset:0;z-index:2;padding:70px 35px 0;opacity:0;pointer-events:none;color:#ffffff;font-family:{{ displayFont }};font-weight:700;font-size:24px;line-height:29px;">
+              <p data-bio-block="1" style="margin:0 0 29px;">HI, I’M MONIL!</p>
+              <p data-bio-block="1" style="margin:0;">I TRANSLATE AMBIGUITY FOR A LIVING. I LOVE DESIGNING FOR SYSTEMS TOO SMART TO BE SIMPLE AND I USE AI AS MY FORCE MULTIPLIER RATHER THAN A PROXY. I BRING THE DILIGENCE OF A CONSULTANT AND THE DEDICATION OF A CRAFTSMAN TO MY WORK. SOME OF MY WORK HAS HELPED CLOSE A $75M ACQUISITION AND FEW SERIES FUNDINGS. EVERY DECISION IS ANCHORED TO A BUSINESS OUTCOME, NOT JUST A VISUAL DIRECTION BECAUSE INFLUENTIAL &amp; TRUSTABLE PRODUCTS ARE BUILT BY INTENTIONAL DESIGN AND CARE, NOT BY SIMPLY SIMPLIFYING</p>
             </div>
-            <div style="flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;padding:6px 4px 2px;">
-              <div style="font-size:11.5px;line-height:16px;color:#d4d4d4;">Alma Mater: New York Institute of Technology</div>
-              <div style="font-size:15.5px;line-height:22px;margin-top:4px;">Masters in UX/UI Design &amp; Development</div>
+            <div data-bio-out="1" aria-hidden="true" style="position:absolute;inset:0;z-index:2;padding:70px 35px 0;pointer-events:none;color:#ffffff;font-family:{{ displayFont }};font-weight:700;font-size:24px;line-height:29px;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);"></div>
+            <canvas data-thread="1" aria-hidden="true" style="position:absolute;left:0;top:0;width:100%;height:100%;z-index:2;pointer-events:none;"></canvas>
+            <div data-role="crt" data-hud-screen="1" aria-hidden="true" style="position:absolute;inset:0;z-index:3;overflow:hidden;pointer-events:none;">
+              <div style="position:absolute;inset:0;z-index:2;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
+              <canvas data-crt-noise="1" width="240" height="96" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;"></canvas>
+              <div data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 10.4s linear infinite;animation-delay:-3.3s;"></div>
+              <div style="position:absolute;inset:0;z-index:5;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 12px rgba(0,0,0,0.3);"></div>
+              <div data-crt-flicker="1" style="position:absolute;inset:0;z-index:6;background:#000000;opacity:0;"></div>
+              <div data-crt-tear="1" style="position:absolute;left:0;right:0;top:40%;height:2px;z-index:6;background:rgba(255,255,255,0.5);opacity:0;"></div>
             </div>
-          </section>
-          <section data-morph-out="3" style="height:{{ cardH }};transform-origin:50% 50%;display:flex;flex-direction:column;border:0.5px solid #ffffff;padding:8px;">
-            <div data-role="crt" style="position:relative;flex:none;height:186px;overflow:hidden;background:rgba(217,217,217,0.3);">
-              <div data-crt-content="1" style="position:relative;z-index:1;height:100%;display:flex;flex-direction:column;color:#ffffff;">
-                <div style="flex:1;min-height:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:14px;"><img src="assets/bots.svg" alt="Human and agent pixel icons" style="display:block;max-width:100%;height:74px;width:auto;filter:drop-shadow(0 0 1.5px rgba(255,255,255,0.55)) drop-shadow(0 0 6px rgba(255,255,255,0.22));"></div>
-                <div style="flex:none;padding:0 16px 34px;"><p style="margin:0;text-align:center;font-size:17px;line-height:22px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Building solutions for and with humans and agents alike</p></div>
-              </div>
-              <div aria-hidden="true" data-crt-scan="1" style="position:absolute;inset:0;z-index:2;pointer-events:none;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
-              <canvas data-crt-noise="1" width="240" height="96" aria-hidden="true" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;pointer-events:none;"></canvas>
-              <div aria-hidden="true" data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 8.2s linear infinite;animation-delay:-6.1s;"></div>
-              <div aria-hidden="true" style="position:absolute;inset:0;z-index:5;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 12px rgba(0,0,0,0.3);"></div>
-              <div aria-hidden="true" data-crt-flicker="1" style="position:absolute;inset:0;z-index:6;pointer-events:none;background:#000000;opacity:0;"></div>
-              <div aria-hidden="true" data-crt-tear="1" style="position:absolute;left:0;right:0;top:40%;height:2px;z-index:6;pointer-events:none;background:rgba(255,255,255,0.5);opacity:0;"></div>
-              <span aria-hidden="true" style="position:absolute;left:0;top:0;border-top:1px solid #ffffff;border-left:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
-              <span aria-hidden="true" style="position:absolute;right:0;top:0;border-top:1px solid #ffffff;border-right:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
-              <span aria-hidden="true" style="position:absolute;left:0;bottom:0;border-bottom:1px solid #ffffff;border-left:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
-              <span aria-hidden="true" style="position:absolute;right:0;bottom:0;border-bottom:1px solid #ffffff;border-right:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
+            <div data-hud-boot="1" data-w="549" data-h="680" aria-hidden="true" style="position:absolute;inset:6px;pointer-events:none;z-index:4;">
+              <div data-hud-fill="1" style="position:absolute;inset:0;background:#D9D9D9;opacity:0;transform-origin:50% 50%;"></div>
+              <span data-hud-arm="tl-h" style="position:absolute;left:0;top:0;width:20px;height:{{ armPx }};background:#ffffff;transform-origin:0 0;"></span>
+              <span data-hud-arm="tl-v" style="position:absolute;left:0;top:0;width:{{ armPx }};height:20px;background:#ffffff;transform-origin:0 0;"></span>
+              <span data-hud-arm="tr-h" style="position:absolute;right:0;top:0;width:20px;height:{{ armPx }};background:#ffffff;transform-origin:100% 0;"></span>
+              <span data-hud-arm="tr-v" style="position:absolute;right:0;top:0;width:{{ armPx }};height:20px;background:#ffffff;transform-origin:100% 0;"></span>
+              <span data-hud-arm="bl-h" style="position:absolute;left:0;bottom:0;width:20px;height:{{ armPx }};background:#ffffff;transform-origin:0 100%;"></span>
+              <span data-hud-arm="bl-v" style="position:absolute;left:0;bottom:0;width:{{ armPx }};height:20px;background:#ffffff;transform-origin:0 100%;"></span>
+              <span data-hud-arm="br-h" style="position:absolute;right:0;bottom:0;width:20px;height:{{ armPx }};background:#ffffff;transform-origin:100% 100%;"></span>
+              <span data-hud-arm="br-v" style="position:absolute;right:0;bottom:0;width:{{ armPx }};height:20px;background:#ffffff;transform-origin:100% 100%;"></span>
             </div>
-            <div style="flex:1 1 auto;display:flex;flex-direction:column;justify-content:center;padding:6px 4px 2px;">
-              <div style="font-size:11.5px;line-height:16px;color:#d4d4d4;">Current tech stack:</div>
-              <img src="assets/stack.png" alt="ChatGPT, Perplexity, Cursor, Claude, Figma, Framer" style="display:block;margin:6px 0 0 -1px;width:236px;max-width:100%;height:auto;mix-blend-mode:lighten;">
-            </div>
+            <div data-hud-outline="1" aria-hidden="true" style="position:absolute;inset:0;border:0.5px solid #ffffff;pointer-events:none;z-index:5;"></div>
           </section>
         </div>
-        <section data-screen-label="Work Map" style="grid-column:{{ wmCol }};grid-row:{{ wmRow }};position:relative;z-index:1;min-width:0;">
-          <dc-import name="WorkMap" narrow="{{ narrow }}" hint-size="100%,692px"></dc-import>
-        </section>
+
+        <div data-role="col-right" style="grid-column:{{ rCol }};grid-row:{{ rRow }};position:relative;z-index:2;align-self:center;min-width:0;display:flex;flex-direction:column;align-items:center;gap:{{ colGap }};">
+
+          <section data-hud-card="1" style="position:relative;flex:none;width:500px;height:280px;zoom:{{ cardZoom }};">
+            <div data-hud-screen="1" aria-hidden="true" style="position:absolute;left:8px;top:8px;width:484px;height:186px;background:rgba(217,217,217,0.3);z-index:1;"></div>
+            <div data-hud-sets="1" data-crt-content="1" style="position:absolute;inset:0;z-index:2;">
+              <div data-hud-set="A" style="position:absolute;inset:8px;">
+                <div style="height:186px;display:flex;flex-direction:column;color:#ffffff;">
+                  <div style="flex:1;min-height:0;display:flex;align-items:flex-start;justify-content:center;"><img data-rv="1" src="assets/skyline-alpha.png" alt="New York skyline" style="display:block;width:100%;height:112px;object-fit:cover;object-position:50% 100%;filter:drop-shadow(0 0 1.5px rgba(255,255,255,0.55)) drop-shadow(0 0 6px rgba(255,255,255,0.22));"></div>
+                  <div style="flex:none;padding:0 16px 34px;"><p data-rv="1" data-scr="1" style="margin:0;text-align:center;font-size:17px;line-height:22px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Currently based out of New York and stuck on the J train</p></div>
+                </div>
+                <div style="position:absolute;left:0;right:0;top:186px;bottom:0;display:flex;flex-direction:column;justify-content:center;padding:6px 4px 2px;">
+                  <div data-rv="1" data-scr="1" style="font-size:11.5px;line-height:16px;color:#d4d4d4;">Alma Mater: New York Institute of Technology</div>
+                  <div data-rv="1" data-scr="1" style="font-size:15.5px;line-height:22px;margin-top:4px;">Masters in UX/UI Design &amp; Development</div>
+                </div>
+              </div>
+              <div data-hud-set="B" aria-hidden="true" style="position:absolute;inset:8px;opacity:0;">
+                <div style="height:186px;display:flex;flex-direction:column;color:#ffffff;">
+                  <div style="flex:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px;"><div data-rv="1" data-scr="1" style="font-family:{{ displayFont }};font-weight:700;font-size:72px;line-height:0.86;letter-spacing:-0.01em;white-space:nowrap;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Ex-Founder</div></div>
+                  <div style="flex:none;padding:0 16px 34px;"><p data-rv="1" data-scr="1" style="margin:0;text-align:center;font-size:17px;line-height:22px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">I consulted with early stage startup founders &amp; SMBs</p></div>
+                </div>
+                <div style="position:absolute;left:0;right:0;top:186px;bottom:0;display:flex;flex-direction:column;justify-content:center;padding:6px 4px 2px;">
+                  <div data-rv="1" data-scr="1" style="font-size:11.5px;line-height:16px;color:#d4d4d4;">My value</div>
+                  <div data-rv="1" data-scr="1" style="font-size:15.5px;line-height:19px;margin-top:4px;text-wrap:pretty;">I ran workshops to upskill design teams in SMBs and legacy companies to leverage AI native workflows</div>
+                </div>
+              </div>
+            </div>
+            <div data-role="crt" data-hud-screen="1" aria-hidden="true" style="position:absolute;left:8px;top:8px;width:484px;height:186px;overflow:hidden;pointer-events:none;z-index:3;">
+              <div style="position:absolute;inset:0;z-index:2;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
+              <canvas data-crt-noise="1" width="240" height="96" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;"></canvas>
+              <div data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 6.4s linear infinite;animation-delay:-2.9s;"></div>
+              <div style="position:absolute;inset:0;z-index:5;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 12px rgba(0,0,0,0.3);"></div>
+              <div data-crt-flicker="1" style="position:absolute;inset:0;z-index:6;background:#000000;opacity:0;"></div>
+              <div data-crt-tear="1" style="position:absolute;left:0;right:0;top:40%;height:2px;z-index:6;background:rgba(255,255,255,0.5);opacity:0;"></div>
+            </div>
+            <div data-hud-boot="1" data-w="484" data-h="186" aria-hidden="true" style="position:absolute;left:8px;top:8px;width:484px;height:186px;pointer-events:none;z-index:4;">
+              <div data-hud-fill="1" style="position:absolute;inset:0;background:#D9D9D9;opacity:0;transform-origin:50% 50%;"></div>
+              <span data-hud-arm="tl-h" style="position:absolute;left:0;top:0;width:20px;height:{{ armPx }};background:#ffffff;transform-origin:0 0;"></span>
+              <span data-hud-arm="tl-v" style="position:absolute;left:0;top:0;width:{{ armPx }};height:20px;background:#ffffff;transform-origin:0 0;"></span>
+              <span data-hud-arm="tr-h" style="position:absolute;right:0;top:0;width:20px;height:{{ armPx }};background:#ffffff;transform-origin:100% 0;"></span>
+              <span data-hud-arm="tr-v" style="position:absolute;right:0;top:0;width:{{ armPx }};height:20px;background:#ffffff;transform-origin:100% 0;"></span>
+              <span data-hud-arm="bl-h" style="position:absolute;left:0;bottom:0;width:20px;height:{{ armPx }};background:#ffffff;transform-origin:0 100%;"></span>
+              <span data-hud-arm="bl-v" style="position:absolute;left:0;bottom:0;width:{{ armPx }};height:20px;background:#ffffff;transform-origin:0 100%;"></span>
+              <span data-hud-arm="br-h" style="position:absolute;right:0;bottom:0;width:20px;height:{{ armPx }};background:#ffffff;transform-origin:100% 100%;"></span>
+              <span data-hud-arm="br-v" style="position:absolute;right:0;bottom:0;width:{{ armPx }};height:20px;background:#ffffff;transform-origin:100% 100%;"></span>
+            </div>
+            <div data-hud-outline="1" aria-hidden="true" style="position:absolute;inset:0;border:0.5px solid #ffffff;pointer-events:none;z-index:5;"></div>
+          </section>
+
+          <section data-hud-card="3" style="position:relative;flex:none;width:500px;height:280px;zoom:{{ cardZoom }};">
+            <div data-hud-screen="1" aria-hidden="true" style="position:absolute;left:8px;top:8px;width:484px;height:186px;background:rgba(217,217,217,0.3);z-index:1;"></div>
+            <div data-hud-sets="1" data-crt-content="1" style="position:absolute;inset:0;z-index:2;">
+              <div data-hud-set="A" style="position:absolute;inset:8px;">
+                <div style="height:186px;display:flex;flex-direction:column;color:#ffffff;">
+                  <div style="flex:1;min-height:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:14px;"><img data-rv="1" src="assets/human-agent.png" alt="Human and agent pixel icons" style="display:block;max-width:100%;height:73px;width:auto;image-rendering:pixelated;filter:drop-shadow(0 0 1.5px rgba(255,255,255,0.55)) drop-shadow(0 0 6px rgba(255,255,255,0.22));"></div>
+                  <div style="flex:none;padding:0 16px 34px;"><p data-rv="1" data-scr="1" style="margin:0;text-align:center;font-size:17px;line-height:22px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Building solutions for humans &amp; agents with both in loop</p></div>
+                </div>
+                <div style="position:absolute;left:0;right:0;top:186px;bottom:0;display:flex;flex-direction:column;justify-content:center;padding:6px 4px 2px;">
+                  <div data-rv="1" data-scr="1" style="font-size:11.5px;line-height:16px;color:#d4d4d4;">Current tech stack:</div>
+                  <div style="display:flex;gap:8px;margin-top:8px;">
+                    <img data-rv="1" src="assets/stack/chatgpt.png" alt="ChatGPT" style="display:block;width:32px;height:32px;">
+                    <img data-rv="1" src="assets/stack/cursor.png" alt="Cursor" style="display:block;width:32px;height:32px;">
+                    <img data-rv="1" src="assets/stack/claude.png" alt="Claude" style="display:block;width:32px;height:32px;">
+                    <img data-rv="1" src="assets/stack/perplexity.png" alt="Perplexity" style="display:block;width:32px;height:32px;">
+                    <img data-rv="1" src="assets/stack/figma.png" alt="Figma" style="display:block;width:32px;height:32px;">
+                    <img data-rv="1" src="assets/stack/paper.png" alt="Paper" style="display:block;width:32px;height:32px;">
+                  </div>
+                </div>
+              </div>
+              <div data-hud-set="B" aria-hidden="true" style="position:absolute;inset:8px;opacity:0;">
+                <div style="height:186px;display:flex;flex-direction:column;color:#ffffff;">
+                  <div style="flex:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:12px;"><div data-rv="1" data-scr="1" style="font-family:{{ displayFont }};font-weight:700;font-size:84px;line-height:0.86;letter-spacing:-0.01em;white-space:nowrap;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">25+</div></div>
+                  <div style="flex:none;padding:0 16px 20px;"><p data-rv="1" data-scr="1" style="margin:0;text-align:center;font-size:17px;line-height:22px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Workshops, guest lectures, and upskilling sessions conducted for companies and universities</p></div>
+                </div>
+                <div style="position:absolute;left:0;right:0;top:186px;bottom:0;display:flex;flex-direction:column;justify-content:center;padding:6px 4px 2px;">
+                  <div data-rv="1" data-scr="1" style="font-size:11.5px;line-height:16px;color:#d4d4d4;">I love teaching</div>
+                  <div data-rv="1" data-scr="1" style="font-size:15.5px;line-height:19px;margin-top:4px;text-wrap:pretty;">I have helped companies set up their design teams &amp; processes and mentor early stage designers.</div>
+                </div>
+              </div>
+            </div>
+            <div data-role="crt" data-hud-screen="1" aria-hidden="true" style="position:absolute;left:8px;top:8px;width:484px;height:186px;overflow:hidden;pointer-events:none;z-index:3;">
+              <div style="position:absolute;inset:0;z-index:2;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
+              <canvas data-crt-noise="1" width="240" height="96" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;"></canvas>
+              <div data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 8.2s linear infinite;animation-delay:-6.1s;"></div>
+              <div style="position:absolute;inset:0;z-index:5;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 12px rgba(0,0,0,0.3);"></div>
+              <div data-crt-flicker="1" style="position:absolute;inset:0;z-index:6;background:#000000;opacity:0;"></div>
+              <div data-crt-tear="1" style="position:absolute;left:0;right:0;top:40%;height:2px;z-index:6;background:rgba(255,255,255,0.5);opacity:0;"></div>
+            </div>
+            <div data-hud-boot="1" data-w="484" data-h="186" aria-hidden="true" style="position:absolute;left:8px;top:8px;width:484px;height:186px;pointer-events:none;z-index:4;">
+              <div data-hud-fill="1" style="position:absolute;inset:0;background:#D9D9D9;opacity:0;transform-origin:50% 50%;"></div>
+              <span data-hud-arm="tl-h" style="position:absolute;left:0;top:0;width:20px;height:{{ armPx }};background:#ffffff;transform-origin:0 0;"></span>
+              <span data-hud-arm="tl-v" style="position:absolute;left:0;top:0;width:{{ armPx }};height:20px;background:#ffffff;transform-origin:0 0;"></span>
+              <span data-hud-arm="tr-h" style="position:absolute;right:0;top:0;width:20px;height:{{ armPx }};background:#ffffff;transform-origin:100% 0;"></span>
+              <span data-hud-arm="tr-v" style="position:absolute;right:0;top:0;width:{{ armPx }};height:20px;background:#ffffff;transform-origin:100% 0;"></span>
+              <span data-hud-arm="bl-h" style="position:absolute;left:0;bottom:0;width:20px;height:{{ armPx }};background:#ffffff;transform-origin:0 100%;"></span>
+              <span data-hud-arm="bl-v" style="position:absolute;left:0;bottom:0;width:{{ armPx }};height:20px;background:#ffffff;transform-origin:0 100%;"></span>
+              <span data-hud-arm="br-h" style="position:absolute;right:0;bottom:0;width:20px;height:{{ armPx }};background:#ffffff;transform-origin:100% 100%;"></span>
+              <span data-hud-arm="br-v" style="position:absolute;right:0;bottom:0;width:{{ armPx }};height:20px;background:#ffffff;transform-origin:100% 100%;"></span>
+            </div>
+            <div data-hud-outline="1" aria-hidden="true" style="position:absolute;inset:0;border:0.5px solid #ffffff;pointer-events:none;z-index:5;"></div>
+          </section>
+        </div>
       </main>
       </div>
+      </div>
 
-      <section id="work" data-screen-label="Case Studies" style="padding:0 0 clamp(64px, 6.94vw, 120px);">
+      <sc-if value="{{ narrow }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;justify-content:center;padding:0 0 64px;">
+          <section data-screen-label="Work Map" style="width:100%;flex:none;max-width:100%;min-width:0;position:relative;z-index:1;">
+            <dc-import name="WorkMap" narrow="{{ narrow }}" hint-size="100%,692px"></dc-import>
+          </section>
+        </div>
+      </sc-if>
+
+      <section id="work" data-screen-label="Case Studies" style="margin-top:{{ csOverlap }};padding:0 0 clamp(64px, 6.94vw, 120px);">
         <dc-import name="CaseStudies" hint-size="100%,760px"></dc-import>
       </section>
 
@@ -244,296 +353,562 @@ a:hover{color:#ffffff;}
         <dc-import name="Tickers" hint-size="100%,900px"></dc-import>
       </div>
 
-      <div data-screen-label="Tools, Traits &amp; Strategies" style="padding:0 0 clamp(64px, 6.94vw, 120px);">
-        <dc-import name="Toolkit" hint-size="100%,585px"></dc-import>
-      </div>
+      <!-- Tools, Traits & Strategies hidden for now -->
+      <sc-if value="{{ showToolkit }}" hint-placeholder-val="{{ false }}">
+        <div data-screen-label="Tools, Traits &amp; Strategies" style="padding:0 0 clamp(64px, 6.94vw, 120px);">
+          <dc-import name="Toolkit" hint-size="100%,585px"></dc-import>
+        </div>
+      </sc-if>
 
-      <dc-import name="Footer" hint-size="100%,860px"></dc-import>
+      <dc-import name="Footer" hint-size="100%,480px"></dc-import>
     </div>
   </div>
 
+  <div data-role="cs-ghost" aria-hidden="true" style="position:fixed;left:0;top:0;width:0;height:0;border:0.5px solid #ffffff;pointer-events:none;z-index:40;display:none;">
+    <span data-gc="1" style="position:absolute;left:-1px;top:-1px;width:20px;height:20px;border-top:1px solid #ffffff;border-left:1px solid #ffffff;"></span>
+    <span data-gc="1" style="position:absolute;right:-1px;top:-1px;width:20px;height:20px;border-top:1px solid #ffffff;border-right:1px solid #ffffff;"></span>
+    <span data-gc="1" style="position:absolute;right:-1px;bottom:-1px;width:20px;height:20px;border-bottom:1px solid #ffffff;border-right:1px solid #ffffff;"></span>
+    <span data-gc="1" style="position:absolute;left:-1px;bottom:-1px;width:20px;height:20px;border-bottom:1px solid #ffffff;border-left:1px solid #ffffff;"></span>
+  </div>
   <div style="position:absolute;inset:0;pointer-events:none;opacity:{{ lightOpacity }};background-image:url(assets/noise-light.svg);background-size:200px 200px;"></div>
   <div style="position:absolute;inset:0;pointer-events:none;opacity:{{ darkOpacity }};background-image:url(assets/noise-dark.svg);background-size:200px 200px;"></div>
+
+  <sc-if value="{{ debugOn }}" hint-placeholder-val="{{ false }}">
+    <div role="region" aria-label="Motion debug" style="position:fixed;right:16px;bottom:16px;z-index:1000;width:264px;background:#1c1c1c;border:0.5px solid #ffffff;padding:12px;display:flex;flex-direction:column;gap:10px;font-family:'Redaction',Georgia,serif;font-size:14px;line-height:18px;color:#ececec;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
+        <span style="font-family:'Redaction 10','Redaction',Georgia,serif;font-weight:700;letter-spacing:0.02em;">Motion debug</span>
+        <button onClick="{{ onCloseDebug }}" aria-label="Close" style="background:transparent;border:0.5px solid #9a9a9a;color:#ececec;font:inherit;width:24px;height:24px;cursor:pointer;" style-hover="background:#2a2a2a;">×</button>
+      </div>
+      <button onClick="{{ onReplay }}" style="background:transparent;border:0.5px solid #d6d6d6;color:#ececec;font:inherit;padding:7px 8px;cursor:pointer;text-align:left;" style-hover="background:#2a2a2a;">Replay bootUp</button>
+      <div style="display:flex;gap:8px;">
+        <button onClick="{{ onAB }}" style="flex:1;background:transparent;border:0.5px solid #d6d6d6;color:#ececec;font:inherit;padding:7px 8px;cursor:pointer;" style-hover="background:#2a2a2a;">A → B</button>
+        <button onClick="{{ onBA }}" style="flex:1;background:transparent;border:0.5px solid #d6d6d6;color:#ececec;font:inherit;padding:7px 8px;cursor:pointer;" style-hover="background:#2a2a2a;">B → A</button>
+      </div>
+      <label style="display:flex;flex-direction:column;gap:6px;">
+        <span style="display:flex;justify-content:space-between;"><span>Speed</span><span>{{ speedLabel }}</span></span>
+        <input type="range" min="0.25" max="2" step="0.05" value="{{ speed }}" onChange="{{ onSpeed }}" style="width:100%;accent-color:#d8d8d8;">
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;cursor:pointer;">
+        <input type="checkbox" checked="{{ rmSim }}" onChange="{{ onRM }}" style="accent-color:#d8d8d8;">
+        <span>Simulate reduced motion</span>
+      </label>
+      <div style="font-size:12px;color:#bdbdbd;">Showing set {{ shownSet }}</div>
+    </div>
+  </sc-if>
 </div>
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;noise&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:0.6,&quot;min&quot;:0,&quot;max&quot;:1,&quot;step&quot;:0.05,&quot;tsType&quot;:&quot;number&quot;},&quot;displayCut&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Clean&quot;,&quot;10&quot;,&quot;20&quot;,&quot;35&quot;,&quot;50&quot;,&quot;70&quot;,&quot;100&quot;],&quot;default&quot;:&quot;35&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Type&quot;}}">
+const DW = 1625, DH = 692, MIN_Z = 0.55;
+// Figure turn ends when the top of the Card B set reaches this share of the viewport height (stacked layout).
+// In the pinned desktop layout Card B is the set that swaps in, so the turn ends at the swap trigger.
+const END_ANCHOR = 0.7, SKIP_INTRO_Y = 24;
+// Section 1 → 2 happens in place (desktop): the hero stays pinned and the Work Map sits behind it in the same frame.
+// TL is in screen-heights of scroll after the A → B swap stretch (pinVh). close: side cards close; dissolve: figure → text
+// (Work Map cards boot in one by one inside it); sprout: wires grow; end: pin releases.
+// CLOSE_DELAY / DISSOLVE_DELAY (ms): extra time gaps after the scroll trigger and after the cards finish closing.
+// Section 2 → 3 (all scroll-scrubbed until the card is full size):
+// pull: wires reel every Work Map card in behind the (opaque) middle screen while the bio disintegrates top → bottom into static;
+// shut: the screen switches off like an old TV — top/bottom edges meet (a,d & b,c), then the line's ends meet in the middle;
+// grow: from that point the outline opens out (horizontal, then vertical) to the case-study card, which then forms on its own.
+const TL = { close: 0.15, dissolve: [0.5, 1.7], sprout: [1.8, 2.9], pull: [3.0, 3.8], shut: [3.85, 4.35], grow: [4.35, 5.0], end: 5.05 }, CLOSE_DELAY = 220, DISSOLVE_DELAY = 320;
+// THREAD_LEN: how many glyphs are in flight between the figure and the text cursor at once (the strand's length).
+const THREAD_LEN = 36, NAV_SHOW_DELAY = 1000;
+// Nav: the active item (section in view, or last clicked) gets the grey grain fill.
+const NAV = [
+  { id: 'work', label: 'Work', flex: '139 1 0' },
+  { id: 'articles', label: 'Articles', flex: '162 1 0' },
+  { id: 'testimonials', label: 'Testi-Monils', flex: '213 1 0' },
+  { id: 'contact', label: 'Contact', flex: '162 1 0' }
+];
+// WM_APPEAR: dissolve-progress window over which the Work Map cards boot in, one by one.
+const WM_APPEAR = [0.08, 0.92];
+const clamp01 = v => (v < 0 ? 0 : v > 1 ? 1 : v);
 class Component extends DCLogic {
-  state = (() => { const W = typeof window !== 'undefined' ? window : null; const g = W ? Math.min(64, Math.max(20, W.innerWidth * 0.037037)) : 64; return { cw: W ? Math.min(1600, W.innerWidth - 2 * g) : 1600, vh: W ? W.innerHeight : 1117 }; })();
+  state = (() => { const W = typeof window !== 'undefined' ? window : null; const g = W ? Math.min(64, Math.max(20, W.innerWidth * 0.037037)) : 64; return { cw: W ? Math.min(1600, W.innerWidth - 2 * g) : 1600, vh: W ? W.innerHeight : 1117, navH: 70, debug: false, speed: 1, rmSim: false, shownSet: 'A' }; })();
+  shown = 'A'; want = 'A'; busy = false; booting = false; started = false; lastSide = null; nextCrt = 0;
   heroRef = el => {
     if (this.ro) { this.ro.disconnect(); this.ro = null; }
     if (!el || typeof ResizeObserver === 'undefined') return;
     this.ro = new ResizeObserver(([e]) => { const cw = Math.round(e.contentRect.width), vh = window.innerHeight; if (cw > 0 && (Math.abs(cw - this.state.cw) > 1 || Math.abs(vh - this.state.vh) > 1)) this.setState({ cw, vh }); });
     this.ro.observe(el);
   };
-  // ── CRT screens ─────────────────────────────────────────────────────────
-  // One engine drives every [data-role="crt"] on the page (hero cards, the
-  // centre panel, the case-study Outcomes screen). Only screens that are on
-  // screen get frames, at a steady 24fps. Noise is drawn from a few
-  // pre-baked tiles instead of being regenerated pixel by pixel.
-  crtStart() {
-    const R = Math.random, T = 128;
-    this.crt = new Map(); this.crtOn = new Set(); this.crtLast = 0;
-    this.tiles = Array.from({ length: 6 }, () => {
-      const c = document.createElement('canvas'); c.width = c.height = T;
-      const g = c.getContext('2d'), im = g.createImageData(T, T), d = im.data;
-      for (let i = 0; i < d.length; i += 4) { d[i] = d[i + 1] = d[i + 2] = 255; const v = R(); d[i + 3] = v > 0.55 ? (v - 0.55) * 70 * R() : 0; }
-      g.putImageData(im, 0, 0); return c;
-    });
-    this.crtIO = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) this.crtOn.add(e.target); else this.crtOn.delete(e.target); }), { rootMargin: '48px' });
-    this.crtRO = new ResizeObserver(es => es.forEach(e => { const o = this.crt.get(e.target.closest('[data-role="crt"]')); if (o) o.dirty = true; }));
-    this.crtScan();
-    this.crtScanT = setInterval(() => this.crtScan(), 1500);
-    if (this.reduce) return;
-    const loop = now => {
-      this.crtRaf = requestAnimationFrame(loop);
-      if (document.hidden || !this.crtOn.size || now - this.crtLast < 40) return;
-      this.crtLast = now;
-      for (const el of this.crtOn) { const o = this.crt.get(el); if (o) this.crtFrame(o, now); }
-    };
-    this.crtRaf = requestAnimationFrame(loop);
-  }
-  crtScan() {
-    const now = performance.now();
-    for (const [el, o] of this.crt) if (!el.isConnected) { this.crtIO.unobserve(el); this.crtRO.unobserve(o.cv); this.crt.delete(el); this.crtOn.delete(el); }
-    document.querySelectorAll('[data-role="crt"]').forEach(el => {
-      let o = this.crt.get(el);
-      if (!o) {
-        const cv = el.querySelector('[data-crt-noise]'), fl = el.querySelector('[data-crt-flicker]'), tear = el.querySelector('[data-crt-tear]'), ct = el.querySelector('[data-crt-content]');
-        if (!cv || !fl || !tear || !ct) return;
-        o = { el, cv, fl, tear, ct, g: cv.getContext('2d'), scan: el.querySelector('[data-crt-scan]'), c: el.hasAttribute('data-crt-center'), dirty: true, s: 0, dipEnd: 0, lvl: 0, glEnd: 0, tearEnd: 0, hoverAt: 0, nextGl: now + 1500 + Math.random() * 6000 };
-        el.addEventListener('pointerenter', () => this.crtGlitch(o, true));
-        this.crt.set(el, o); this.crtIO.observe(el); this.crtRO.observe(cv);
-      }
-      this.crtScanlines(o);
-      if (this.reduce && o.dirty) this.crtFrame(o, now, true);
-    });
-  }
-  // Scanlines are re-cut so their period lands on whole device pixels. The
-  // hero is CSS-zoomed and most Windows screens run at 125–150%, so the
-  // original 1px/3px pattern fell between pixels and showed moiré bands.
-  crtScanlines(o) {
-    const h = o.scan && o.el.offsetHeight; if (!h) return;
-    const s = o.el.getBoundingClientRect().height / h * (window.devicePixelRatio || 1);
-    if (!(s > 0) || Math.abs(s - o.s) < 0.01) return;
-    o.s = s;
-    const L = Math.max(1, Math.round(s)) / s, P = Math.max(2, Math.round(3 * s)) / s, px = v => v.toFixed(3) + 'px';
-    o.scan.style.backgroundImage = 'repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) ' + px(L) + ', rgba(0,0,0,0) ' + px(L) + ', rgba(0,0,0,0) ' + px(P) + ')';
-  }
-  crtFrame(o, now, still) {
-    const R = Math.random, cv = o.cv, g = o.g;
-    if (o.dirty) {
-      o.dirty = false;
-      const w = cv.clientWidth, h = cv.clientHeight; if (!w || !h) return;
-      // ~2 CSS px of grain in both axes, so tall screens no longer smear into vertical streaks.
-      const W = Math.max(8, Math.round(w / 2)), H = Math.max(8, Math.round(h / 2));
-      if (cv.width !== W || cv.height !== H) { cv.width = W; cv.height = H; }
-      o.pats = this.tiles.map(t => g.createPattern(t, 'repeat'));
-    }
-    if (!o.pats) return;
-    const W = cv.width, H = cv.height, boost = o.c ? (this.boost || 0) : 0;
-    g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, W, H);
-    for (let k = 0, n = 1 + Math.round(boost * 3); k < n; k++) {
-      const ox = (R() * 128) | 0, oy = (R() * 128) | 0;
-      g.setTransform(1, 0, 0, 1, ox, oy); g.fillStyle = o.pats[(R() * o.pats.length) | 0]; g.fillRect(-ox, -oy, W, H);
-    }
-    if (still) return;
-    // Brightness: a faint constant shimmer, with an occasional short dip.
-    let fl;
-    if (now < o.dipEnd) fl = o.lvl * (0.6 + 0.4 * R());
-    else { if (R() < 0.012) { o.dipEnd = now + 40 + R() * 130; o.lvl = 0.06 + R() * 0.1; } fl = R() * R() * 0.045; }
-    o.fl.style.opacity = fl.toFixed(3);
-    // Glitches are scheduled per screen (every 3.5–11.5s) so the screens never fire in sync.
-    if (o.glEnd) {
-      if (now >= o.glEnd) { o.glEnd = 0; o.el.removeAttribute('data-glitch'); o.ct.style.transform = ''; }
-      else o.ct.style.transform = 'translateX(' + ((R() - 0.5) * 5).toFixed(1) + 'px)';
-    } else if (now >= o.nextGl || R() < 0.25 * boost) this.crtGlitch(o, false, now);
-    if (o.tearEnd && now >= o.tearEnd) { o.tearEnd = 0; o.tear.style.opacity = '0'; }
-  }
-  crtGlitch(o, hover, now = performance.now()) {
-    if (this.reduce || o.glEnd) return;
-    if (hover) { if (now - o.hoverAt < 1200) return; o.hoverAt = now; }
-    const R = Math.random;
-    o.glEnd = now + (hover ? 170 : 60 + R() * 90);
-    o.nextGl = now + 3500 + R() * 8000;
-    o.el.setAttribute('data-glitch', '');
-    o.ct.style.transform = 'translateX(' + ((R() < 0.5 ? -1 : 1) * (1 + R() * 2)).toFixed(1) + 'px)';
-    o.tearEnd = now + 50 + R() * 70;
-    o.tear.style.top = (8 + R() * 84).toFixed(1) + '%';
-    o.tear.style.height = (1 + ((R() * 3) | 0)) + 'px';
-    o.tear.style.opacity = (0.18 + R() * 0.3).toFixed(2);
-  }
+  cards() { return Array.from(document.querySelectorAll('[data-hud-card]')).sort((a, b) => a.getAttribute('data-hud-card') - b.getAttribute('data-hud-card')); }
+  center() { return this.$('[data-hud-center]'); }
+  // Cached element lookup (re-queried only if the node was replaced).
+  $(sel) { const c = (this.$c = this.$c || {}); let e = c[sel]; if (!e || !e.isConnected) e = c[sel] = document.querySelector(sel); return e; }
 
-  // ── Nav ─────────────────────────────────────────────────────────────────
-  // Hides when you scroll down, comes back when you scroll up, reach the top,
-  // or move the pointer to the top edge. A bracket marks the current section
-  // and follows the pointer across the links.
-  navStart() {
-    this.navY = window.scrollY; this.navAcc = 0; this.navHover = null; this.navActive = null;
-    this.onNavOver = e => {
-      if (e.pointerType === 'touch') return;
-      const a = e.target.closest ? e.target.closest('[data-nav-link]') : null;
-      if (a !== this.navHover) { this.navHover = a; this.paintInd(); }
-    };
-    this.onNavFocus = e => {
-      const a = e.target.closest ? e.target.closest('[data-nav-link]') : null;
-      if (a !== this.navHover) { this.navHover = a; this.paintInd(); }
-    };
-    // A nav click keeps the bar up for the glide so you see the bracket land,
-    // then tucks it away so it doesn't sit over the section you jumped to.
-    const land = () => {
-      if (!this.navLock) return;
-      this.navLock = false; this.navY = window.scrollY; this.navAcc = 0;
-      clearTimeout(this.navTuckT);
-      this.navTuckT = setTimeout(() => { if (window.scrollY > 120 && !document.querySelector('[data-nav]:hover')) this.setNav(true); }, 900);
-    };
-    this.onNavClick = e => {
-      const a = e.target.closest ? e.target.closest('[data-nav-link]') : null;
-      if (!a) return;
-      this.navLock = true; this.setNav(false); clearTimeout(this.navTuckT);
-      clearTimeout(this.navLockT); this.navLockT = setTimeout(land, 2500);
-    };
-    this.onScrollEnd = land;
-    this.onEdge = e => { if (e.clientY < 72 && e.pointerType !== 'touch') { clearTimeout(this.navTuckT); this.setNav(false); } };
-    document.addEventListener('pointerover', this.onNavOver, { passive: true });
-    document.addEventListener('focusin', this.onNavFocus);
-    document.addEventListener('click', this.onNavClick);
-    window.addEventListener('scrollend', this.onScrollEnd);
-    window.addEventListener('pointermove', this.onEdge, { passive: true });
+  // ── Geometry cache (performance) ─────────────────────────────────────────
+  // The scroll choreography only needs a handful of positions. They are derived
+  // from the scroll offset (cached from scroll events) plus document offsets that
+  // are measured only when layout can have changed, instead of calling
+  // getBoundingClientRect ~20 times per frame, which forced a full-page layout
+  // between every component's style writes.
+  measureGeo() {
+    const sy = (this.sy = window.scrollY), G = { at: performance.now() };
+    const pin = this.$('[data-role="hero-pin"]'), fit = this.$('[data-role="hero-fit"]'), ce = this.center(), stage = this.$('[data-role="stage"]');
+    if (!pin || !fit || !stage) { this.G = null; return; }
+    const pr = pin.getBoundingClientRect(), fr = fit.getBoundingClientRect(), sr = stage.getBoundingClientRect();
+    G.pinTop = pr.top + sy; G.pinH = pr.height; G.fitH = fr.height; G.sticky = getComputedStyle(fit).position === 'sticky';
+    // offsets inside the (possibly stuck) hero frame
+    const fitTopNow = fr.top;
+    G.stage = { dy: sr.top - fitTopNow, h: sr.height };
+    if (ce) { const cr = ce.getBoundingClientRect(); G.ce = { left: cr.left, dy: cr.top - fitTopNow, w: cr.width, h: cr.height, ow: ce.offsetWidth, oh: ce.offsetHeight }; }
+    const rb = this.$('[data-role="col-right"]'); if (rb) G.colRightTop = rb.getBoundingClientRect().top - fitTopNow;
+    const wm = this.$('[data-workmap]'); if (wm) { const wr = wm.getBoundingClientRect(); G.wm = { top: wr.top + sy, h: wr.height }; }
+    G.nav = NAV.map(n => { const el = document.getElementById(n.id); return el ? el.getBoundingClientRect().top + sy : null; });
+    // stacked layout: Work Map nodes sit in normal flow, so their document positions are static
+    if (this.layout && this.layout.narrow && this.wmNodes) { G.wmTops = new Map(); this.wmNodes.forEach(n => { if (n.isConnected) G.wmTops.set(n, n.getBoundingClientRect().top + sy); }); }
+    this.G = G; this.gf = null;
   }
-  setNav(hide) {
-    const h = document.querySelector('[data-nav]'); if (!h) return;
-    if (hide === h.hasAttribute('data-hidden')) return;
-    if (hide) h.setAttribute('data-hidden', ''); else h.removeAttribute('data-hidden');
+  // Per-frame derived geometry (memoised for the frame). fitTop follows CSS sticky:
+  // natural position, clamped to the nav line, released at the bottom of the pin.
+  geo() {
+    const G = this.G; if (!G) return null;
+    const sy = this.sy, f = this.gf;
+    if (f && f.sy === sy) return f;
+    const pinTopVP = G.pinTop - sy, navH = this.state.navH;
+    const fitTop = G.sticky ? Math.min(Math.max(pinTopVP, navH), pinTopVP + G.pinH - G.fitH) : pinTopVP;
+    return (this.gf = { sy, vh: window.innerHeight, pinTopVP, fitTop, stageTop: fitTop + G.stage.dy, stageH: G.stage.h,
+      ce: G.ce && { left: G.ce.left, top: fitTop + G.ce.dy, width: G.ce.w, height: G.ce.h, ow: G.ce.ow, oh: G.ce.oh },
+      colRightTop: G.colRightTop !== undefined ? fitTop + G.colRightTop : null, wm: G.wm && { top: G.wm.top - sy, h: G.wm.h } });
   }
-  navScroll() {
-    const y = window.scrollY, dy = y - this.navY; this.navY = y;
-    if (y < 120) { this.navAcc = 0; this.setNav(false); return; }
-    if (this.navLock) return;
-    if (dy && (dy > 0) !== (this.navAcc > 0)) this.navAcc = 0;
-    this.navAcc += dy;
-    if (this.navAcc > 24) this.setNav(true); else if (this.navAcc < -12) this.setNav(false);
-  }
-  spy() {
-    const links = document.querySelectorAll('[data-nav-link]'), probe = window.innerHeight * 0.4;
-    const atEnd = window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 4;
-    let act = null;
-    links.forEach(a => {
-      const s = document.getElementById(a.getAttribute('href').slice(1)); if (!s) return;
-      const r = s.getBoundingClientRect();
-      if (r.top <= probe && r.bottom + 300 > probe) act = a;
-    });
-    if (atEnd && links.length) act = links[links.length - 1];
-    if (act === this.navActive) return;
-    if (this.navActive) this.navActive.removeAttribute('aria-current');
-    this.navActive = act;
-    if (act) act.setAttribute('aria-current', 'true');
-    this.paintInd();
-  }
-  paintInd() {
-    const ind = document.querySelector('[data-nav-ind]'); if (!ind) return;
-    const t = this.navHover || this.navActive;
-    if (!t) { ind.style.opacity = '0'; return; }
-    const appearing = ind.style.opacity !== '1';
-    // Appear in place (fade only); once visible, slide between links.
-    if (appearing) ind.style.transition = 'opacity 240ms ease';
-    ind.style.transform = 'translateX(' + (t.offsetLeft + 4) + 'px)';
-    ind.style.width = Math.max(0, t.offsetWidth - 8) + 'px';
-    ind.style.opacity = '1';
-    if (appearing) { void ind.offsetWidth; ind.style.transition = ''; }
-  }
-
-  // Fade the page up once the hero's own typefaces are in, so the first thing
-  // you see is never a Georgia fallback swapping to Redaction. Capped at 1s so
-  // a slow font never holds the page back; sections below the fold keep
-  // loading behind it.
-  reveal() {
-    const root = document.documentElement, t0 = performance.now(), F = document.fonts;
-    const done = () => requestAnimationFrame(() => root.classList.remove('dc-boot'));
-    const check = () => {
-      if (!root.classList.contains('dc-boot')) return;
-      const fonts = !F || !F.check || (F.check("16px 'Redaction'") && F.check("700 64px 'Redaction 35'"));
-      if (fonts || performance.now() - t0 > 1000) { done(); return; }
-      this.revealT = setTimeout(check, 30);
-    };
-    check();
-  }
-
-  // The runtime only passes prevProps here, so track the layout inputs ourselves.
-  componentDidUpdate() {
-    const k = this.state.cw + '|' + this.state.stickyTop;
-    if (k === this.layoutKey) return;
-    this.layoutKey = k; this.measure(); this.onS && this.onS(); requestAnimationFrame(() => this.paintInd());
-  }
+  remeasure() { if (!this.mRaf) this.mRaf = requestAnimationFrame(() => { this.mRaf = 0; this.measureGeo(); }); }
   componentDidMount() {
-    this.reduce = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
-    this.onS = () => { if (!this.mraf) this.mraf = requestAnimationFrame(() => this.morph()); };
+    window.__wmSprout = 0; this.sideState = 'open';
+    this.sysRM = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    this.hiddenEls = this.cards().concat([this.center()]).filter(Boolean);
+    this.hiddenEls.forEach(e => (e.style.visibility = 'hidden'));
+    if (/[?&]debug\b/.test(window.location.search)) this.setState({ debug: true });
+    this.onKey = e => {
+      const tg = e.target || {};
+      if (e.shiftKey && (e.key === 'D' || e.key === 'd') && !/INPUT|TEXTAREA|SELECT/.test(tg.tagName || '') && !tg.isContentEditable) this.setState(s => ({ debug: !s.debug }));
+    };
+    window.addEventListener('keydown', this.onKey);
+    this.sy = window.scrollY;
+    this.onS = () => {
+      this.sy = window.scrollY;
+      // nav hides while scrolling and returns NAV_SHOW_DELAY ms after the scroll stops
+      if (!this.spyRaf) this.spyRaf = requestAnimationFrame(() => { this.spyRaf = 0; this.spyNav(); });
+      // only scrolls the user drives (wheel / touch / keys / scrollbar) hide the nav — not nav-link jumps
+      if (performance.now() - (this.userInputAt || -1e9) > 300) return;
+      if (this.sy > 40) this.setNavHidden(true);
+      clearTimeout(this.navT); this.navT = setTimeout(() => this.setNavHidden(false), NAV_SHOW_DELAY);
+    };
     window.addEventListener('scroll', this.onS, { passive: true });
-    setTimeout(() => { this.measure(); this.onS(); }, 60);
-    this.navStart();
-    this.crtStart();
-    this.reveal();
-    this.onR = () => { if (Math.abs(window.innerHeight - this.state.vh) > 1) this.setState({ vh: window.innerHeight }); this.measure(); this.onS(); this.paintInd(); };
+    this.onInput = e => { if (e.type === 'keydown' && !/^(Arrow|Page|Home|End| $)/.test(e.key)) return; if (e.type === 'pointerdown' && e.target !== document.documentElement) return; this.userInputAt = performance.now(); };
+    ['wheel', 'touchmove', 'keydown', 'pointerdown'].forEach(t => window.addEventListener(t, this.onInput, { passive: true }));
+    this.onR = () => { this.measureNav(); if (Math.abs(window.innerHeight - this.state.vh) > 1) this.setState({ vh: window.innerHeight }); this.remeasure(); };
     window.addEventListener('resize', this.onR);
+    this.measureNav();
+    // Geometry is re-measured when anything on the page changes size, when fonts land,
+    // and as a once-a-second safety net (one batch of reads, outside the frame loop).
+    this.measureGeo();
+    if (typeof ResizeObserver !== 'undefined') { this.geoRo = new ResizeObserver(() => this.remeasure()); const ct = this.$('[data-role="container"]'); if (ct) this.geoRo.observe(ct); }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this.remeasure());
+    this.geoT = setInterval(() => { if (!document.hidden) this.measureGeo(); }, 1000);
+    const t0 = performance.now();
+    const wait = () => {
+      if (this.dead) return;
+      if (window.HUDMotion) return this.initMotion();
+      if (performance.now() - t0 > 4000) return this.unhide();
+      this.waitRaf = requestAnimationFrame(wait);
+    };
+    wait();
+    const waitFig = () => {
+      if (this.dead) return;
+      if (window.GlyphFigure) return this.mountFig();
+      this.figRaf = requestAnimationFrame(waitFig);
+    };
+    waitFig();
+  }
+  mountFig() {
+    const el = document.querySelector('[data-figure-mount]'); if (!el || this.fig) return;
+    this.fig = window.GlyphFigure.mount(el, { getEndDelta: () => this.figEndDelta() });
+    if (this.figPending) { this.fig.reveal(this.figPending); this.figPending = null; }
+  }
+  revealFig(o) { if (this.fig) this.fig.reveal(o); else this.figPending = o; }
+  figEndDelta() {
+    const vh = window.innerHeight, L = this.layout || {}, g = this.geo();
+    if (!L.narrow) {
+      const C = this.H ? this.H.CONFIG.hero : { trigger: 0.4, pinVh: 1 };
+      return g ? C.trigger * vh * C.pinVh - (this.state.navH - g.pinTopVP) : 0;
+    }
+    return g && g.colRightTop !== null ? g.colRightTop - END_ANCHOR * vh : 0;
+  }
+  // Nav hide/show is applied straight to the header (same transform + stepped transition
+  // as before) instead of through setState, which re-rendered the whole page template
+  // every time a scroll started or stopped.
+  setNavHidden(on) {
+    if (on === !!this.navHiddenNow) return;
+    this.navHiddenNow = on;
+    const h = this.$('[data-role="nav"]'); if (h) h.style.transform = on ? 'translateY(-130%)' : 'none';
+  }
+  componentDidUpdate(pp) {
+    if (pp.displayCut !== this.props.displayCut && this.H) this.H.fontsReady(document.querySelector('[data-role="stage"]')).then(() => this.buildBio());
+    const k = this.state.cw + '|' + this.state.vh + '|' + this.state.navH;
+    if (k !== this.geoKey) { this.geoKey = k; this.remeasure(); }
   }
   componentWillUnmount() {
-    cancelAnimationFrame(this.crtRaf); clearInterval(this.crtScanT); clearTimeout(this.navLockT); clearTimeout(this.navTuckT); clearTimeout(this.revealT); cancelAnimationFrame(this.mraf);
-    if (this.crtIO) this.crtIO.disconnect(); if (this.crtRO) this.crtRO.disconnect(); if (this.ro) this.ro.disconnect();
-    window.removeEventListener('scroll', this.onS); window.removeEventListener('resize', this.onR);
-    window.removeEventListener('scrollend', this.onScrollEnd); window.removeEventListener('pointermove', this.onEdge);
-    document.removeEventListener('pointerover', this.onNavOver); document.removeEventListener('focusin', this.onNavFocus); document.removeEventListener('click', this.onNavClick);
+    this.dead = true;
+    cancelAnimationFrame(this.waitRaf); cancelAnimationFrame(this.figRaf); if (this.eng) this.eng.stop(); if (this.fig) this.fig.destroy();
+    clearTimeout(this.navT); clearInterval(this.geoT); cancelAnimationFrame(this.mRaf); cancelAnimationFrame(this.spyRaf);
+    if (this.crtIO) this.crtIO.disconnect(); if (this.geoRo) this.geoRo.disconnect();
+    window.removeEventListener('scroll', this.onS); ['wheel', 'touchmove', 'keydown', 'pointerdown'].forEach(t => window.removeEventListener(t, this.onInput)); window.removeEventListener('resize', this.onR); window.removeEventListener('keydown', this.onKey);
+    if (this.ro) this.ro.disconnect(); if (this.bioRo) this.bioRo.disconnect();
+  }
+  // Split the bio into its rendered lines (measured on the hidden source copy) so each line can be typed in on its own.
+  buildBio() {
+    const src = document.querySelector('[data-bio-src]'), out = document.querySelector('[data-bio-out]'), ce = this.center();
+    if (!src || !out || !ce) return;
+    if (this.eng) (this.bioLines || []).forEach(l => this.eng.cancel(l.el));
+    out.textContent = '';
+    const lines = [];
+    Array.from(src.querySelectorAll('[data-bio-block]')).forEach(blk => {
+      const groups = []; let lastTop = null, n;
+      const tw = document.createTreeWalker(blk, NodeFilter.SHOW_TEXT);
+      while ((n = tw.nextNode())) {
+        const re = /\S+/g; let m;
+        while ((m = re.exec(n.data))) {
+          const r = document.createRange(); r.setStart(n, m.index); r.setEnd(n, m.index + m[0].length);
+          const top = Math.round(r.getBoundingClientRect().top);
+          if (lastTop === null || Math.abs(top - lastTop) > 4) { groups.push([]); lastTop = top; }
+          groups[groups.length - 1].push(m[0]);
+        }
+      }
+      const bd = document.createElement('div'); bd.style.margin = getComputedStyle(blk).margin;
+      groups.forEach(g => { const ld = document.createElement('div'); ld.textContent = g.join(' '); ld.style.whiteSpace = 'nowrap'; ld.setAttribute('data-scr', '1'); bd.appendChild(ld); lines.push({ el: ld, on: false, frac: 0 }); });
+      out.appendChild(bd);
+    });
+    const cr = ce.getBoundingClientRect(), k = cr.width / Math.max(1, ce.offsetWidth) || 1, chars = [];
+    lines.forEach(l => {
+      const st = this.H && this.H.prepScramble(l.el); if (!st) return;
+      st.chars.forEach(c => { const r = c.span.getBoundingClientRect(); c.span.style.visibility = 'hidden'; chars.push({ span: c.span, ch: c.final, x: (r.left + r.width / 2 - cr.left) / k, y: (r.top + r.height / 2 - cr.top) / k }); });
+    });
+    const cs = getComputedStyle(out);
+    this.bioFont = { size: parseFloat(cs.fontSize) || 24, family: cs.fontFamily, weight: cs.fontWeight };
+    this.bioLines = lines; this.thread = { chars, shown: 0, drawn: true };
+  }
+  // The bio is pulled out of the figure like yarn: a strand of glyphs runs from the dissolve front (sweeping across the
+  // figure's remaining width) to the text cursor, each glyph growing from figure-cell size into the bio type as it lands.
+  drawThread(front) {
+    const T = this.thread, ch = T.chars, N = ch.length, ce = this.center(), cv = document.querySelector('[data-thread]');
+    if (!cv || !ce || !N) return;
+    const L = THREAD_LEN, reduced = this.eng.reduced, g = clamp01(front);
+    const c = reduced ? N * g : -L + (N + L) * g;
+    const shown = Math.max(0, Math.min(N, Math.ceil(c)));
+    if (shown !== T.shown) { for (let i = Math.min(shown, T.shown); i < Math.max(shown, T.shown); i++) ch[i].span.style.visibility = i < shown ? '' : 'hidden'; T.shown = shown; }
+    const i0 = Math.max(0, Math.ceil(c)), i1 = reduced ? i0 : Math.min(N, Math.ceil(c + L));
+    if (i0 >= i1 && !T.drawn) return;
+    const gc = this.geo() && this.geo().ce;   // cached: no layout read per frame
+    const w = gc ? gc.ow : ce.offsetWidth, h = gc ? gc.oh : ce.offsetHeight, k = (gc ? gc.width : ce.getBoundingClientRect().width) / Math.max(1, w) || 1, dpr = Math.min(2, window.devicePixelRatio || 1);
+    const bw = Math.round(w * k * dpr), bh = Math.round(h * k * dpr);
+    if (cv.width !== bw || cv.height !== bh) { cv.width = bw; cv.height = bh; }
+    const x = cv.getContext('2d'); x.setTransform(1, 0, 0, 1, 0, 0); x.clearRect(0, 0, bw, bh);
+    T.drawn = i0 < i1; if (!T.drawn) return;
+    x.setTransform(k * dpr, 0, 0, k * dpr, 0, 0); x.textAlign = 'center'; x.textBaseline = 'middle';
+    const sp = this.fig && this.fig.frontSpan, x0 = sp ? sp.x0 * w : w * 0.4, x1 = sp ? sp.x1 * w : w * 0.6, sy = front * h;
+    const t = performance.now() / 1000, cell = this.fig ? this.fig.cellPx : 12, F = this.bioFont;
+    const CS = (window.FIGURE && window.FIGURE.charset) || '01#%*+=-:.', bend = 0.24 + 0.08 * Math.sin(t * 0.7);
+    for (let i = i1 - 1; i >= i0; i--) {
+      const p = clamp01(1 - (i - c) / L), d = ch[i], e = p * p * (3 - 2 * p);
+      const sx = x0 + (x1 - x0) * (0.5 + 0.5 * Math.sin(i * 0.45 + t * 1.3));
+      const dx = d.x - sx, dy = d.y - sy, len = Math.hypot(dx, dy) || 1, nx = -dy / len, ny = dx / len;
+      const cx = (sx + d.x) / 2 + nx * len * bend, cy = (sy + d.y) / 2 + ny * len * bend;
+      const wob = Math.sin(p * Math.PI) * 4 * Math.sin(t * 5 + i * 0.9), u = 1 - e;
+      const px = u * u * sx + 2 * u * e * cx + e * e * d.x + nx * wob, py = u * u * sy + 2 * u * e * cy + e * e * d.y + ny * wob;
+      const s = cell + (F.size - cell) * p * p, settled = p > 0.82;
+      x.font = settled ? F.weight + ' ' + s.toFixed(1) + 'px ' + F.family : '600 ' + s.toFixed(1) + 'px "IBM Plex Mono", ui-monospace, monospace';
+      x.fillStyle = settled ? '#ffffff' : 'rgba(225,240,255,' + (0.55 + 0.45 * p).toFixed(3) + ')';
+      x.fillText(settled ? d.ch : CS[(i * 7 + Math.floor(t * 14 + i)) % CS.length], px, py);
+    }
+  }
+  // Section 1 → 2. Desktop: the middle component holds its pinned spot after the hero releases, then docks into the
+  // Work Map's empty centre column. Over that stretch the figure dissolves top → bottom and the bio types in line by line.
+  transition(dt) {
+    const ce = this.center(), L = this.layout || {}, vh = window.innerHeight, H = this.H; if (!ce || !H) return;
+    const C = H.CONFIG.hero; let D = 0;
+    const g = this.geo(); if (!g) return;
+    if (!L.narrow) {
+      const q = (this.state.navH - g.pinTopVP) / vh - C.pinVh, now = performance.now();
+      this.stepSides(q >= TL.close);
+      const ok = this.sideState === 'closed' && this.sidesDoneAt && now - this.sidesDoneAt > DISSOLVE_DELAY;
+      D = ok ? clamp01((q - TL.dissolve[0]) / (TL.dissolve[1] - TL.dissolve[0])) : 0;
+      this.sprout = clamp01((q - TL.sprout[0]) / (TL.sprout[1] - TL.sprout[0]));
+      this.stepOut(q);
+    } else {
+      this.stepSides(false); window.__csReveal = undefined;
+      D = clamp01(-this.figEndDelta() / (0.8 * vh));
+      const wr = g.wm;
+      this.sprout = wr ? clamp01((vh * 0.75 - wr.top) / Math.max(1, wr.h * 0.8)) : 1;
+    }
+    this.dz = this.dz === undefined ? D : this.dz + (D - this.dz) * (1 - Math.exp(-dt / 600));
+    window.__wmSprout = this.started ? (this.sprout ?? 0) : 0;
+    this.stepWM(this.dz, vh, L.narrow);
+    const front = this.fig ? this.fig.setDissolve(this.dz) : this.dz;
+    if (!this.thread || !this.started) return;
+    this.drawThread(this.dz > 0.001 ? front : -1);
+  }
+  // Side hero cards close (bootUp in reverse) shortly after the scroll trigger, and reopen if the user scrolls back.
+  stepSides(close) {
+    if (!this.started || !this.H) return;
+    const want = close ? 'closed' : 'open'; if (want === this.sideState) return;
+    this.sideState = want; this.sidesDoneAt = 0;
+    const H = this.H, eng = this.eng, cards = this.cards();
+    document.querySelectorAll('[data-role="stage"] > [data-role="col-left"], [data-role="stage"] > [data-role="col-right"]').forEach(c => (c.style.pointerEvents = close ? 'none' : ''));
+    if (want === 'closed') {
+      this.booting = false; this.busy = false; let n = cards.length;
+      cards.forEach((c, k) => H.bootDown(eng, c, { delay: CLOSE_DELAY + k * H.CONFIG.hero.cardStagger, set: this.shown, tag: c, onEnd: () => { if (--n === 0 && this.sideState === 'closed') this.sidesDoneAt = performance.now(); } }));
+      return;
+    }
+    this.shown = this.want; this.booting = true; let n = cards.length;
+    cards.forEach((c, k) => H.bootUp(eng, c, { delay: k * H.CONFIG.hero.cardStagger, set: this.shown, tag: c, onEnd: () => { if (--n === 0) { this.booting = false; this.pump(); } } }));
+  }
+  stepOut(q) {
+    const ce = this.center(); if (!this.started || !ce) return;
+    const sm = t => t * t * (3 - 2 * t), seg = (x, y) => clamp01((q - x) / (y - x));
+    const u = seg(TL.pull[0], TL.pull[1]);
+    window.__wmPull = u;
+    const wm = this.$('[data-role="wm-pull"]'), wv = q >= TL.shut[0] ? 'hidden' : '';
+    if (wm && wm.style.visibility !== wv) wm.style.visibility = wv;
+    this.dissolveBio(u);
+    this.staticBoost = Math.min(1, u * 2.5);
+    const s = seg(TL.shut[0], TL.shut[1]), sv = sm(clamp01(s / 0.55)), sh = sm(clamp01((s - 0.55) / 0.45));
+    const g = seg(TL.grow[0], TL.grow[1]), gh = sm(clamp01(g / 0.45)), gv = sm(clamp01((g - 0.45) / 0.55)), reveal = q >= TL.grow[1];
+    const shutOn = s > 0;
+    const cp = shutOn ? 'inset(' + (sv * 50).toFixed(3) + '% ' + (sh * 50).toFixed(3) + '%)' : '';
+    if (ce.style.clipPath !== cp) ce.style.clipPath = cp;
+    if (shutOn !== !!this.shutOn) {
+      this.shutOn = shutOn; const v = shutOn ? 'hidden' : '';
+      ce.querySelectorAll('[data-hud-outline], [data-hud-arm]').forEach(e => (e.style.visibility = v));
+    }
+    const ghost = this.$('[data-role="cs-ghost"]'), card = this.$('[data-cs-card]'), tr = this.$('[data-cs-track]');
+    let R = null, br = false, bg = 0;
+    const gA = this.geo() && this.geo().ce, A = gA || ce.getBoundingClientRect(), cx = A.left + A.width / 2, cy = A.top + A.height / 2;
+    if (shutOn && s < 1) {
+      const w = A.width * (1 - sh), hh = A.height * (1 - sv);
+      R = [cx - w / 2, cy - hh / 2, w, hh]; br = true; bg = 0.12 + 0.5 * sv + 0.25 * sh;
+    } else if (s >= 1 && !reveal && card && tr) {
+      const B = card.getBoundingClientRect(), tb = tr.getBoundingClientRect();
+      const st = parseFloat(tr.firstElementChild && tr.firstElementChild.style.top) || 0, off = Math.max(0, tb.top - st);
+      const bx = B.left + B.width / 2, by = B.top - off + B.height / 2, w = B.width * gh, hh = B.height * gv;
+      const X = cx + (bx - cx) * gh, Y = cy + (by - cy) * gh;
+      R = [X - w / 2, Y - hh / 2, w, hh]; bg = 0.85 * (1 - gv);
+    }
+    if (ghost) {
+      if (R) {
+        ghost.style.display = 'block';
+        ghost.style.transform = 'translate(' + R[0].toFixed(1) + 'px,' + R[1].toFixed(1) + 'px)';
+        ghost.style.width = Math.max(1, R[2]).toFixed(1) + 'px'; ghost.style.height = Math.max(1, R[3]).toFixed(1) + 'px';
+        ghost.style.background = 'rgba(255,255,255,' + (bg * (R[3] < 40 || R[2] < 40 ? 1 : 0.35)).toFixed(3) + ')';
+        ghost.style.boxShadow = bg > 0.05 ? '0 0 ' + (6 + 10 * bg).toFixed(0) + 'px rgba(255,255,255,' + (0.45 * bg).toFixed(3) + ')' : 'none';
+        const bv = br ? '' : 'hidden', bs = Math.min(20, R[2] / 2, R[3] / 2).toFixed(1) + 'px';
+        ghost.querySelectorAll('[data-gc]').forEach(c => { c.style.visibility = bv; c.style.width = bs; c.style.height = bs; });
+      } else if (ghost.style.display !== 'none') ghost.style.display = 'none';
+    }
+    window.__csReveal = reveal;
+    const fit = this.$('[data-role="hero-fit"]'), pe = reveal ? 'none' : '';
+    if (fit && fit.style.pointerEvents !== pe) fit.style.pointerEvents = pe;
+  }
+  // Bio disintegrates top → bottom: a band of characters behind the front degrades into dim noise glyphs and fades into the
+  // screen static (whose gain rises with it); everything above the band is gone.
+  dissolveBio(f) {
+    const T = this.thread, ch = T && T.chars; if (!ch || !ch.length) return;
+    if (f <= 0) {
+      if (this.bioDis) { this.bioDis = false; ch.forEach(c => { c.span.textContent = c.ch; c.span.style.opacity = ''; c.span.style.color = ''; c.span.style.visibility = ''; }); T.shown = ch.length; }
+      return;
+    }
+    this.bioDis = true;
+    let y0 = Infinity, y1 = -Infinity; ch.forEach(c => { if (c.y < y0) y0 = c.y; if (c.y > y1) y1 = c.y; });
+    const band = 96, front = y0 - 12 + (y1 - y0 + band + 24) * f, CS = (window.FIGURE && window.FIGURE.charset) || '01#%*+=-:.';
+    for (const c of ch) {
+      const dy = front - c.y, sp = c.span;
+      if (dy > band) { if (sp.style.visibility !== 'hidden') sp.style.visibility = 'hidden'; continue; }
+      if (sp.style.visibility) sp.style.visibility = '';
+      if (dy <= 0) { if (sp.style.opacity) { sp.style.opacity = ''; sp.style.color = ''; sp.textContent = c.ch; } continue; }
+      const t = dy / band;
+      sp.style.opacity = (1 - t).toFixed(2); sp.style.color = t > 0.15 ? '#9a9a9a' : '';
+      if (t > 0.08 && Math.random() < 0.5) sp.textContent = CS[(Math.random() * CS.length) | 0];
+    }
+  }
+  // Work Map cards boot in one by one (top → bottom) as the figure dissolves; all are on by the time it is fully text.
+  stepWM(dz, vh, narrow) {
+    const H = this.H;
+    // The node list only changes when the Work Map re-mounts; re-query when one was replaced
+    // instead of on every frame.
+    if (!this.wmNodes || !this.wmNodes.length || this.wmNodes.some(n => !n.isConnected)) {
+      const nodes = Array.from(document.querySelectorAll('[data-workmap] [data-node]'));
+      if (!H || !nodes.length) return;
+      nodes.forEach(n => { this.eng.cancel(n); H.prime(n, null); n.__wmOn = false; });
+      this.wmNodes = nodes;
+      this.wmOrder = nodes.map(n => ({ n, r: n.getBoundingClientRect() })).sort((a, b) => a.r.top - b.r.top || a.r.left - b.r.left).map(o => o.n);
+    }
+    if (!H || !this.started) return;
+    const N = this.wmOrder.length;
+    this.wmOrder.forEach((n, k) => {
+      // only the stacked (narrow) layout uses the node's screen position; skip the layout read on desktop
+      const dt = narrow && this.G && this.G.wmTops && this.G.wmTops.get(n);
+      const top = narrow ? (dt !== undefined && dt !== false ? dt - this.sy : n.getBoundingClientRect().top) : 0, a = WM_APPEAR[0] + (WM_APPEAR[1] - WM_APPEAR[0]) * (N > 1 ? k / (N - 1) : 0);
+      const inView = top < vh * 0.92;
+      const on = narrow ? inView : dz >= a;
+      const off = narrow ? top > vh : dz < a - 0.03;
+      if (on && !n.__wmOn) { n.__wmOn = true; H.bootUp(this.eng, n, { set: null, tag: n }); }
+      else if (off && n.__wmOn) { n.__wmOn = false; H.bootDown(this.eng, n, { set: null, tag: n }); }
+    });
+  }
+  // Active nav item follows the section in view (none above Curated Work).
+  spyNav() {
+    let act = null; const y = window.innerHeight * 0.4, G = this.G;
+    // section tops come from the geometry cache (document offset - scroll), not a layout read per section
+    NAV.forEach((n, i) => { const t = G && G.nav[i]; if (t !== null && t !== undefined ? t - this.sy < y : (document.getElementById(n.id) && document.getElementById(n.id).getBoundingClientRect().top < y)) act = i; });
+    if (act !== this.state.navActive) this.setState({ navActive: act });
+  }
+  navVals() {
+    const ac = this.state.navActive ?? null, N = NAV.length;
+    return {
+      navItems: NAV.map((n, i) => ({
+        href: '#' + n.id, label: n.label, flex: n.flex, cur: i === ac ? 'page' : 'false',
+        go: () => { this.userInputAt = -1e9; this.setState({ navActive: i }); },
+        fg: i === ac ? '#1c1c1c' : '#ececec', bg: i === ac ? '#d9d9d9' : 'transparent', noise: i === ac,
+        div: i === N - 1 ? '0' : '0.5px solid #bdbdbd'
+      }))
+    };
+  }
+  unhide() { (this.hiddenEls || []).forEach(e => (e.style.visibility = '')); this.hiddenEls = null; }
+  measureNav() {
+    const h = document.querySelector('[data-role="nav"]'); if (!h) return;
+    const v = Math.round(h.getBoundingClientRect().height);
+    if (v > 0 && Math.abs(v - this.state.navH) > 1) this.setState({ navH: v });
+  }
+  initMotion() {
+    const H = (this.H = window.HUDMotion), eng = (this.eng = new H.Engine());
+    eng.reduced = this.sysRM || this.state.rmSim; eng.speed = this.state.speed;
+    this.cards().forEach(c => H.prime(c, this.shown));
+    const ce = this.center(); if (ce) H.prime(ce, null);
+    this.unhide();
+    eng.hooks.push((now, dt) => { this.frame(now); this.transition(dt || 16); });
+    eng.start();
+    H.fontsReady(document.querySelector('[data-role="stage"]')).then(() => {
+      if (this.dead) return;
+      this.bootPending = true; this.buildBio();
+      const src = document.querySelector('[data-bio-src]');
+      if (src && typeof ResizeObserver !== 'undefined') { let w = src.offsetWidth; this.bioRo = new ResizeObserver(() => { if (src.offsetWidth !== w) { w = src.offsetWidth; this.buildBio(); } }); this.bioRo.observe(src); }
+    });
+  }
+  frame(now) {
+    const g = this.geo(); if (!g) return;
+    const H = this.H, vh = g.vh, rc = { top: g.stageTop, bottom: g.stageTop + g.stageH, height: g.stageH };
+    const vis = !document.hidden && rc.bottom > 0 && rc.top < vh;
+    if (this.bootPending && vis) { this.bootPending = false; this.boot(); }
+    if (!this.sysRM && now >= this.nextCrt) { this.nextCrt = now + (vis ? 40 + Math.random() * 80 : 300); if (vis) this.crtTick(); }
+    const C = H.CONFIG.hero, L = this.layout || {};
+    let side;
+    if (!L.narrow) side = (this.state.navH - g.pinTopVP) / (vh * C.pinVh) >= C.trigger ? 'B' : 'A';
+    else side = (this.state.navH - rc.top) / Math.max(1, rc.height) >= C.mobileTrigger ? 'B' : 'A';
+    if (side !== this.lastSide) { this.lastSide = side; this.request(side); }
+  }
+  boot() {
+    const H = this.H, eng = this.eng, C = H.CONFIG.hero, cards = this.cards(), ce = this.center();
+    this.started = true; this.booting = true; this.busy = false;
+    if (ce) {
+      // Middle component uses the same screen boot as the cards; the figure appears only once it has finished.
+      if (this.fig) this.fig.hide(); else this.figPending = null;
+      const bt = ce.querySelector('[data-hud-boot]');
+      if (bt) { bt.setAttribute('data-w', Math.max(0, ce.offsetWidth - 12)); bt.setAttribute('data-h', Math.max(0, ce.offsetHeight - 12)); }
+      const instant = !this.figSeen && window.scrollY > SKIP_INTRO_Y, rm = eng.reduced; this.figSeen = true;
+      if (instant) eng.reduced = true;
+      H.bootUp(eng, ce, { delay: instant ? 0 : C.centerBootAt, set: null, tag: ce, onScreenOn: () => this.revealFig({ skipIntro: instant }) });
+      eng.reduced = rm;
+    }
+    let n = cards.length;
+    cards.forEach((c, k) => H.bootUp(eng, c, { delay: k * C.cardStagger, set: this.shown, tag: c, onEnd: () => { if (--n === 0) { this.booting = false; this.pump(); } } }));
+  }
+  request(s) { this.want = s; this.pump(); }
+  pump() {
+    if (!this.started || this.booting || this.busy || this.sideState === 'closed' || this.shown === this.want) return;
+    const H = this.H, from = this.shown, to = this.want, cards = this.cards();
+    this.busy = true; let n = cards.length;
+    cards.forEach((c, k) => H.glitchSwap(this.eng, c, from, to, { delay: k * H.CONFIG.hero.swapStagger, tag: c, onEnd: () => {
+      if (--n === 0) { this.shown = to; this.busy = false; if (this.state.debug) this.setState({ shownSet: to }); this.pump(); }
+    } }));
+  }
+  // Static noise, pre-baked: a few full-size frames per gain level, generated once with the
+  // exact per-pixel formula and drawn each tick from a random tile at a random wrapped offset.
+  // Same canvas size, same alpha distribution, but no per-pixel JS work every tick.
+  noiseTiles(W, H, level) {
+    const key = W + 'x' + H + ':' + level, C = (this.noiseC = this.noiseC || {});
+    if (C[key]) return C[key];
+    const R = Math.random, gain = 70 * (1 + 0.75 * level);
+    return (C[key] = Array.from({ length: 4 }, () => {
+      const c = document.createElement('canvas'); c.width = W; c.height = H;
+      const x = c.getContext('2d'), im = x.createImageData(W, H), d = im.data;
+      for (let i = 0; i < d.length; i += 4) { d[i] = d[i + 1] = d[i + 2] = 255; const v = R(); d[i + 3] = v > 0.55 ? (v - 0.55) * gain * R() : 0; }
+      x.putImageData(im, 0, 0); return c;
+    }));
+  }
+  crtTick() {
+    const R = Math.random, all = document.querySelectorAll('[data-role="crt"]');
+    if (!this.crt || all.length !== this.crt.length || this.crt.some(o => !o.el.isConnected)) {
+      // which screens are on screen comes from an IntersectionObserver, not a rect read per screen per tick
+      if (this.crtIO) this.crtIO.disconnect();
+      this.crtVis = new Set();
+      this.crtIO = typeof IntersectionObserver !== 'undefined' ? new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) this.crtVis.add(e.target); else this.crtVis.delete(e.target); })) : null;
+      this.crt = Array.from(all).map(el => {
+        const cv = el.querySelector('[data-crt-noise]'), g = cv && cv.getContext('2d'), card = el.closest('[data-hud-card]');
+        if (this.crtIO) this.crtIO.observe(el); else this.crtVis.add(el);
+        return { el, cv, g, card, pats: {}, fl: el.querySelector('[data-crt-flicker]'), tear: el.querySelector('[data-crt-tear]'), isC: !!el.closest('[data-hud-center]'), ct: el.querySelector('[data-crt-content]') || ((card || el.closest('[data-hud-center]')) && (card || el.closest('[data-hud-center]')).querySelector('[data-crt-content]')), dip: 0, lvl: 0, gl: 0, tr: 0 };
+      }).filter(o => o.g);
+    }
+    for (const o of this.crt) {
+      if (!this.crtVis.has(o.el)) continue;
+      if (o.card && o.card.__hudGlitch) continue;
+      const W = o.cv.width, Hh = o.cv.height, level = o.isC ? Math.round(4 * (this.staticBoost || 0)) : 0;
+      const pats = o.pats[level] || (o.pats[level] = this.noiseTiles(W, Hh, level).map(t => o.g.createPattern(t, 'repeat')));
+      const ox = (R() * W) | 0, oy = (R() * Hh) | 0;
+      o.g.setTransform(1, 0, 0, 1, 0, 0); o.g.clearRect(0, 0, W, Hh);
+      o.g.setTransform(1, 0, 0, 1, ox, oy); o.g.fillStyle = pats[(R() * pats.length) | 0]; o.g.fillRect(-ox, -oy, W, Hh);
+      o.g.setTransform(1, 0, 0, 1, 0, 0);
+      if (o.fl) {
+        if (o.dip > 0) { o.dip--; o.fl.style.opacity = (o.lvl * (0.6 + 0.4 * R())).toFixed(3); }
+        else if (R() < 0.022) { o.dip = 1 + ((R() * 4) | 0); o.lvl = 0.06 + R() * 0.12; }
+        else o.fl.style.opacity = (R() * R() * 0.05).toFixed(3);
+      }
+      if (o.ct) {
+        if (o.gl > 0) { if (--o.gl === 0) o.ct.style.transform = ''; }
+        else if (R() < 0.006) { o.gl = 1 + ((R() * 2) | 0); o.ct.style.transform = 'translateX(' + ((R() - 0.5) * 4).toFixed(1) + 'px)'; }
+      }
+      if (o.tear) {
+        if (o.tr > 0) { if (--o.tr === 0) o.tear.style.opacity = '0'; }
+        else if (R() < 0.008) { o.tr = 1; o.tear.style.top = (R() * 96).toFixed(1) + '%'; o.tear.style.height = (1 + ((R() * 3) | 0)) + 'px'; o.tear.style.opacity = (0.15 + R() * 0.3).toFixed(2); }
+      }
+    }
   }
   heroLayout() {
-    const { cw } = this.state, narrow = cw < 900;
-    if (narrow) return { narrow: true, heroRef: this.heroRef, heroZoom: 1, heroW: '100%', heroCols: 'minmax(0,1fr)', heroRows: 'auto', rowGap: '28px', heroPad: '40px 0 64px', cardH: 'auto', centerH: 'auto', stickyTop: 'auto', lCol: 'auto', lRow: 'auto', cCol: 'auto', cRow: 'auto', rCol: 'auto', rRow: 'auto', wmCol: 'auto', wmRow: 'auto' };
-    const z = cw / 1625, r = v => Math.round(v * 100) / 100;
-    return { narrow: false, heroRef: this.heroRef, heroZoom: r(z), heroW: '1625px', heroCols: '500px 561px 500px', heroRows: '692px 692px', rowGap: '200px', heroPad: r(80 * z) + 'px 0 ' + r(140 * z) + 'px', cardH: '280px', centerH: '692px', stickyTop: r(this.state.stickyTop ?? 0) + 'px', lCol: '1', lRow: '1', cCol: '2', cRow: '1 / span 2', rCol: '3', rRow: '1', wmCol: '1 / -1', wmRow: '2' };
-  }
-  measure() {
-    const st = document.querySelector('[data-role="stage"]'); if (!st || this.state.cw < 900) return;
-    const z = this.state.cw / 1625, vh = window.innerHeight;
-    const natural = st.getBoundingClientRect().top + window.scrollY;
-    const px = Math.min(natural, Math.max(12, (vh - 692 * z) / 2)), d = px / z;
-    if (Math.abs(d - (this.state.stickyTop ?? -99)) > 0.5) this.setState({ stickyTop: d });
-  }
-  // Scroll-driven CRT power-off (hero cards) and power-on (work map clusters).
-  // Fully determined by scroll position: stop scrolling mid-way and the frame
-  // holds still instead of flickering at random.
-  morph() {
-    this.mraf = 0;
-    this.navScroll(); this.spy();
-    const outs = document.querySelectorAll('[data-morph-out]'), ins = document.querySelectorAll('[data-morph-in]'), edges = document.querySelector('[data-wm-edges]');
-    const reset = () => { outs.forEach(e => { e.style.transform = ''; e.style.opacity = ''; e.style.filter = ''; }); ins.forEach(e => { e.style.transform = ''; e.style.opacity = ''; }); if (edges) edges.style.opacity = ''; this.morphP = 0; this.boost = 0; };
-    const st = document.querySelector('[data-role="stage"]');
-    if (!st || this.state.cw < 900 || this.reduce) { reset(); return; }
-    const z = this.state.cw / 1625, top = (this.state.stickyTop ?? 0) * z;
-    const C = (v) => Math.max(0, Math.min(1, v)), q = (v, n) => Math.round(v * n) / n;
-    const p = C((top - st.getBoundingClientRect().top) / (892 * z));
-    this.morphP = p;
-    this.boost = Math.sin(Math.PI * C((p - 0.3) / 0.4));
-    const jit = (t, i) => (t > 0 && t < 1) ? Math.round(Math.sin(t * 41 + i * 2.3) * 1.5) * 2 : 0;
-    outs.forEach(e => {
-      const i = +e.getAttribute('data-morph-out'), t = C((p - [0.06, 0.16, 0.1, 0.2][i]) / 0.3);
-      if (t <= 0) { e.style.transform = ''; e.style.opacity = ''; e.style.filter = ''; return; }
-      const sy = t < 0.6 ? Math.max(0.02, q(1 - t / 0.6, 6)) : 0.02, sx = t < 0.6 ? 1 : Math.max(0, q(1 - (t - 0.6) / 0.4, 4));
-      e.style.transform = 'translateX(' + jit(t, i) + 'px) scale(' + sx + ',' + sy + ')';
-      e.style.opacity = t >= 1 ? '0' : '1';
-      // The picture brightens as it collapses to a line, like a tube switching off.
-      e.style.filter = t >= 1 ? '' : 'brightness(' + (1 + 1.6 * q(C(t / 0.6), 6)).toFixed(2) + ')';
-    });
-    ins.forEach(e => {
-      const j = +e.getAttribute('data-morph-in'), t = C((p - [0.5, 0.6][j]) / 0.3);
-      if (t >= 1) { e.style.transform = ''; e.style.opacity = ''; return; }
-      const sx = t < 0.35 ? Math.max(0.02, q(t / 0.35, 4)) : 1, sy = t < 0.35 ? 0.02 : Math.max(0.02, q(0.02 + (t - 0.35) / 0.65, 6));
-      e.style.transform = 'translateX(' + jit(t, j + 4) + 'px) scale(' + sx + ',' + sy + ')';
-      e.style.opacity = t <= 0 ? '0' : '1';
-    });
-    if (edges) edges.style.opacity = String(q(C((p - 0.88) / 0.12), 3));
+    const { cw, vh, navH } = this.state, r = v => Math.round(v * 1000) / 1000;
+    const pinVh = (window.HUDMotion && window.HUDMotion.CONFIG.hero.pinVh) || 1;
+    const z = Math.min(cw / DW, (vh - navH - 32) / DH), narrow = z < MIN_Z;
+    if (narrow) {
+      const cz = r(Math.min(1, cw / 500));
+      return { narrow: true, wide: false, csOverlap: '0px', armPx: r(1 / cz) + 'px', heroZoom: 1, heroW: '100%', heroCols: 'minmax(0,1fr)', heroRows: 'auto', rowGap: '28px', colGap: '28px', cardZoom: cz, centerH: 'auto', pinH: 'auto', pinPos: 'relative', pinTop: 'auto', pinInnerH: 'auto', heroPad: '24px 0 64px', lCol: 'auto', lRow: 'auto', cCol: 'auto', cRow: 'auto', rCol: 'auto', rRow: 'auto' };
+    }
+    return { narrow: false, armPx: r(1 / z) + 'px', heroZoom: r(z), heroW: DW + 'px', heroCols: '500px 561px 500px', heroRows: DH + 'px', rowGap: '0px', colGap: '48px', cardZoom: 1, centerH: DH + 'px', pinH: Math.round(vh * (1 + pinVh + TL.end) - navH) + 'px', pinPos: 'sticky', pinTop: navH + 'px', pinInnerH: (vh - navH) + 'px', heroPad: '0', lCol: '1', lRow: '1', cCol: '2', cRow: '1', rCol: '3', rRow: '1', wide: true, csOverlap: '-' + Math.round(vh * (1 + TL.end - TL.grow[1])) + 'px' };
   }
   renderVals() {
-    const n = this.props.noise ?? 0.6;
-    const cut = this.props.displayCut ?? '35';
+    const n = this.props.noise ?? 0.6, cut = this.props.displayCut ?? '35';
     const fam = cut === 'Clean' ? "'Redaction'" : `'Redaction ${cut}'`;
-    return { ...this.heroLayout(), lightOpacity: 0.08 + n * 0.3, darkOpacity: 0.15 + n * 0.5, displayFont: `${fam}, 'Redaction', Georgia, serif` };
+    const L = (this.layout = this.heroLayout());
+    return {
+      ...L, heroRef: this.heroRef, ...this.navVals(), showToolkit: false,
+      navTf: this.state.navHidden ? 'translateY(-130%)' : 'none',
+      lightOpacity: 0.08 + n * 0.3, darkOpacity: 0.15 + n * 0.5,
+      displayFont: `${fam}, 'Redaction', Georgia, serif`,
+      debugOn: this.state.debug, speed: this.state.speed, speedLabel: this.state.speed.toFixed(2) + '×', rmSim: this.state.rmSim, shownSet: this.shown,
+      onCloseDebug: () => this.setState({ debug: false }),
+      onReplay: () => { if (this.H) this.boot(); },
+      onAB: () => this.request('B'),
+      onBA: () => this.request('A'),
+      onSpeed: e => { const v = +e.target.value; if (this.eng) this.eng.speed = v; this.setState({ speed: v }); },
+      onRM: e => { const v = !!e.target.checked; if (this.eng) this.eng.reduced = this.sysRM || v; this.setState({ rmSim: v }); }
+    };
   }
 }
 </script>

@@ -9,21 +9,19 @@
 <x-dc>
 <helmet>
 <style>
-/* Fonts and the crtRoll keyframes live in index.html; re-declaring them here made every font re-download on mount. */
-[data-cs-sq] > span:first-child{transition:opacity 160ms ease;}
-[data-cs-sq]:focus-visible{outline:1px solid #df5227;outline-offset:3px;}
-@media (hover: hover){ [data-cs-sq]:hover > span:first-child{opacity:0.6;} }
+/* Fonts are declared once in index.html; re-declaring them here re-downloaded every face. */
+@keyframes crtRoll{0%{transform:translateY(-110%)}100%{transform:translateY(420%)}}
 </style>
 </helmet>
 <div data-cs-track="1" ref="{{ trackRef }}" style="position:relative;height:{{ trackHeight }};">
   <div style="position:{{ stickyPos }};top:{{ stickyTop }};height:{{ stickyHeight }};display:flex;align-items:center;">
-    <div data-cs-card="1" style="width:100%;display:flex;flex-direction:column;padding:0 1px 1px 0;color:#eeeeee;font-family:'Redaction 35','Redaction',Georgia,serif;">
+    <div data-cs-card="1" style="position:relative;width:100%;display:flex;flex-direction:column;padding:0 1px 1px 0;color:#eeeeee;font-family:'Redaction 35','Redaction',Georgia,serif;">
 
-      <div data-screen-label="Case Bar" style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 25px;min-height:59px;padding:8px 16px 8px 17px;border:1px solid #929292;margin:0 -1px -1px 0;">
-        <h2 data-anim="1" style="margin:0;min-width:0;font-family:'Redaction 10','Redaction',Georgia,serif;font-weight:400;font-size:28px;line-height:32px;letter-spacing:0;color:#ffffff;text-wrap:balance;">{{ c.title }}</h2>
+      <div data-screen-label="Case Bar" data-cs-box="1" style="position:relative;display:flex;flex-wrap:wrap;align-items:center;gap:10px 25px;min-height:59px;padding:8px 16px 8px 17px;border:1px solid #929292;margin:0 -1px -1px 0;">
+        <h2 data-anim="1" data-cs-title="1" style="margin:0;min-width:0;font-family:'Redaction 10','Redaction',Georgia,serif;font-weight:400;font-size:28px;line-height:32px;letter-spacing:0;color:#ffffff;text-wrap:balance;">{{ c.title }}</h2>
         <div style="display:flex;gap:8px;">
           <sc-for list="{{ c.tags }}" as="t" hint-placeholder-count="3">
-            <span data-anim="1" style="position:relative;display:flex;padding:2px;">
+            <span data-anim="1" data-cs-tag="1" style="position:relative;display:flex;padding:2px;">
               <svg preserveAspectRatio="none" style="position:absolute;left:0.5px;top:0.5px;width:calc(100% - 1px);height:calc(100% - 1px);overflow:visible;"><rect x="0" y="0" width="100%" height="100%" fill="none" stroke="#df5227" stroke-width="1" pathLength="100" stroke-dasharray="20.4 1.8 16.5 3 31 2.3 18.1 2.4 4.5"></rect></svg>
               <span style="position:relative;overflow:hidden;display:flex;align-items:center;height:37px;padding:0 10px;background:#df5227;color:#ffffff;font-family:'Redaction 70','Redaction',Georgia,serif;font-weight:700;font-size:14px;line-height:1;white-space:nowrap;">
                 <span style="position:relative;">{{ t }}</span>
@@ -32,9 +30,9 @@
             </span>
           </sc-for>
         </div>
-        <div aria-label="Case studies" style="position:relative;margin-left:auto;display:flex;gap:4px;padding:2px;">
+        <div aria-label="Case studies" data-cs-nav="1" style="position:relative;margin-left:auto;display:flex;gap:4px;padding:2px;">
           <sc-for list="{{ squares }}" as="sq" hint-placeholder-count="4">
-            <button type="button" data-cs-sq="1" aria-label="{{ sq.label }}" aria-current="{{ sq.on }}" onClick="{{ sq.go }}" style="position:relative;width:24px;height:24px;padding:0;border:0;background:transparent;cursor:pointer;overflow:hidden;">
+            <button type="button" aria-label="{{ sq.label }}" aria-current="{{ sq.on }}" onClick="{{ sq.go }}" style="position:relative;width:24px;height:24px;padding:0;border:0;background:transparent;cursor:pointer;overflow:hidden;">
               <span style="position:absolute;inset:0;background:#d9d9d9;opacity:0.3;"></span>
               <span data-fill="{{ sq.i }}" style="position:absolute;inset:0;background:#d9d9d9;transform-origin:0 50%;transform:scaleX(0);"></span>
               <span style="position:absolute;inset:0;background-image:url(assets/noise-dark.svg);background-size:200px 200px;opacity:0.35;"></span>
@@ -50,7 +48,7 @@
       <div style="display:flex;flex-wrap:wrap;">
         <div style="flex:1 1 560px;min-width:0;display:flex;flex-direction:column;">
 
-          <div data-screen-label="Goals" style="min-height:345px;padding:16px 16px 28px 15px;border:1px solid #929292;margin:0 -1px -1px 0;">
+          <div data-screen-label="Goals" data-cs-box="1" data-cs-tree="1" style="position:relative;min-height:345px;padding:16px 16px 28px 15px;border:1px solid #929292;margin:0 -1px -1px 0;">
             <div data-anim="1" style="display:inline-flex;align-items:center;gap:10px;height:32px;padding:0 6px 0 6px;background:#ffffff;color:#000000;font-size:20px;line-height:1;white-space:nowrap;">
               <svg width="20" height="18" viewBox="47 123 20 18" fill="none" style="flex:0 0 auto;"><path d="M48 126V136.8C48 137.92 48 138.48 48.218 138.908C48.4097 139.284 48.7155 139.59 49.0918 139.782C49.5192 140 50.079 140 51.1969 140H62.8031C63.921 140 64.48 140 64.9074 139.782C65.2837 139.59 65.5905 139.284 65.7822 138.908C66.0002 138.48 66.0002 137.92 66.0002 136.8L66.0002 129.2C66.0002 128.08 66.0002 127.52 65.7822 127.092C65.5905 126.715 65.2839 126.41 64.9076 126.218C64.4798 126 63.9201 126 62.8 126H57M48 126H57M48 126C48 124.895 48.8954 124 50 124H53.6745C54.1637 124 54.4089 124 54.639 124.055C54.8431 124.104 55.0379 124.185 55.2168 124.295C55.4186 124.419 55.5918 124.592 55.9375 124.938L57 126" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
               <span>[Core] Goals</span>
@@ -82,39 +80,50 @@
           </div>
 
           <div style="display:flex;flex-wrap:wrap;">
-            <div data-screen-label="Outcomes" style="flex:1 1 300px;min-width:0;min-height:358px;padding:15px 15px 22px 15px;border:0.5px solid #ffffff;margin:0 -1px -1px 0;display:flex;flex-direction:column;">
-              <div style="display:flex;"><div data-anim="1" style="display:inline-flex;align-items:center;gap:10px;height:32px;padding:0 6px;background:#ffffff;color:#000000;font-size:20px;line-height:1;white-space:nowrap;">
+            <div data-screen-label="Outcomes" data-cs-box="1" data-cs-outcomes="1" style="position:relative;flex:1 1 300px;min-width:0;min-height:358px;padding:15px 15px 22px 15px;border:0.5px solid #ffffff;margin:0 -1px -1px 0;display:flex;flex-direction:column;">
+              <div data-hud-set="A" style="display:flex;flex-direction:column;flex:1;">
+              <div style="display:flex;"><div data-anim="1" data-rv="1" style="display:inline-flex;align-items:center;gap:10px;height:32px;padding:0 6px;background:#ffffff;color:#000000;font-size:20px;line-height:1;white-space:nowrap;">
                 <svg width="20" height="18" viewBox="47 123 20 18" fill="none" style="flex:0 0 auto;"><path d="M48 126V136.8C48 137.92 48 138.48 48.218 138.908C48.4097 139.284 48.7155 139.59 49.0918 139.782C49.5192 140 50.079 140 51.1969 140H62.8031C63.921 140 64.48 140 64.9074 139.782C65.2837 139.59 65.5905 139.284 65.7822 138.908C66.0002 138.48 66.0002 137.92 66.0002 136.8L66.0002 129.2C66.0002 128.08 66.0002 127.52 65.7822 127.092C65.5905 126.715 65.2839 126.41 64.9076 126.218C64.4798 126 63.9201 126 62.8 126H57M48 126H57M48 126C48 124.895 48.8954 124 50 124H53.6745C54.1637 124 54.4089 124 54.639 124.055C54.8431 124.104 55.0379 124.185 55.2168 124.295C55.4186 124.419 55.5918 124.592 55.9375 124.938L57 126" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                <span>[Core] Outcomes</span>
+                <span data-rv="1" data-scr="1">[Core] Outcomes</span>
               </div></div>
-              <div data-anim="1" data-role="crt" style="position:relative;margin-top:11px;min-height:186px;overflow:hidden;background:rgba(217,217,217,0.3);">
+              <div style="position:relative;margin-top:11px;">
+              <div data-role="crt" data-hud-screen="1" style="position:relative;min-height:186px;overflow:hidden;background:rgba(217,217,217,0.3);">
                 <div data-crt-content="1" style="position:relative;z-index:1;min-height:186px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px 36px 26px;text-align:center;">
-                  <div style="font-family:'Redaction 35','Redaction',Georgia,serif;font-size:80px;line-height:72px;letter-spacing:-0.01em;color:#ffffff;white-space:nowrap;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">{{ c.outcome.value }}</div>
-                  <div style="font-family:'Redaction',Georgia,serif;font-size:18px;line-height:22px;color:#ffffff;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">{{ c.outcome.caption }}</div>
+                  <div data-rv="1" data-scr="1" style="font-family:'Redaction 35','Redaction',Georgia,serif;font-size:80px;line-height:72px;letter-spacing:-0.01em;color:#ffffff;white-space:nowrap;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">{{ c.outcome.value }}</div>
+                  <div data-rv="1" data-scr="1" style="font-family:'Redaction',Georgia,serif;font-size:18px;line-height:22px;color:#ffffff;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">{{ c.outcome.caption }}</div>
                 </div>
-                <div aria-hidden="true" data-crt-scan="1" style="position:absolute;inset:0;z-index:2;pointer-events:none;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
+                <div aria-hidden="true" style="position:absolute;inset:0;z-index:2;pointer-events:none;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
                 <canvas data-crt-noise="1" width="240" height="96" aria-hidden="true" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;pointer-events:none;"></canvas>
                 <div aria-hidden="true" data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;pointer-events:none;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 8.6s linear infinite;animation-delay:-2.2s;"></div>
                 <div aria-hidden="true" style="position:absolute;inset:0;z-index:5;pointer-events:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 12px rgba(0,0,0,0.3);"></div>
                 <div aria-hidden="true" data-crt-flicker="1" style="position:absolute;inset:0;z-index:6;pointer-events:none;background:#000000;opacity:0;"></div>
                 <div aria-hidden="true" data-crt-tear="1" style="position:absolute;left:0;right:0;top:40%;height:2px;z-index:6;pointer-events:none;background:rgba(255,255,255,0.5);opacity:0;"></div>
-                <span aria-hidden="true" style="position:absolute;left:0;top:0;border-top:1px solid #ffffff;border-left:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
-                <span aria-hidden="true" style="position:absolute;right:0;top:0;border-top:1px solid #ffffff;border-right:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
-                <span aria-hidden="true" style="position:absolute;left:0;bottom:0;border-bottom:1px solid #ffffff;border-left:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
-                <span aria-hidden="true" style="position:absolute;right:0;bottom:0;border-bottom:1px solid #ffffff;border-right:1px solid #ffffff;width:20px;height:20px;z-index:7;pointer-events:none;"></span>
+              </div>
+              <div data-hud-boot="1" data-w="0" data-h="0" aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;z-index:7;">
+                <div data-hud-fill="1" style="position:absolute;inset:0;background:#D9D9D9;opacity:0;transform-origin:50% 50%;"></div>
+                <span data-hud-arm="tl-h" style="position:absolute;left:0;top:0;width:20px;height:1px;background:#ffffff;transform-origin:0 0;"></span>
+                <span data-hud-arm="tl-v" style="position:absolute;left:0;top:0;width:1px;height:20px;background:#ffffff;transform-origin:0 0;"></span>
+                <span data-hud-arm="tr-h" style="position:absolute;right:0;top:0;width:20px;height:1px;background:#ffffff;transform-origin:100% 0;"></span>
+                <span data-hud-arm="tr-v" style="position:absolute;right:0;top:0;width:1px;height:20px;background:#ffffff;transform-origin:100% 0;"></span>
+                <span data-hud-arm="bl-h" style="position:absolute;left:0;bottom:0;width:20px;height:1px;background:#ffffff;transform-origin:0 100%;"></span>
+                <span data-hud-arm="bl-v" style="position:absolute;left:0;bottom:0;width:1px;height:20px;background:#ffffff;transform-origin:0 100%;"></span>
+                <span data-hud-arm="br-h" style="position:absolute;right:0;bottom:0;width:20px;height:1px;background:#ffffff;transform-origin:100% 100%;"></span>
+                <span data-hud-arm="br-v" style="position:absolute;right:0;bottom:0;width:1px;height:20px;background:#ffffff;transform-origin:100% 100%;"></span>
+              </div>
               </div>
               <div style="margin-top:22px;display:flex;flex-direction:column;gap:5px;font-size:16px;line-height:22px;color:#ffffff;">
                 <sc-for list="{{ c.outcome.stats }}" as="s" hint-placeholder-count="3">
                   <div data-anim="1" style="display:flex;align-items:baseline;gap:2px;">
-                    <span>{{ s.k }}</span>
-                    <span style="flex:1;min-width:12px;height:2px;background-image:linear-gradient(90deg,#ffffff 0 1.7px,transparent 1.7px);background-size:3.92px 2px;background-repeat:repeat-x;"></span>
-                    <span>{{ s.v }}</span>
+                    <span data-rv="1" data-scr="1">{{ s.k }}</span>
+                    <span data-rv="1" style="flex:1;min-width:12px;height:2px;background-image:linear-gradient(90deg,#ffffff 0 1.7px,transparent 1.7px);background-size:3.92px 2px;background-repeat:repeat-x;"></span>
+                    <span data-rv="1" data-scr="1">{{ s.v }}</span>
                   </div>
                 </sc-for>
               </div>
+              </div>
             </div>
 
-            <div data-screen-label="Team" style="flex:1 1 300px;min-width:0;min-height:358px;padding:15px 16px 16px 15px;border:1px solid #929292;margin:0 -1px -1px 0;">
+            <div data-screen-label="Team" data-cs-box="1" data-cs-tree="1" style="position:relative;flex:1 1 300px;min-width:0;min-height:358px;padding:15px 16px 16px 15px;border:1px solid #929292;margin:0 -1px -1px 0;">
               <div data-anim="1" style="display:inline-flex;align-items:center;gap:10px;height:32px;padding:0 6px;background:#ffffff;color:#000000;font-size:20px;line-height:1;white-space:nowrap;">
                 <svg width="20" height="18" viewBox="47 123 20 18" fill="none" style="flex:0 0 auto;"><path d="M48 126V136.8C48 137.92 48 138.48 48.218 138.908C48.4097 139.284 48.7155 139.59 49.0918 139.782C49.5192 140 50.079 140 51.1969 140H62.8031C63.921 140 64.48 140 64.9074 139.782C65.2837 139.59 65.5905 139.284 65.7822 138.908C66.0002 138.48 66.0002 137.92 66.0002 136.8L66.0002 129.2C66.0002 128.08 66.0002 127.52 65.7822 127.092C65.5905 126.715 65.2839 126.41 64.9076 126.218C64.4798 126 63.9201 126 62.8 126H57M48 126H57M48 126C48 124.895 48.8954 124 50 124H53.6745C54.1637 124 54.4089 124 54.639 124.055C54.8431 124.104 55.0379 124.185 55.2168 124.295C55.4186 124.419 55.5918 124.592 55.9375 124.938L57 126" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg>
                 <span>[Core] Team</span>
@@ -147,8 +156,9 @@
           </div>
         </div>
 
-        <div data-screen-label="Case Visual" style="flex:1 1 560px;min-width:0;min-height:360px;border:1px solid #929292;margin:0 -1px -1px 0;"></div>
+        <div data-screen-label="Case Visual" data-cs-box="1" style="position:relative;flex:1 1 560px;min-width:0;min-height:360px;border:1px solid #929292;margin:0 -1px -1px 0;"></div>
       </div>
+      <div data-cs-frame="1" aria-hidden="true" style="position:absolute;inset:0;border:0.5px solid #ffffff;pointer-events:none;opacity:0;z-index:6;"></div>
     </div>
   </div>
 </div>
@@ -170,7 +180,7 @@ const WEALTHDESK = {
 // Cases 2–4 duplicate case 1 until their content is ready.
 const CASES = [WEALTHDESK, WEALTHDESK, WEALTHDESK, WEALTHDESK];
 const SCROLL_PER_CASE = 75; // vh of scroll per case study
-const MAX_VH = 0.9; // card never taller than 90% of the viewport
+const MAX_VH = 0.84; // card never taller than 84% of the viewport, and always clear of the nav bar
 
 const tree = groups => groups.map((g, gi) => ({
   label: g.label,
@@ -196,20 +206,94 @@ class Component extends DCLogic {
     this.mql = window.matchMedia('(max-width: 760px)');
     this.onMql = () => this.setState({ mobile: this.mql.matches }, () => this.update(true));
     this.mql.addEventListener('change', this.onMql);
-    // Scroll work is batched to one pass per frame; fitting the card (which
-    // forces layout) only happens when its size can actually have changed.
+    // Performance: scroll work runs once per frame (not once per scroll event), and the
+    // card fit, which forces a layout, only runs when the card size can have changed.
     this.onScroll = () => { this.lastY = window.scrollY; if (!this.raf) this.raf = requestAnimationFrame(() => { this.raf = 0; this.update(this.needFit); }); };
     this.poll = setInterval(() => { if (!document.hidden && window.scrollY !== this.lastY) this.onScroll(); }, 90);
     window.addEventListener('scroll', this.onScroll, { passive: true });
     this.onResize = () => { this.z = 1; this.update(true); };
     window.addEventListener('resize', this.onResize);
+    // The track offset is cached; it moves only when the page height changes above it.
+    if (typeof ResizeObserver !== 'undefined') { this.docRo = new ResizeObserver(() => { this.trTop = null; this.wrY = null; this.onScroll(); }); this.docRo.observe(document.body); }
     this.setState({ mobile: this.mql.matches }, () => this.update(true));
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { this.z = 1; this.update(true); });
+    this.revealed = null; this.watchReveal();
+  }
+
+  // Section 2 → 3 handoff. Desktop: the hero writes window.__csReveal (true once the middle component's outline has grown
+  // to this card's bounds). Otherwise the card forms when it scrolls into view. Forming is time-based, not scroll-scrubbed.
+  watchReveal() {
+    this.rr = requestAnimationFrame(() => this.watchReveal());
+    const tr = this.track(), card = tr && this.card(tr); if (!card) return;
+    let want = window.__csReveal;
+    if (typeof want !== 'boolean') {
+      if (this.revealed) want = true;
+      else { const y = this.lastY ?? window.scrollY; if (y !== this.wrY) { this.wrY = y; this.wrWant = card.getBoundingClientRect().top < window.innerHeight * 0.8; } want = this.wrWant; }
+    }
+    if (want === this.revealed) return;
+    this.revealed = want;
+    if (want) this.form(card); else this.unform(card);
+  }
+  unform(card) {
+    if (this.eng) { this.eng.cancel('cs'); this.eng.cancel('cs-o'); }
+    if (card.getAnimations) card.getAnimations({ subtree: true }).forEach(a => a.cancel());
+    card.querySelectorAll('[data-cs-edge]').forEach(e => e.remove());
+    card.querySelectorAll('[data-cs-box]').forEach(b => (b.style.borderColor = ''));
+    card.style.visibility = 'hidden';
+  }
+  form(card) {
+    const H = window.HUDMotion;
+    card.style.visibility = '';
+    if (!H || this.reduce) { if (H) { const o = card.querySelector('[data-cs-outcomes]'); if (o) { H.prime(o, 'A'); const e = this.eng || (this.eng = new H.Engine()); e.reduced = true; e.start(); H.bootUp(e, o, { set: 'A', tag: 'cs-o' }); } } return; }
+    const eng = this.eng || (this.eng = new H.Engine()); eng.start(); eng.reduced = false;
+    const EASE = 'cubic-bezier(.2,.75,.2,1)', frame = card.querySelector('[data-cs-frame]'), outc = card.querySelector('[data-cs-outcomes]');
+    // 1) lines: every box draws its four edges out from their centres, staggered top → bottom
+    if (frame) frame.style.opacity = '1';
+    const boxes = Array.from(card.querySelectorAll('[data-cs-box]'));
+    let linesEnd = 0;
+    boxes.forEach((b, i) => {
+      const cs = getComputedStyle(b), col = cs.borderTopColor, w = cs.borderTopWidth, d = 40 + i * 90, D = 460;
+      b.style.borderColor = 'transparent'; linesEnd = Math.max(linesEnd, d + D);
+      [['left:-' + w + ';right:-' + w + ';top:-' + w + ';height:' + w, 'scaleX(0)'], ['left:-' + w + ';right:-' + w + ';bottom:-' + w + ';height:' + w, 'scaleX(0)'],
+       ['top:-' + w + ';bottom:-' + w + ';left:-' + w + ';width:' + w, 'scaleY(0)'], ['top:-' + w + ';bottom:-' + w + ';right:-' + w + ';width:' + w, 'scaleY(0)']].forEach(([pos, from]) => {
+        const s = document.createElement('span'); s.setAttribute('data-cs-edge', '1');
+        s.style.cssText = 'position:absolute;z-index:4;pointer-events:none;transform-origin:50% 50%;background:' + col + ';' + pos;
+        b.appendChild(s); s.animate([{ transform: from }, { transform: 'none' }], { duration: D, delay: d, easing: EASE, fill: 'backwards' });
+      });
+    });
+    eng.add({ delay: linesEnd + 40, dur: 160, tag: 'cs',
+      fn: t => { if (frame) frame.style.opacity = String(1 - t / 160); },
+      onEnd: () => { card.querySelectorAll('[data-cs-edge]').forEach(e => e.remove()); boxes.forEach(b => (b.style.borderColor = '')); if (frame) frame.style.opacity = '0'; } });
+    const T1 = 560;
+    // 2) header: title ticks in, tags + case squares flicker on
+    const title = card.querySelector('[data-cs-title]');
+    if (title) { title.style.opacity = '0'; H.textScramble(eng, title, { delay: T1, tag: 'cs' }); }
+    const flick = Array.from(card.querySelectorAll('[data-cs-tag]')).concat(Array.from(card.querySelectorAll('[data-cs-nav]')));
+    flick.forEach((e, k) => { e.style.opacity = '0'; H.flickerOn(eng, [e], { delay: T1 + 140 + k * 70, tag: 'cs' }); });
+    // 3) Goals + Team: old-OS boot cascade — top → bottom each folder row's branch line ticks in, the row wipes open
+    //    in hard steps and its label types out
+    const rows = [];
+    card.querySelectorAll('[data-cs-tree] [data-anim]').forEach(el => rows.push({ el, top: el.getBoundingClientRect().top, left: el.getBoundingClientRect().left }));
+    rows.sort((a, b) => a.top - b.top || a.left - b.left);
+    const tops = []; rows.forEach(r => { let k = tops.findIndex(t => Math.abs(t - r.top) < 6); if (k < 0) { tops.push(r.top); k = tops.length - 1; } r.k = k; });
+    rows.forEach(r => {
+      const d = T1 + 220 + r.k * 120, wrap = r.el.parentElement;
+      wrap.querySelectorAll(':scope > [data-line]').forEach(l => l.animate([{ transform: l.style.height === '1px' ? 'scaleX(0)' : 'scaleY(0)' }, { transform: 'none' }], { duration: 120, delay: d - 90, easing: 'steps(3, end)', fill: 'backwards' }));
+      r.el.animate([{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)' }], { duration: 240, delay: d, easing: 'steps(6, end)', fill: 'backwards' });
+      const label = r.el.querySelector(':scope > span');
+      if (label) { label.style.opacity = '0'; H.textScramble(eng, label, { delay: d + 60, tag: 'cs' }); }
+    });
+    // 4) Outcomes boots exactly like the section 1 cards
+    if (outc) {
+      const bt = outc.querySelector('[data-hud-boot]');
+      if (bt) { bt.setAttribute('data-w', bt.offsetWidth); bt.setAttribute('data-h', bt.offsetHeight); }
+      H.prime(outc, 'A'); H.bootUp(eng, outc, { delay: T1 + 260, set: 'A', tag: 'cs-o' });
+    }
   }
 
   componentWillUnmount() {
+    cancelAnimationFrame(this.rr); cancelAnimationFrame(this.raf); if (this.eng) this.eng.stop(); if (this.docRo) this.docRo.disconnect();
     clearInterval(this.poll);
-    cancelAnimationFrame(this.raf);
     window.removeEventListener('scroll', this.onScroll);
     window.removeEventListener('resize', this.onResize);
     if (this.mql) this.mql.removeEventListener('change', this.onMql);
@@ -221,21 +305,24 @@ class Component extends DCLogic {
     if (this.shownIdx !== idx) { this.shownIdx = idx; this.animateIn(); this.paintFill(idx, this.local || 0); this.needFit = true; this.onScroll(); }
   }
 
+  card(tr) { const c = this.cardEl; return c && c.isConnected ? c : (this.cardEl = tr && tr.querySelector('[data-cs-card]')); }
+
   update(refit) {
     const tr = this.track();
     if (!tr) return;
     const n = CASES.length;
-    const card = tr.querySelector('[data-cs-card]');
+    const card = this.card(tr);
     const vh = window.innerHeight;
-    if (card && (refit || !this.fitted)) { this.fit(card, vh); this.fitted = true; this.needFit = false; }
+    if (card && (refit || !this.fitted)) { this.fit(card, vh); this.fitted = true; this.needFit = false; this.ch = card.getBoundingClientRect().height; this.trTop = null; }
     if (this.state.mobile) { this.local = 1; this.paintFill(this.state.idx, 1); return; }
-    const ch = card ? card.getBoundingClientRect().height : vh;
+    const ch = card ? this.ch : vh;
     const top = Math.min(0, Math.round(vh - ch - 24));
     const stickH = Math.max(vh, ch + 48);
     const trackH = Math.round(stickH + n * vh * SCROLL_PER_CASE / 100);
     if (!this.state.geo || this.state.geo.top !== top || this.state.geo.trackH !== trackH) { this.setState({ geo: { top, trackH, stickH } }); }
     const dist = Math.max(1, trackH - stickH);
-    const p = Math.min(dist, Math.max(0, top - tr.getBoundingClientRect().top));
+    if (this.trTop == null) this.trTop = tr.getBoundingClientRect().top + window.scrollY;
+    const p = Math.min(dist, Math.max(0, top - (this.trTop - (this.lastY ?? window.scrollY))));
     const per = dist / n;
     const idx = Math.min(n - 1, Math.floor(p / per));
     this.local = Math.min(1, (p - idx * per) / per);
@@ -245,7 +332,8 @@ class Component extends DCLogic {
 
   // Scales the whole card (type included) so it never exceeds MAX_VH of the viewport.
   fit(card, vh) {
-    const target = vh * MAX_VH;
+    const nav = document.querySelector('[data-role="nav"]'), nh = nav ? nav.offsetHeight + 12 : 0;
+    const target = Math.min(vh * MAX_VH, vh - 2 * nh);
     if (this.state.mobile) {
       card.style.zoom = ''; card.style.width = '';
       card.style.maxHeight = target + 'px'; card.style.overflowY = 'auto';
@@ -278,15 +366,11 @@ class Component extends DCLogic {
     const tr = this.track();
     if (!tr || this.reduce || !tr.animate) return;
     const ease = 'cubic-bezier(.2,.75,.2,1)';
-    // Transform + opacity only: they stay on the compositor, so swapping cases mid-scroll doesn't drop frames.
-    // Any entrance still running from a fast scroll-through is cancelled first so they never stack.
     tr.querySelectorAll('[data-anim]').forEach((el, k) => {
-      el.getAnimations().forEach(a => a.cancel());
-      el.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'none' }],
+      el.animate([{ opacity: 0, transform: 'translateY(8px)', filter: 'blur(2px)' }, { opacity: 1, transform: 'none', filter: 'none' }],
         { duration: 520, delay: k * 22, easing: ease, fill: 'backwards' });
     });
     tr.querySelectorAll('[data-line]').forEach((el, k) => {
-      el.getAnimations().forEach(a => a.cancel());
       const v = el.style.height === '1px' ? 'scaleX(0)' : 'scaleY(0)';
       el.animate([{ transform: v }, { transform: 'none' }], { duration: 480, delay: 80 + k * 18, easing: ease, fill: 'backwards' });
     });
