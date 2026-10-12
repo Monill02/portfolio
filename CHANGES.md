@@ -7,13 +7,21 @@ Replace the repo contents with this folder (keep .git), then commit and push:
 
 ```
 git add -A
-git commit -m "Hero: 1600px container, local Redaction fonts, new logo/spark/bots SVGs, nav border tweaks"
+git commit -m "Case study video, 7 testimonials, 6 new articles, scroll feel, nav note icon"
 git push origin main
 ```
 
 Do NOT open index.html via file:// — fonts need a server. Preview with `npx serve .` → http://localhost:3000
 
-## Latest: Articles + Testimonials tickers
+## Latest: Content + scroll update
+- scroll-feel.js (new): damped wheel/trackpad/keyboard scrolling + desktop sticky stops at key moments.
+- Work Map plays on view (not scroll-linked); computer-entrance.js + assets/computer.glb.
+- Case study 1: WealthDesk video (assets/wealthdesk-case-study-card.mp4), fades in after the card draws; page grain cut out over it.
+- Testimonials: 7 real entries with monochrome photos (assets/testimonials/t1–t7.png).
+- Articles: 6 new cards; blurbs clamped to 2 lines.
+- Nav: spark icon replaced by assets/nav-note.png; Articles/Testimonials links scroll the section to viewport middle.
+
+## Previous: Articles + Testimonials tickers
 - New Tickers.dc.html, mounted in index.html below Case Studies. Sections #articles and #testimonials (nav links scroll here).
 - Full-bleed, endlessly looping tickers: Articles drift right→left, Testimonials left→right. Speeds 70/58 px/s; hovering eases a ticker down to 25% speed.
 - Article cards: noisy white title panel (assets/noise-card.svg) + black blurb strip. Testimonial cards match the mockup (corner handles, pixel LinkedIn icon, [Collab] Outcomes tree).

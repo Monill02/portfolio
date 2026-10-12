@@ -159,7 +159,11 @@
           </div>
         </div>
 
-        <div data-screen-label="Case Visual" data-cs-box="1" style="position:relative;flex:1 1 560px;min-width:0;min-height:360px;border:1px solid #929292;margin:0 -1px -1px 0;"></div>
+        <div data-screen-label="Case Visual" data-cs-box="1" style="position:relative;flex:1 1 560px;min-width:0;min-height:360px;border:1px solid #929292;margin:0 -1px -1px 0;overflow:hidden;">
+          <sc-if value="{{ c.video }}" hint-placeholder-val="{{ true }}">
+            <video data-noise-exclude="1" src="{{ c.video }}" autoPlay="{{ true }}" muted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" preload="auto" aria-label="WealthDesk product screens" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#000000;opacity:0;display:block;"></video>
+          </sc-if>
+        </div>
       </div>
       <div data-cs-frame="1" aria-hidden="true" style="position:absolute;inset:0;border:0.5px solid #ffffff;pointer-events:none;opacity:0;z-index:6;"></div>
     </div>
@@ -181,7 +185,7 @@ const WEALTHDESK = {
   ]
 };
 // Cases 2–4 duplicate case 1 until their content is ready.
-const CASES = [WEALTHDESK, WEALTHDESK, WEALTHDESK, WEALTHDESK];
+const CASES = [{ ...WEALTHDESK, video: 'assets/wealthdesk-case-study-card.mp4' }, WEALTHDESK, WEALTHDESK, WEALTHDESK];
 const SCROLL_PER_CASE = 75; // vh of scroll per case study
 const MAX_VH = 0.84; // card never taller than 84% of the viewport, and always clear of the nav bar
 
@@ -217,6 +221,14 @@ class Component extends DCLogic {
     this.setState({ mobile: this.mql.matches }, () => this.update());
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { this.z = 1; this.update(); });
     this.revealed = null; this.watchReveal();
+    // sticky stop just after each case switches in, so it can play before the next one (see scroll-feel.js)
+    (window.__detents = window.__detents || {}).cases = () => {
+      const tr = this.track(), g = this.state.geo; if (!tr || !g || this.state.mobile) return [];
+      const n = CASES.length, per = Math.max(1, g.trackH - g.stickH) / n, y0 = tr.getBoundingClientRect().top + window.scrollY - g.top, out = [];
+      for (let i = 1; i < n; i++) out.push(y0 + i * per + per * 0.12);
+      out.push(y0 + n * per);
+      return out;
+    };
   }
 
   // Section 2 → 3 handoff. Desktop: the hero writes window.__csReveal (true once the middle component's outline has grown
@@ -235,12 +247,21 @@ class Component extends DCLogic {
     if (card.getAnimations) card.getAnimations({ subtree: true }).forEach(a => a.cancel());
     card.querySelectorAll('[data-cs-edge]').forEach(e => e.remove());
     card.querySelectorAll('[data-cs-box]').forEach(b => (b.style.borderColor = ''));
+    card.querySelectorAll('[data-noise-exclude]').forEach(v => (v.style.opacity = '0'));
     card.style.visibility = 'hidden';
+  }
+  // Case visual loads only once the card has fully drawn and its content starts animating.
+  showAsset(root, delay) {
+    (root || document).querySelectorAll('[data-noise-exclude]').forEach(v => {
+      if (v.style.opacity === '1') return;
+      v.style.opacity = '1';
+      if (v.animate && !this.reduce) v.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 420, delay, easing: 'cubic-bezier(.2,.75,.2,1)', fill: 'backwards' });
+    });
   }
   form(card) {
     const H = window.HUDMotion;
     card.style.visibility = '';
-    if (!H || this.reduce) { if (H) { const o = card.querySelector('[data-cs-outcomes]'); if (o) { H.prime(o, 'A'); const e = this.eng || (this.eng = new H.Engine()); e.reduced = true; e.start(); H.bootUp(e, o, { set: 'A', tag: 'cs-o' }); } } return; }
+    if (!H || this.reduce) { this.showAsset(card, 0); if (H) { const o = card.querySelector('[data-cs-outcomes]'); if (o) { H.prime(o, 'A'); const e = this.eng || (this.eng = new H.Engine()); e.reduced = true; e.start(); H.bootUp(e, o, { set: 'A', tag: 'cs-o' }); } } return; }
     const eng = this.eng || (this.eng = new H.Engine()); eng.start(); eng.reduced = false;
     const EASE = 'cubic-bezier(.2,.75,.2,1)', frame = card.querySelector('[data-cs-frame]'), outc = card.querySelector('[data-cs-outcomes]');
     // 1) lines: every box draws its four edges out from their centres, staggered top → bottom
@@ -261,6 +282,7 @@ class Component extends DCLogic {
       fn: t => { if (frame) frame.style.opacity = String(1 - t / 160); },
       onEnd: () => { card.querySelectorAll('[data-cs-edge]').forEach(e => e.remove()); boxes.forEach(b => (b.style.borderColor = '')); if (frame) frame.style.opacity = '0'; } });
     const T1 = 560;
+    this.showAsset(card, Math.max(linesEnd + 200, T1 + 220));
     // 2) header: title ticks in, tags + case squares flicker on
     const title = card.querySelector('[data-cs-title]');
     if (title) { title.style.opacity = '0'; H.textScramble(eng, title, { delay: T1, tag: 'cs' }); }
@@ -289,7 +311,7 @@ class Component extends DCLogic {
 
   componentWillUnmount() {
     cancelAnimationFrame(this.rr); if (this.eng) this.eng.stop();
-    clearInterval(this.poll);
+    clearInterval(this.poll); if (window.__detents) delete window.__detents.cases;
     window.removeEventListener('scroll', this.onScroll);
     window.removeEventListener('resize', this.onResize);
     if (this.mql) this.mql.removeEventListener('change', this.onMql);
@@ -298,7 +320,7 @@ class Component extends DCLogic {
   componentDidUpdate() {
     const idx = this.state.idx;
     if (this.shownIdx === undefined) { this.shownIdx = idx; return; }
-    if (this.shownIdx !== idx) { this.shownIdx = idx; this.animateIn(); this.paintFill(idx, this.local || 0); }
+    if (this.shownIdx !== idx) { this.shownIdx = idx; const tr = this.track(), card = tr && tr.querySelector('[data-cs-card]'); if (card && card.style.visibility !== 'hidden') this.showAsset(card, 120); this.animateIn(); this.paintFill(idx, this.local || 0); }
   }
 
   update() {
