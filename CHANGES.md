@@ -15,7 +15,8 @@ Do NOT open index.html via file:// — fonts need a server. Preview with `npx se
 
 ## Latest: Content + scroll update
 - scroll-feel.js (new): damped wheel/trackpad/keyboard scrolling + desktop sticky stops at key moments.
-- Work Map plays on view (not scroll-linked); computer-entrance.js + assets/computer.glb.
+- Work Map plays on view (not scroll-linked).
+- 3D computer intro: computer-entrance.js + assets/computer.glb + screen-grid.json (root). three.js loads from jsDelivr CDN.
 - Case study 1: WealthDesk video (assets/wealthdesk-case-study-card.mp4), fades in after the card draws; page grain cut out over it.
 - Testimonials: 7 real entries with monochrome photos (assets/testimonials/t1–t7.png).
 - Articles: 6 new cards; blurbs clamped to 2 lines.
