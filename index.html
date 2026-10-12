@@ -61,6 +61,13 @@ a:hover{color:#ffffff;}
 </style>
 <script src="hud-motion.js"></script>
 <script src="glyph-figure.js"></script>
+<script src="scroll-feel.js"></script>
+<style>
+html.ce-on, html.ce-on body{overflow:hidden !important;height:100%;}
+html.ce-pre:not(.ce-cover-off) body::after{content:"";position:fixed;inset:0;z-index:2147483000;background:radial-gradient(120% 90% at 50% 45%,#1c1d21 0%,#141518 60%);}
+</style>
+<script>try{if(sessionStorage.getItem('computer-entered')!=='1'){window.__computerHold=true;document.documentElement.classList.add('ce-pre','ce-on');setTimeout(function(){if(!window.COMPUTER){window.__computerHold=false;document.documentElement.classList.add('ce-cover-off');document.documentElement.classList.remove('ce-on');}},6000);}}catch(e){}</script>
+<script type="module" src="./computer-entrance.js"></script>
 </helmet>
 <div data-screen-label="Page" style="position:relative;min-height:100vh;background:#1c1c1c;color:#ececec;font-family:'Redaction',Georgia,serif;overflow:clip;">
   <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%, #262626 0%, #1d1d1d 55%, #151515 100%);"></div>
@@ -82,9 +89,10 @@ a:hover{color:#ffffff;}
             </sc-for>
           </div>
         </nav>
-        <a href="#" aria-label="Sparkle" style="pointer-events:auto;background:#1c1c1c;flex:0 0 40px;width:40px;height:40px;border:2px solid #d8d8d8;display:flex;overflow:hidden;">
-          <img src="assets/spark.svg" alt="" style="width:40px;height:40px;margin:-2px;display:block;">
+        <a href="#" aria-label="Notes" style="pointer-events:auto;background:#1c1c1c;flex:0 0 40px;width:40px;height:40px;border:2px solid #d8d8d8;display:flex;align-items:center;justify-content:center;overflow:hidden;box-sizing:border-box;">
+          <img src="assets/nav-note.png" alt="" style="width:24px;height:24px;display:block;image-rendering:pixelated;">
         </a>
+        <button type="button" onClick="{{ backToComputer }}" style="pointer-events:auto;position:absolute;top:100%;right:0;margin-top:6px;padding:4px 0;background:none;border:0;cursor:pointer;font-family:'Redaction',Georgia,serif;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#9a9a9a;" style-hover="color:#ececec;">↺ Computer</button>
       </header>
 
       <div data-role="hero-pin" style="position:relative;height:{{ pinH }};">
@@ -370,8 +378,8 @@ a:hover{color:#ffffff;}
     <span data-gc="1" style="position:absolute;right:-1px;bottom:-1px;width:20px;height:20px;border-bottom:1px solid #ffffff;border-right:1px solid #ffffff;"></span>
     <span data-gc="1" style="position:absolute;left:-1px;bottom:-1px;width:20px;height:20px;border-bottom:1px solid #ffffff;border-left:1px solid #ffffff;"></span>
   </div>
-  <div style="position:absolute;inset:0;pointer-events:none;opacity:{{ lightOpacity }};background-image:url(assets/noise-light.svg);background-size:200px 200px;"></div>
-  <div style="position:absolute;inset:0;pointer-events:none;opacity:{{ darkOpacity }};background-image:url(assets/noise-dark.svg);background-size:200px 200px;"></div>
+  <div data-noise-layer="1" style="position:absolute;inset:0;pointer-events:none;opacity:{{ lightOpacity }};background-image:url(assets/noise-light.svg);background-size:200px 200px;"></div>
+  <div data-noise-layer="1" style="position:absolute;inset:0;pointer-events:none;opacity:{{ darkOpacity }};background-image:url(assets/noise-dark.svg);background-size:200px 200px;"></div>
 
   <sc-if value="{{ debugOn }}" hint-placeholder-val="{{ false }}">
     <div role="region" aria-label="Motion debug" style="position:fixed;right:16px;bottom:16px;z-index:1000;width:264px;background:#1c1c1c;border:0.5px solid #ffffff;padding:12px;display:flex;flex-direction:column;gap:10px;font-family:'Redaction',Georgia,serif;font-size:14px;line-height:18px;color:#ececec;">
@@ -422,6 +430,9 @@ const NAV = [
 ];
 // WM_APPEAR: dissolve-progress window over which the Work Map cards boot in, one by one.
 const WM_APPEAR = [0.08, 0.92];
+// Desktop: the Work Map is time-based, not scroll-scrubbed. It boots once it comes into view (side cards closed):
+// cards one by one every WM_STAGGER ms, then after WM_SPROUT_WAIT the wires grow over WM_SPROUT_MS.
+const WM_STAGGER = 90, WM_SPROUT_WAIT = 250, WM_SPROUT_MS = 1400;
 const clamp01 = v => (v < 0 ? 0 : v > 1 ? 1 : v);
 class Component extends DCLogic {
   state = (() => { const W = typeof window !== 'undefined' ? window : null; const g = W ? Math.min(64, Math.max(20, W.innerWidth * 0.037037)) : 64; return { cw: W ? Math.min(1600, W.innerWidth - 2 * g) : 1600, vh: W ? W.innerHeight : 1117, navH: 70, debug: false, speed: 1, rmSim: false, shownSet: 'A' }; })();
@@ -455,6 +466,7 @@ class Component extends DCLogic {
     if (ce) { const cr = ce.getBoundingClientRect(); G.ce = { left: cr.left, dy: cr.top - fitTopNow, w: cr.width, h: cr.height, ow: ce.offsetWidth, oh: ce.offsetHeight }; }
     const rb = this.$('[data-role="col-right"]'); if (rb) G.colRightTop = rb.getBoundingClientRect().top - fitTopNow;
     const wm = this.$('[data-workmap]'); if (wm) { const wr = wm.getBoundingClientRect(); G.wm = { top: wr.top + sy, h: wr.height }; }
+    const tkEl = document.querySelector('[data-screen-label="Articles + Testimonials"]'); if (tkEl) G.tkTop = tkEl.getBoundingClientRect().top + sy;
     G.nav = NAV.map(n => { const el = document.getElementById(n.id); return el ? el.getBoundingClientRect().top + sy : null; });
     // stacked layout: Work Map nodes sit in normal flow, so their document positions are static
     if (this.layout && this.layout.narrow && this.wmNodes) { G.wmTops = new Map(); this.wmNodes.forEach(n => { if (n.isConnected) G.wmTops.set(n, n.getBoundingClientRect().top + sy); }); }
@@ -473,7 +485,38 @@ class Component extends DCLogic {
       colRightTop: G.colRightTop !== undefined ? fitTop + G.colRightTop : null, wm: G.wm && { top: G.wm.top - sy, h: G.wm.h } });
   }
   remeasure() { if (!this.mRaf) this.mRaf = requestAnimationFrame(() => { this.mRaf = 0; this.measureGeo(); }); }
+  // Punch the page grain out over [data-noise-exclude] media so it shows unprocessed.
+  noiseHoles() {
+    const layers = document.querySelectorAll('[data-noise-layer]'), ex = document.querySelector('[data-noise-exclude]');
+    const host = layers[0] && layers[0].offsetParent;
+    let key = 'none';
+    const exOn = ex && getComputedStyle(ex).visibility !== 'hidden' && parseFloat(getComputedStyle(ex).opacity) > 0.5;
+    if (exOn && host) {
+      const a = ex.getBoundingClientRect(), b = host.getBoundingClientRect();
+      if (a.width && a.height) key = [a.left - b.left, a.top - b.top, a.width, a.height].map(v => Math.round(v * 10) / 10).join(',');
+    }
+    layers.forEach(l => {
+      const s = l.style;
+      if (l.__nk === key && (key === 'none' || s.maskImage || s.webkitMaskImage)) return;
+      l.__nk = key;
+      if (key === 'none') { s.webkitMaskImage = s.maskImage = ''; return; }
+      const [x, y, w, hh] = key.split(',');
+      s.webkitMaskImage = s.maskImage = 'linear-gradient(#000,#000), linear-gradient(#000,#000)';
+      s.webkitMaskSize = s.maskSize = '100% 100%, ' + w + 'px ' + hh + 'px';
+      s.webkitMaskPosition = s.maskPosition = '0 0, ' + x + 'px ' + y + 'px';
+      s.webkitMaskRepeat = s.maskRepeat = 'no-repeat';
+      s.webkitMaskComposite = 'xor'; s.maskComposite = 'exclude';
+    });
+  }
   componentDidMount() {
+    // Performance: the grain cut-out reads style + layout, so it only runs per frame while the case
+    // video is within a screen of the viewport (it rides a sticky card, so it must track every frame
+    // then), plus one last pass as it leaves. Off screen the page does no work for it.
+    this.nhNear = false;
+    const nh = () => { if (this.dead) return; this.noiseHoles(); this.nhRaf = this.nhNear ? requestAnimationFrame(nh) : 0; };
+    this.nhIO = typeof IntersectionObserver !== 'undefined' ? new IntersectionObserver(es => es.forEach(e => { this.nhNear = e.isIntersecting; if (!this.nhRaf) this.nhRaf = requestAnimationFrame(nh); }), { rootMargin: '100% 0px' }) : null;
+    this.nhT = setInterval(() => { const ex = document.querySelector('[data-noise-exclude]'); if (!this.nhIO) { this.nhNear = true; if (!this.nhRaf) this.nhRaf = requestAnimationFrame(nh); return; } if (ex && ex !== this.nhEx) { if (this.nhEx) this.nhIO.unobserve(this.nhEx); this.nhEx = ex; this.nhIO.observe(ex); } }, 500);
+    this.nhRaf = requestAnimationFrame(nh);
     window.__wmSprout = 0; this.sideState = 'open';
     this.sysRM = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
     this.hiddenEls = this.cards().concat([this.center()]).filter(Boolean);
@@ -499,6 +542,31 @@ class Component extends DCLogic {
     ['wheel', 'touchmove', 'keydown', 'pointerdown'].forEach(t => window.addEventListener(t, this.onInput, { passive: true }));
     this.onR = () => { this.measureNav(); if (Math.abs(window.innerHeight - this.state.vh) > 1) this.setState({ vh: window.innerHeight }); this.remeasure(); };
     window.addEventListener('resize', this.onR);
+    // computer hands over (first visit or ↺ Computer): replay the hero's load animation as the page tunes in
+    this.onRelease = () => {
+      if (!this.eng || !this.H || this.bootPending) return;
+      const H = this.H, ce = this.center();
+      this.cards().forEach(c => { this.eng.cancel(c); H.prime(c, this.shown); });
+      if (ce) { this.eng.cancel(ce); H.prime(ce, null); }
+      this.started = false; this.booting = false; this.busy = false; this.figSeen = false; this.figReplay = true; this.wmOnAt = 0;
+      this.bootPending = true;
+    };
+    window.addEventListener('computer:release', this.onRelease);
+    // sticky stops (see scroll-feel.js): each section rests once it has fully played
+    (window.__detents = window.__detents || {}).hero = () => {
+      const L = this.layout || {}, vh = window.innerHeight, C = this.H && this.H.CONFIG.hero, out = [];
+      if (C && !L.narrow) {
+        const pin = this.$('[data-role="hero-pin"]');
+        if (pin) {
+          // cached pin offset (this runs on every wheel event; a layout read here forced a reflow per event)
+          const base = (this.G ? this.G.pinTop : pin.getBoundingClientRect().top + window.scrollY) - this.state.navH + vh * C.pinVh;
+          [TL.close - 0.06, TL.dissolve[1] + 0.08, TL.end + 0.02].forEach(x => out.push(base + vh * x));
+        }
+      } else ['[data-screen-label="Work Map"]', '#work'].forEach(s => { const e = document.querySelector(s); if (e) out.push(e.getBoundingClientRect().top + window.scrollY - this.state.navH); });
+      const tk = document.querySelector('[data-screen-label="Articles + Testimonials"]');
+      if (tk) out.push((this.G && this.G.tkTop !== undefined ? this.G.tkTop : tk.getBoundingClientRect().top + window.scrollY) - this.state.navH);
+      return out;
+    };
     this.measureNav();
     // Geometry is re-measured when anything on the page changes size, when fonts land,
     // and as a once-a-second safety net (one batch of reads, outside the frame loop).
@@ -506,9 +574,10 @@ class Component extends DCLogic {
     if (typeof ResizeObserver !== 'undefined') { this.geoRo = new ResizeObserver(() => this.remeasure()); const ct = this.$('[data-role="container"]'); if (ct) this.geoRo.observe(ct); }
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => this.remeasure());
     this.geoT = setInterval(() => { if (!document.hidden) this.measureGeo(); }, 1000);
-    const t0 = performance.now();
+    let t0 = performance.now();
     const wait = () => {
       if (this.dead) return;
+      if (window.__computerHold) { t0 = performance.now(); this.waitRaf = requestAnimationFrame(wait); return; }
       if (window.HUDMotion) return this.initMotion();
       if (performance.now() - t0 > 4000) return this.unhide();
       this.waitRaf = requestAnimationFrame(wait);
@@ -549,11 +618,11 @@ class Component extends DCLogic {
     if (k !== this.geoKey) { this.geoKey = k; this.remeasure(); }
   }
   componentWillUnmount() {
-    this.dead = true;
+    this.dead = true; cancelAnimationFrame(this.nhRaf); clearInterval(this.nhT); if (this.nhIO) this.nhIO.disconnect();
     cancelAnimationFrame(this.waitRaf); cancelAnimationFrame(this.figRaf); if (this.eng) this.eng.stop(); if (this.fig) this.fig.destroy();
     clearTimeout(this.navT); clearInterval(this.geoT); cancelAnimationFrame(this.mRaf); cancelAnimationFrame(this.spyRaf);
     if (this.crtIO) this.crtIO.disconnect(); if (this.geoRo) this.geoRo.disconnect();
-    window.removeEventListener('scroll', this.onS); ['wheel', 'touchmove', 'keydown', 'pointerdown'].forEach(t => window.removeEventListener(t, this.onInput)); window.removeEventListener('resize', this.onR); window.removeEventListener('keydown', this.onKey);
+    window.removeEventListener('scroll', this.onS); ['wheel', 'touchmove', 'keydown', 'pointerdown'].forEach(t => window.removeEventListener(t, this.onInput)); window.removeEventListener('resize', this.onR); window.removeEventListener('computer:release', this.onRelease); if (window.__detents) delete window.__detents.hero; window.removeEventListener('keydown', this.onKey);
     if (this.ro) this.ro.disconnect(); if (this.bioRo) this.bioRo.disconnect();
   }
   // Split the bio into its rendered lines (measured on the hidden source copy) so each line can be typed in on its own.
@@ -633,13 +702,14 @@ class Component extends DCLogic {
       this.stepSides(q >= TL.close);
       const ok = this.sideState === 'closed' && this.sidesDoneAt && now - this.sidesDoneAt > DISSOLVE_DELAY;
       D = ok ? clamp01((q - TL.dissolve[0]) / (TL.dissolve[1] - TL.dissolve[0])) : 0;
-      this.sprout = clamp01((q - TL.sprout[0]) / (TL.sprout[1] - TL.sprout[0]));
+      if (ok && !this.wmOnAt) this.wmOnAt = now; else if (!ok) this.wmOnAt = 0;
+      this.stepSprout(!!this.wmOnAt, dt);
       this.stepOut(q);
     } else {
       this.stepSides(false); window.__csReveal = undefined;
       D = clamp01(-this.figEndDelta() / (0.8 * vh));
-      const wr = g.wm;
-      this.sprout = wr ? clamp01((vh * 0.75 - wr.top) / Math.max(1, wr.h * 0.8)) : 1;
+      const wr = g.wm;   // cached geometry, no layout read per frame
+      this.stepSprout(!wr || wr.top < vh * 0.75, dt);
     }
     this.dz = this.dz === undefined ? D : this.dz + (D - this.dz) * (1 - Math.exp(-dt / 600));
     window.__wmSprout = this.started ? (this.sprout ?? 0) : 0;
@@ -647,6 +717,13 @@ class Component extends DCLogic {
     const front = this.fig ? this.fig.setDissolve(this.dz) : this.dz;
     if (!this.thread || !this.started) return;
     this.drawThread(this.dz > 0.001 ? front : -1);
+  }
+  // Wires grow (time-based) once every Work Map card is on; they retract twice as fast when the map closes.
+  stepSprout(on, dt) {
+    const all = !!(this.wmOrder && this.wmOrder.length && this.wmOrder.every(n => n.__wmOn));
+    this.sproutWait = on && all ? (this.sproutWait || 0) + dt : 0;
+    const s = this.sprout || 0;
+    this.sprout = on && this.sproutWait > WM_SPROUT_WAIT ? Math.min(1, s + dt / WM_SPROUT_MS) : on ? s : Math.max(0, s - 2 * dt / WM_SPROUT_MS);
   }
   // Side hero cards close (bootUp in reverse) shortly after the scroll trigger, and reopen if the user scrolls back.
   stepSides(close) {
@@ -713,6 +790,10 @@ class Component extends DCLogic {
   // screen static (whose gain rises with it); everything above the band is gone.
   dissolveBio(f) {
     const T = this.thread, ch = T && T.chars; if (!ch || !ch.length) return;
+    // Fully dissolved (front past the last line + band): every glyph is already hidden and nothing can
+    // change, so skip the per-character pass until the scroll brings the bio back.
+    if (f >= 1 && this.bioGone === ch) return;
+    if (f < 1) this.bioGone = null;
     if (f <= 0) {
       if (this.bioDis) { this.bioDis = false; ch.forEach(c => { c.span.textContent = c.ch; c.span.style.opacity = ''; c.span.style.color = ''; c.span.style.visibility = ''; }); T.shown = ch.length; }
       return;
@@ -729,6 +810,7 @@ class Component extends DCLogic {
       sp.style.opacity = (1 - t).toFixed(2); sp.style.color = t > 0.15 ? '#9a9a9a' : '';
       if (t > 0.08 && Math.random() < 0.5) sp.textContent = CS[(Math.random() * CS.length) | 0];
     }
+    if (f >= 1) this.bioGone = ch;
   }
   // Work Map cards boot in one by one (top → bottom) as the figure dissolves; all are on by the time it is fully text.
   stepWM(dz, vh, narrow) {
@@ -749,8 +831,8 @@ class Component extends DCLogic {
       const dt = narrow && this.G && this.G.wmTops && this.G.wmTops.get(n);
       const top = narrow ? (dt !== undefined && dt !== false ? dt - this.sy : n.getBoundingClientRect().top) : 0, a = WM_APPEAR[0] + (WM_APPEAR[1] - WM_APPEAR[0]) * (N > 1 ? k / (N - 1) : 0);
       const inView = top < vh * 0.92;
-      const on = narrow ? inView : dz >= a;
-      const off = narrow ? top > vh : dz < a - 0.03;
+      const on = narrow ? inView : this.wmOnAt > 0 && performance.now() - this.wmOnAt >= k * WM_STAGGER;
+      const off = narrow ? top > vh : !this.wmOnAt;
       if (on && !n.__wmOn) { n.__wmOn = true; H.bootUp(this.eng, n, { set: null, tag: n }); }
       else if (off && n.__wmOn) { n.__wmOn = false; H.bootDown(this.eng, n, { set: null, tag: n }); }
     });
@@ -765,9 +847,19 @@ class Component extends DCLogic {
   navVals() {
     const ac = this.state.navActive ?? null, N = NAV.length;
     return {
+      backToComputer: () => window.dispatchEvent(new CustomEvent('computer:back')),
       navItems: NAV.map((n, i) => ({
         href: '#' + n.id, label: n.label, flex: n.flex, cur: i === ac ? 'page' : 'false',
-        go: () => { this.userInputAt = -1e9; this.setState({ navActive: i }); },
+        go: (e) => {
+          this.userInputAt = -1e9; this.setState({ navActive: i });
+          if (n.id !== 'articles' && n.id !== 'testimonials') return;
+          const el = document.getElementById(n.id); if (!el) return;
+          if (e) e.preventDefault();
+          const b = el.getBoundingClientRect(), top = this.state.navH || 0, avail = window.innerHeight - top;
+          const y = window.scrollY + b.top - top - Math.max(0, (avail - b.height) / 2);
+          window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+          if (history.replaceState) history.replaceState(null, '', '#' + n.id);
+        },
         fg: i === ac ? '#1c1c1c' : '#ececec', bg: i === ac ? '#d9d9d9' : 'transparent', noise: i === ac,
         div: i === N - 1 ? '0' : '0.5px solid #bdbdbd'
       }))
@@ -798,7 +890,8 @@ class Component extends DCLogic {
     const g = this.geo(); if (!g) return;
     const H = this.H, vh = g.vh, rc = { top: g.stageTop, bottom: g.stageTop + g.stageH, height: g.stageH };
     const vis = !document.hidden && rc.bottom > 0 && rc.top < vh;
-    if (this.bootPending && vis) { this.bootPending = false; this.boot(); }
+    const held = window.__computerHold || document.documentElement.classList.contains('ce-on');
+    if (this.bootPending && vis && !held) { this.bootPending = false; this.boot(); }
     if (!this.sysRM && now >= this.nextCrt) { this.nextCrt = now + (vis ? 40 + Math.random() * 80 : 300); if (vis) this.crtTick(); }
     const C = H.CONFIG.hero, L = this.layout || {};
     let side;
@@ -814,9 +907,9 @@ class Component extends DCLogic {
       if (this.fig) this.fig.hide(); else this.figPending = null;
       const bt = ce.querySelector('[data-hud-boot]');
       if (bt) { bt.setAttribute('data-w', Math.max(0, ce.offsetWidth - 12)); bt.setAttribute('data-h', Math.max(0, ce.offsetHeight - 12)); }
-      const instant = !this.figSeen && window.scrollY > SKIP_INTRO_Y, rm = eng.reduced; this.figSeen = true;
+      const instant = !this.figSeen && window.scrollY > SKIP_INTRO_Y, rm = eng.reduced, replay = !!this.figReplay; this.figSeen = true; this.figReplay = false;
       if (instant) eng.reduced = true;
-      H.bootUp(eng, ce, { delay: instant ? 0 : C.centerBootAt, set: null, tag: ce, onScreenOn: () => this.revealFig({ skipIntro: instant }) });
+      H.bootUp(eng, ce, { delay: instant ? 0 : C.centerBootAt, set: null, tag: ce, onScreenOn: () => this.revealFig({ skipIntro: instant, replay }) });
       eng.reduced = rm;
     }
     let n = cards.length;

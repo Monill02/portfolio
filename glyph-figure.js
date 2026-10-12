@@ -142,6 +142,7 @@ function makeAtlas(cw, ch) {
     function reveal(o = {}) {
       if (!ready) { pending = o; return; }
       const now = performance.now();
+      if (o.replay) revealedOnce = false;   // computer hand-over: play the intro turn again
       if (!revealedOnce) {
         revealedOnce = true;
         if (o.skipIntro) { startY = opts.startY || 0; state.progress = progressNow(); yaw = scrollTarget(state.progress); state.phase = 'scroll'; }

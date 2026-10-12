@@ -28,7 +28,7 @@
       <sc-for list="{{ articles }}" as="a" hint-placeholder-count="5">
         <a href="{{ a.href }}" aria-hidden="{{ a.hidden }}" tabindex="{{ a.tab }}" style="flex:0 0 auto;width:min(399px, 82vw);margin-right:4px;display:flex;flex-direction:column;color:#eeeeee;" style-hover="color:#ffffff;">
           <div style="position:relative;height:182px;padding:18px 24px 0 24px;background-color:#ffffff;background-image:url(assets/noise-card.svg);background-size:240px 240px;color:#000000;font-family:'Redaction 35','Redaction',Georgia,serif;font-size:38px;line-height:42px;letter-spacing:-0.005em;text-wrap:pretty;overflow:hidden;">{{ a.title }}</div>
-          <div style="height:70px;padding:14px 24px 0 24px;background:#000000;border:1px solid #595959;font-family:'Redaction 35','Redaction',Georgia,serif;font-size:16px;line-height:20px;color:#ffffff;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">{{ a.blurb }}</div>
+          <div style="height:70px;padding:14px 24px 0 24px;background:#000000;border:1px solid #595959;font-family:'Redaction 35','Redaction',Georgia,serif;font-size:16px;line-height:20px;color:#ffffff;overflow:hidden;"><div style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-height:40px;">{{ a.blurb }}</div></div>
         </a>
       </sc-for>
     </div>
@@ -58,7 +58,7 @@
               <span style="position:absolute;left:15px;bottom:15px;width:18px;height:18px;border-bottom:2px solid #ffffff;border-left:2px solid #ffffff;"></span>
               <span style="position:absolute;right:15px;bottom:15px;width:18px;height:18px;border-bottom:2px solid #ffffff;border-right:2px solid #ffffff;"></span>
               <div style="position:absolute;inset:24px;background:#000000;border:1px solid #595959;overflow:hidden;">
-                <sc-if value="{{ q.photo }}" hint-placeholder-val="{{ false }}"><img src="{{ q.photo }}" alt="{{ q.name }}" style="display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1);"></sc-if>
+                <sc-if value="{{ q.photo }}" hint-placeholder-val="{{ false }}"><img src="{{ q.photo }}" alt="{{ q.name }}" loading="lazy" decoding="async" style="display:block;width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1);"></sc-if>
               </div>
             </div>
             <div style="flex:1 1 0;min-width:0;aspect-ratio:1;margin-left:-1px;border:1px solid #929292;padding:37px 12px 0 20px;overflow:hidden;font-family:'Redaction 35','Redaction',Georgia,serif;">
@@ -95,18 +95,24 @@ const ARTICLES = [
   { title: 'Undying optimism or nothing', blurb: 'Nihilists, here me out for a second.', href: '#' },
   { title: 'Dissecting the UX of Home Depot & Lowe\u2019s', blurb: 'I am beginning to understand the consumeristic state of America.', href: '#' },
   { title: 'Guide to being efficiently annoying by Spotify', blurb: 'Today, I\u2019ll explore how Spotify strategically utilizes design & in-depth user insights to intentionally annoy its users.', href: '#' },
-  { title: 'My secret to pitching solutions', blurb: 'Never again hear \u201clet\u2019s revisit this in the next sprint\u201d', href: '#' }
+  { title: 'My secret to pitching solutions', blurb: 'Never again hear \u201clet\u2019s revisit this in the next sprint\u201d', href: '#' },
+  { title: 'What does it mean to \u201csatisfice\u201d the user', blurb: 'And why UX designers should care about this', href: '#' },
+  { title: 'Why are most Virtual Reality experiences so bad?', blurb: 'My professor often says that emerging VR/AR/MR tech comes and goes in waves.', href: '#' },
+  { title: '\u201cSoftware Design is merely a performance art\u201d', blurb: 'I love my feed so much.', href: '#' },
+  { title: 'Micro-interactions or Macro-distractors', blurb: 'How you can make or break UX with micro-interactions.', href: '#' },
+  { title: 'A Product Designer\u2019s Analysis of Humane\u2019s AI Pin', blurb: 'What does this mean for the smart phone industry of now', href: '#' },
+  { title: '(UX writers) show, don\u2019t tell', blurb: 'Beginners guide to writing an effective UX copy', href: '#' }
 ];
-const NIHAR = {
-  role: 'Managed me at THEM Consulting',
-  name: 'Nihar Bhusari',
-  linkedin: '#',
-  photo: '',
-  outcomes: ['0\u21921\u2192$75Mn Acq', '4 Design Systems', '5k\u2192100K MAU'],
-  quote: 'If you are looking for someone who is hungry to learn, has immense ownership and is overflowing with creativity, Monil is your guy. He went above and beyond for every task he worked on, and displayed a penchant for strategic thought behind every design tied to the firm\u2019s bottom line.'
-};
-// Duplicate entries until more testimonials are added.
-const TESTIMONIALS = [NIHAR, NIHAR, NIHAR, NIHAR];
+const T = (role, name, photo, outcomes, quote) => ({ role, name, linkedin: '#', photo: 'assets/testimonials/' + photo + '.png', outcomes, quote });
+const TESTIMONIALS = [
+  T('Managed me at THEM Consulting', 'Nihar Bhusari', 't7', ['0\u21921\u2192$75Mn Acq', '100k \u2192 1M Users', '5Mn AUM'], 'If you are looking for someone who is hungry to learn, takes immense ownership and is overflowing with creativity, Monil is your guy. He went above and beyond for every task he worked on, and displayed a penchant for strategic thought behind every design tied to the firm\u2019s bottom line.'),
+  T('Managed me at THEM Consulting', 'Adi Bharadwaj', 't6', ['0\u21921\u2192$75Mn Acq', '4 Design Systems', '10+ Fintech PoCs'], 'Monil\u2019s the guy you want on your side fighting your battles. Over the course of our collaboration, he displayed immense passion and curiosity for both the client business landscape and the user experience and often translated the goals of both of these stakeholders efficiently into every iteration he produced.'),
+  T('I managed him at THEM Consulting', 'Derek Dominic', 't5', ['0\u21921\u2192$75Mn Acq', '4 Design Systems', '5k\u2192100K MAU'], 'Monil time and again helped me hone the skill of tying a business\u2019s north stars to a seamless user experience. His unwavering love for teaching everything he knows and his ability to express exactly what he means set him apart from every other UX designer out there.'),
+  T('Founder at Genie AI', 'Bilal Shafi', 't1', ['25+ AI native soln', '10+ 0\u21921', '$50K \u2192 $1.5M ARR'], 'Hiring Monil as one of our earliest employees was one of my best decisions at Genie AI. The amount of product, business & cultural value he has created in his time at my company is second to none. His tenacity in shipping exceptional solutions and his persistence in building great experiences are qualities I now look for in every new hire.'),
+  T('Prev colleague at Genie AI', 'Maggie Licata', 't2', ['2 Design systems', '2 MVP launches', '$50K \u2192 $1.5M ARR'], 'Monil always pushed me and everyone he worked with to challenge the way we think. I admire his passion and curiosity, not just towards UX but towards any other topic under the sun. I had a chance to not only work with him but also go to school with him and I owe much of my product thinking to him.'),
+  T('Director at Genie AI', 'Carlton Griffith', 't3', ['PMS Launch', '4.1 \u2192 4.7 NPS', 'Business OS launch'], 'Monil is one of the most disciplined and high-agency designers I\u2019ve had a chance to collaborate with. His acumen in product thinking and leveraging AI has not only helped build exceptional products but also raised the skillset of everyone he works with.'),
+  T('Co-founder at Pilgrim', 'Gagandeep M.', 't4', ['1 Design System', '5+ Workshops', '$100\u2192$500k MRR'], 'Monil came in to host a workshop for me and other execs at Pilgrim on laying the foundation for a truly collaborative design team, and I ended up hiring him as our founding product designer after the workshop. He truly is a force of nature when it comes to building products that solve business problems.')
+];
 const SPEED = { a: 70, t: 58 }; // px per second
 const HOVER_SPEED = 0.25;        // fraction of SPEED while hovered
 const DIR = { a: -1, t: 1 };    // articles right→left, testimonials left→right
