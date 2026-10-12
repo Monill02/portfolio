@@ -1,6 +1,8 @@
 // Glyph figure — ASCII renderer ported from the prototype (index.html). Look is locked; see HANDOFF.md.
 (function () {
-  const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.min.js';
+  // Same three.js build the computer entrance (and its loaders) import, so the library is downloaded
+  // and initialised once instead of twice. Same version (0.169.0), same output.
+  const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.169.0/+esm';
   const LOOK = { rows: 184, aspect: 0.43, gamma: 1.5, iridescence: 0.08, split: 1.54, fringe: 0, flicker: 0.01, rain: 0, scanlines: 0.1, glitch: 3, edges: 0.01, detail: 0.3, headContrast: 1.95, bodyDim: 0.96, photo: 0.61, cavity: 0.4, bgDots: 0.155, fill: 0.94, zoom: 1.5, bottomPad: 0, turnEase: 0.6, sway: 3.2 };
   // Yaw: 180 = back to camera, 90 = profile, 0 = facing camera.
   const INTRO_FROM = 122, INTRO_TO = 80, INTRO_MS = 1800, END_DEG = 0;

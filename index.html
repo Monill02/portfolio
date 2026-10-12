@@ -46,6 +46,22 @@
 @font-face{font-family:'Redaction 100';src:url(fonts/Redaction_100-Italic.woff2) format('woff2');font-weight:400;font-style:italic;font-display:swap;}
 @font-face{font-family:'Redaction 100';src:url(fonts/Redaction_100-Bold.woff2) format('woff2');font-weight:700;font-style:normal;font-display:swap;}
 </style>
+<!-- Scripts live here, not in the template <helmet>: the browser runs scripts in the template while
+     parsing and the runtime then inserts copies into <head>, so every classic script ran twice. -->
+<script src="hud-motion.js"></script>
+<script src="glyph-figure.js"></script>
+<script src="scroll-feel.js"></script>
+<style>
+html.ce-on, html.ce-on body{overflow:hidden !important;height:100%;}
+html.ce-pre:not(.ce-cover-off) body::after{content:"";position:fixed;inset:0;z-index:2147483000;background:radial-gradient(120% 90% at 50% 45%,#1c1d21 0%,#141518 60%);}
+</style>
+<script>try{if(sessionStorage.getItem('computer-entered')!=='1'){window.__computerHold=true;document.documentElement.classList.add('ce-pre','ce-on');setTimeout(function(){if(!window.COMPUTER){window.__computerHold=false;document.documentElement.classList.add('ce-cover-off');document.documentElement.classList.remove('ce-on');}},6000);}}catch(e){}</script>
+<script>
+// Performance: on a first visit (the computer entrance will show) fetch its libraries, model and
+// screen grid from the very start of the page load. Repeat visits skip the entrance and these files.
+try{if(sessionStorage.getItem('computer-entered')!=='1'){[['modulepreload','https://cdn.jsdelivr.net/npm/three@0.169.0/+esm'],['modulepreload','https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/loaders/GLTFLoader.js/+esm'],['modulepreload','https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/environments/RoomEnvironment.js/+esm'],['preload','assets/computer.glb'],['preload','screen-grid.json']].forEach(function(p){var l=document.createElement('link');l.rel=p[0];l.href=p[1];l.crossOrigin='anonymous';if(p[0]==='preload')l.as='fetch';document.head.appendChild(l);});}}catch(e){}
+</script>
+<script type="module" src="./computer-entrance.js"></script>
 <script src="./support.js"></script>
 </head>
 <body>
@@ -59,15 +75,6 @@ a:hover{color:#ffffff;}
 @keyframes crtRoll{0%{transform:translateY(-110%)}100%{transform:translateY(420%)}}
 @media (prefers-reduced-motion: reduce){[data-crt-anim]{animation:none !important;}}
 </style>
-<script src="hud-motion.js"></script>
-<script src="glyph-figure.js"></script>
-<script src="scroll-feel.js"></script>
-<style>
-html.ce-on, html.ce-on body{overflow:hidden !important;height:100%;}
-html.ce-pre:not(.ce-cover-off) body::after{content:"";position:fixed;inset:0;z-index:2147483000;background:radial-gradient(120% 90% at 50% 45%,#1c1d21 0%,#141518 60%);}
-</style>
-<script>try{if(sessionStorage.getItem('computer-entered')!=='1'){window.__computerHold=true;document.documentElement.classList.add('ce-pre','ce-on');setTimeout(function(){if(!window.COMPUTER){window.__computerHold=false;document.documentElement.classList.add('ce-cover-off');document.documentElement.classList.remove('ce-on');}},6000);}}catch(e){}</script>
-<script type="module" src="./computer-entrance.js"></script>
 </helmet>
 <div data-screen-label="Page" style="position:relative;min-height:100vh;background:#1c1c1c;color:#ececec;font-family:'Redaction',Georgia,serif;overflow:clip;">
   <div style="position:absolute;inset:0;background:radial-gradient(ellipse at 50% 40%, #262626 0%, #1d1d1d 55%, #151515 100%);"></div>
@@ -583,9 +590,14 @@ class Component extends DCLogic {
       this.waitRaf = requestAnimationFrame(wait);
     };
     wait();
+    // Performance: while the computer entrance is still loading (it has a fixed load window before it
+    // gives up), the figure (hidden under the cover until the page is entered) waits to initialise, so
+    // the two don't fight over the main thread and GPU. Capped at 4s.
+    const figT0 = performance.now();
+    const entranceLoading = () => !!window.__computerHold && (!window.COMPUTER || window.COMPUTER.state === 'loading') && performance.now() - figT0 < 4000;
     const waitFig = () => {
       if (this.dead) return;
-      if (window.GlyphFigure) return this.mountFig();
+      if (window.GlyphFigure && !entranceLoading()) return this.mountFig();
       this.figRaf = requestAnimationFrame(waitFig);
     };
     waitFig();

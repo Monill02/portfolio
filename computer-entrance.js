@@ -488,6 +488,9 @@ addEventListener('computer:back', back);
 /* ---------- boot ---------- */
 (async () => {
   let seen = false; try { seen = sessionStorage.getItem(KEY) === '1'; } catch (e) {}
+  // Performance: start the libraries, model and screen grid now instead of after the page has
+  // booted, so they are ready inside the load window (loadTimeoutMs) on real connections.
+  if (!seen) preload();
   await waitSite();
   if (seen) { html.classList.add('ce-cover-off'); window.__computerHold = false; return; }
   show();
