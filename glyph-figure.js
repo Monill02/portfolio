@@ -76,7 +76,7 @@ function makeAtlas(cw, ch) {
 }
 
   function mount(container, opts = {}) {
-    const P = Object.assign({}, LOOK);
+    const P = Object.assign({}, LOOK, opts.look || {});
     const reduceMotion = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
     if (reduceMotion) { P.flicker = 0; P.rain = 0; P.glitch = 0; P.sway = 0; }
     const canvas = document.createElement('canvas');
