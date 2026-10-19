@@ -7,7 +7,7 @@
 </head>
 <body>
 <x-dc>
-<div ref="{{ sectionRef }}" data-workmap="1" style="position:relative;height:{{ rootH }};display:grid;grid-template-columns:{{ cols }};column-gap:32px;row-gap:56px;align-items:center;">
+<div ref="{{ sectionRef }}" data-workmap="1" style="position:relative;height:{{ rootH }};display:grid;grid-template-columns:{{ cols }};grid-template-rows:{{ rows }};column-gap:32px;row-gap:{{ rowGap }};align-items:center;">
   <svg style="position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible;pointer-events:none;z-index:0;">
     <defs>
       <filter id="wm-line-noise" x="-5%" y="-5%" width="110%" height="110%" color-interpolation-filters="sRGB">
@@ -40,7 +40,7 @@
               <svg data-lb-c="1" width="100%" height="100%" preserveAspectRatio="none" style="position:absolute;inset:0;overflow:visible;opacity:0;">
                 <rect x="0.5" y="0.5" width="calc(100% - 1px)" height="calc(100% - 1px)" fill="none" stroke="#df5227" stroke-width="1" pathLength="100" stroke-dasharray="24.6 2.3 16.8 0.8 33.3 3 15.3 0.5 3.4"></rect>
               </svg>
-              <div data-lb-c="1" style="position:relative;opacity:0;overflow:hidden;background:#c44a25;box-shadow:inset 0 0 0 1px rgba(255,190,160,0.22);padding:9px 14px;white-space:nowrap;color:#dcd1cb;font-family:'Redaction 10','Redaction',Georgia,serif;font-weight:700;font-size:15px;line-height:20px;letter-spacing:0.01em;">
+              <div data-lb-c="1" style="position:relative;opacity:0;overflow:hidden;background:#c44a25;box-shadow:inset 0 0 0 1px rgba(255,190,160,0.22);padding:{{ b.lbPad }};white-space:nowrap;color:#dcd1cb;font-family:'Redaction 10','Redaction',Georgia,serif;font-weight:700;font-size:{{ b.lbFs }};line-height:{{ b.lbLh }};letter-spacing:0.01em;">
                 <div style="position:absolute;inset:0;background-image:url(assets/noise-dark.svg);background-size:200px 200px;opacity:0.35;pointer-events:none;"></div>
                 <span style="position:relative;">{{ b.label }}</span>
               </div>
@@ -70,7 +70,7 @@
               <svg data-lb-c="1" width="100%" height="100%" preserveAspectRatio="none" style="position:absolute;inset:0;overflow:visible;opacity:0;">
                 <rect x="0.5" y="0.5" width="calc(100% - 1px)" height="calc(100% - 1px)" fill="none" stroke="#df5227" stroke-width="1" pathLength="100" stroke-dasharray="24.6 2.3 16.8 0.8 33.3 3 15.3 0.5 3.4"></rect>
               </svg>
-              <div data-lb-c="1" style="position:relative;opacity:0;overflow:hidden;background:#c44a25;box-shadow:inset 0 0 0 1px rgba(255,190,160,0.22);padding:9px 14px;white-space:nowrap;color:#dcd1cb;font-family:'Redaction 10','Redaction',Georgia,serif;font-weight:700;font-size:15px;line-height:20px;letter-spacing:0.01em;">
+              <div data-lb-c="1" style="position:relative;opacity:0;overflow:hidden;background:#c44a25;box-shadow:inset 0 0 0 1px rgba(255,190,160,0.22);padding:{{ b.lbPad }};white-space:nowrap;color:#dcd1cb;font-family:'Redaction 10','Redaction',Georgia,serif;font-weight:700;font-size:{{ b.lbFs }};line-height:{{ b.lbLh }};letter-spacing:0.01em;">
                 <div style="position:absolute;inset:0;background-image:url(assets/noise-dark.svg);background-size:200px 200px;opacity:0.35;pointer-events:none;"></div>
                 <span style="position:relative;">{{ b.label }}</span>
               </div>
@@ -99,7 +99,10 @@ const RIGHT = [
   { name: 'WealthDesk', label: 'Investment Marketplace', svg: true, logo: 'assets/logos/wealthdesk.svg', w: 120, ow: 108, x: 253, y: 257, lx: -13, ly: -22 },
   { name: 'PayTM', label: 'Fintech', svg: true, logo: 'assets/logos/paytm.svg', w: 120, ow: 104, x: 169, y: 446, lx: -32, ly: -20 }
 ];
-const NODES = LEFT.map(b => ({ ...b, side: 'left' })).concat(RIGHT.map(b => ({ ...b, side: 'right' })));
+// Mobile: the left group sits above the middle component, the right group below it (640 x 334 units per region).
+const MOB = [[10, 46], [135, 196], [260, 26], [385, 196], [510, 46], [30, 196], [190, 26], [350, 196], [510, 26]];
+const MOB_W = 640, MOB_H = 334, LABEL_ORDER = [0, 5, 2, 7, 4, 6, 1, 8, 3], LABEL_MS = 2400;
+const NODES = LEFT.map(b => ({ ...b, side: 'left' })).concat(RIGHT.map(b => ({ ...b, side: 'right' }))).map((b, i) => ({ ...b, mx: MOB[i][0], my: MOB[i][1] }));
 // 0 Genie, 1 OpenLib, 2 PAC, 3 Omni, 4 L'Oréal | 5 THEM, 6 IndiaBonds, 7 WealthDesk, 8 PayTM
 const EDGES = [
   [0,1],[0,2],[0,3],[0,4],[1,2],[1,3],[1,4],[2,3],[2,4],[3,4],
@@ -175,12 +178,12 @@ class Component extends DCLogic {
         if (!wrap) return null;
         const w = wrap.clientWidth;
         if (!w) return null;
-        const boxes = side === 'left' ? LEFT : RIGHT;
-        const minX = Math.min(...boxes.map(b => b.x)), maxX = Math.max(...boxes.map(b => b.x + 120));
-        const bw = maxX - minX, s = Math.min(this.props.narrow ? 1 : 1.12, w / bw), tx = (w - bw * s) / 2 - minX * s;
+        const boxes = side === 'left' ? LEFT : RIGHT, mob = !!this.props.mobile;
+        const minX = mob ? 0 : Math.min(...boxes.map(b => b.x)), maxX = mob ? MOB_W : Math.max(...boxes.map(b => b.x + 120));
+        const bw = maxX - minX, s = mob ? w / MOB_W : Math.min(this.props.narrow ? 1 : 1.12, w / bw), tx = (w - bw * s) / 2 - minX * s;
         const tf = 'translate(' + tx.toFixed(2) + 'px,0) scale(' + s.toFixed(4) + ')';
         if (stage.style.transform !== tf) stage.style.transform = tf;
-        const hh = (602 * s).toFixed(2) + 'px';
+        const hh = ((mob ? MOB_H : 602) * s).toFixed(2) + 'px';
         if (wrap.style.height !== hh) wrap.style.height = hh;
         const wr = wrap.getBoundingClientRect();
         geo[side] = { s, ox: (wr.left - sr.left) / zf + tx, oy: (wr.top - sr.top) / zf };
@@ -203,6 +206,8 @@ class Component extends DCLogic {
       }
       const geo = fit(sec);
       if (!geo) return;
+      const mob = !!this.props.mobile;
+      if (mob) { this.placeLabels(sec); this.labelWant = this.allLinked ? new Set([LABEL_ORDER[Math.floor(now / LABEL_MS) % LABEL_ORDER.length]]) : new Set(); }
       this.animLabels(sec, now);
       const P = typeof window.__wmSprout === 'number' ? window.__wmSprout : 1;
       const PU = typeof window.__wmPull === 'number' ? window.__wmPull : 0;
@@ -211,7 +216,7 @@ class Component extends DCLogic {
       lastKey = key;
       // Pull (section 2 → 3): the wires reel every card in to the centre, behind the middle screen. Nearest cards go first.
       const C = { x: sec.offsetWidth / 2, y: sec.offsetHeight / 2 };
-      NODES.forEach((n, i) => { const g = geo[n.side]; pos[i].x = g.ox + (n.x + HALF) * g.s; pos[i].y = g.oy + (n.y + HALF) * g.s; });
+      NODES.forEach((n, i) => { const g = geo[n.side]; pos[i].x = g.ox + ((mob ? n.mx : n.x) + HALF) * g.s; pos[i].y = g.oy + ((mob ? n.my : n.y) + HALF) * g.s; });
       if (!this.pullDelay) {
         const order = NODES.map((_, i) => i).sort((a, b) => Math.hypot(pos[a].x - C.x, pos[a].y - C.y) - Math.hypot(pos[b].x - C.x, pos[b].y - C.y));
         this.pullDelay = []; order.forEach((i, r) => (this.pullDelay[i] = PULL_LAG * r / (order.length - 1)));
@@ -226,7 +231,7 @@ class Component extends DCLogic {
       // a card's label switches on once a wire touching it has fully connected
       const linked = new Set();
       if (PU <= 0.02) PLAN.forEach(pl => { if (pl && P >= pl.s1) { linked.add(pl.a); linked.add(pl.b); } });
-      this.labelWant = linked;
+      if (mob) this.allLinked = linked.size === NODES.length; else this.labelWant = linked;
       sec.querySelectorAll('[data-edge]').forEach(ln => {
         const pl = PLAN[+ln.getAttribute('data-edge')]; if (!pl) return;
         const f = ease(seg(P, pl.s0, pl.s1)), A = pos[pl.a], B = pos[pl.b];
@@ -265,20 +270,33 @@ class Component extends DCLogic {
       o.cs.forEach(c => { if (c.style.opacity !== cov) c.style.opacity = cov; });
     });
   }
+  // Mobile: labels sit centred above their card, clamped inside the card's region so none run off screen or under the middle component.
+  placeLabels(sec) {
+    sec.querySelectorAll('[data-wm-label]').forEach(el => {
+      const n = NODES[+el.getAttribute('data-wm-label')], lw = el.offsetWidth, lh = el.offsetHeight; if (!n || !lw) return;
+      const l = Math.max(-n.mx, Math.min(MOB_W - n.mx - lw, 60 - lw / 2)), t = Math.max(-n.my, Math.min(MOB_H - n.my - lh, 12 - lh));
+      const L = l.toFixed(1) + 'px', T = t.toFixed(1) + 'px';
+      if (el.style.left !== L) el.style.left = L; if (el.style.top !== T) el.style.top = T;
+    });
+  }
   componentWillUnmount() {
     cancelAnimationFrame(this.raf);
   }
 
   renderVals() {
+    const mob = !!this.props.mobile, lb = mob ? { lbFs: '22px', lbLh: '28px', lbPad: '10px 16px' } : { lbFs: '15px', lbLh: '20px', lbPad: '9px 14px' };
+    const pos = (b, i) => (mob ? { x: NODES[i].mx, y: NODES[i].my } : {});
     return {
       sectionRef: this.sectionRef,
-      rootH: this.props.narrow ? 'auto' : '100%',
-      cols: this.props.narrow ? 'minmax(0,1fr)' : '500px 561px 500px',
-      centerDisplay: this.props.narrow ? 'none' : 'block',
+      rootH: this.props.narrow && !mob ? 'auto' : '100%',
+      cols: mob || this.props.narrow ? 'minmax(0,1fr)' : '500px 561px 500px',
+      rows: mob ? '184px 296px 184px' : 'none',
+      rowGap: mob ? '12px' : '56px',
+      centerDisplay: this.props.narrow && !mob ? 'none' : 'block',
       leftWrap: this.leftWrap,
       rightWrap: this.rightWrap,
-      leftBoxes: LEFT.map((b, i) => ({ ...b, ...look(b, 'left'), i })),
-      rightBoxes: RIGHT.map((b, i) => ({ ...b, ...look(b, 'right'), i: i + LEFT.length })),
+      leftBoxes: LEFT.map((b, i) => ({ ...b, ...look(b, 'left'), ...lb, ...pos(b, i), i })),
+      rightBoxes: RIGHT.map((b, i) => ({ ...b, ...look(b, 'right'), ...lb, ...pos(b, i + LEFT.length), i: i + LEFT.length })),
       edges: EDGES.map(([a, b]) => ({ a, b }))
     };
   }

@@ -57,6 +57,7 @@ html.ce-pre:not(.ce-cover-off) body::after{content:"";position:fixed;inset:0;z-i
     <div data-role="container" style="max-width:1600px;margin:0 auto;">
 
       <header data-role="nav" data-screen-label="Nav" style="position:sticky;top:0;z-index:50;display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:clamp(8px, 0.6vw, 12px);pointer-events:none;transform:{{ navTf }};transition:transform 180ms steps(4);">
+        <sc-if value="{{ desk }}" hint-placeholder-val="{{ true }}">
         <a href="#" aria-label="Home" style="pointer-events:auto;background:#1c1c1c;flex:0 0 40px;width:40px;height:40px;border:2px solid #d8d8d8;display:flex;overflow:hidden;">
           <img src="assets/logo.svg" alt="Logo" style="width:36px;height:36px;display:block;">
         </a>
@@ -74,10 +75,20 @@ html.ce-pre:not(.ce-cover-off) body::after{content:"";position:fixed;inset:0;z-i
           <img src="assets/nav-note.png" alt="" style="width:24px;height:24px;display:block;image-rendering:pixelated;">
         </a>
         <button type="button" onClick="{{ backToComputer }}" style="pointer-events:auto;position:absolute;top:100%;right:0;margin-top:6px;padding:4px 0;background:none;border:0;cursor:pointer;font-family:'Redaction',Georgia,serif;font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:#9a9a9a;" style-hover="color:#ececec;">↺ Computer</button>
+        </sc-if>
+        <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+          <button type="button" aria-label="Open menu" aria-expanded="{{ menuOpenStr }}" onClick="{{ openMenu }}" style="pointer-events:auto;background:#1c1c1c;flex:0 0 40px;width:40px;height:40px;border:2px solid #d8d8d8;display:flex;align-items:center;justify-content:center;overflow:hidden;box-sizing:border-box;padding:0;cursor:pointer;flex-direction:column;gap:4px;">
+            <span style="display:block;width:22px;height:3px;border-radius:2px;background:#ececec;"></span>
+            <span style="display:block;width:22px;height:3px;border-radius:2px;background:#ececec;"></span>
+            <span style="display:block;width:22px;height:3px;border-radius:2px;background:#ececec;"></span>
+          </button>
+          <a href="{{ resumeUrl }}" aria-label="Resume" style="pointer-events:auto;background:#1c1c1c;flex:0 0 40px;width:40px;height:40px;border:2px solid #d8d8d8;display:flex;align-items:center;justify-content:center;overflow:hidden;box-sizing:border-box;padding:0;cursor:pointer;"><img src="assets/nav-note.png" alt="" style="width:24px;height:24px;display:block;image-rendering:pixelated;"></a>
+        </sc-if>
       </header>
 
       <div data-role="hero-pin" style="position:relative;height:{{ pinH }};">
       <div ref="{{ heroRef }}" data-role="hero-fit" style="position:{{ pinPos }};z-index:2;top:{{ pinTop }};height:{{ pinInnerH }};display:flex;align-items:center;justify-content:center;padding:{{ heroPad }};">
+      <sc-if value="{{ desk }}" hint-placeholder-val="{{ true }}">
       <main data-screen-label="Hero" data-role="stage" style="zoom:{{ heroZoom }};width:{{ heroW }};flex:none;max-width:100%;display:grid;grid-template-columns:{{ heroCols }};grid-template-rows:{{ heroRows }};column-gap:32px;row-gap:{{ rowGap }};">
         <sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}">
           <section data-screen-label="Work Map" data-role="wm-pull" style="grid-column:1 / -1;grid-row:1;position:relative;z-index:0;transform-origin:50% 50%;min-width:0;height:692px;">
@@ -323,6 +334,182 @@ html.ce-pre:not(.ce-cover-off) body::after{content:"";position:fixed;inset:0;z-i
           </section>
         </div>
       </main>
+      </sc-if>
+      <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
+      <main data-screen-label="Hero" data-role="stage" style="zoom:{{ heroZoom }};width:353px;height:688px;flex:none;position:relative;display:flex;flex-direction:column;align-items:center;justify-content:space-between;">
+        <section data-screen-label="Work Map" data-role="wm-pull" style="position:absolute;left:0;top:0;width:100%;height:688px;z-index:0;transform-origin:50% 50%;min-width:0;">
+          <dc-import name="WorkMap" mobile="{{ true }}" hint-size="100%,688px"></dc-import>
+        </section>
+        <div data-role="col-left" style="position:relative;z-index:2;width:100%;display:flex;justify-content:space-between;">
+          <section data-hud-card="0" style="position:relative;flex:none;width:172px;height:184px;">
+            <div data-hud-screen="1" aria-hidden="true" style="position:absolute;left:5px;top:5px;width:162px;height:100px;background:rgba(217,217,217,0.3);z-index:1;"></div>
+            <div data-hud-sets="1" data-crt-content="1" style="position:absolute;inset:0;z-index:2;">
+              <div data-hud-set="A" style="position:absolute;inset:5px;">
+                <div style="height:100px;display:flex;flex-direction:column;color:#ffffff;"><div style="flex:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;"><div data-rv="1" data-scr="1" style="font-family:{{ displayFont }};font-weight:700;font-size:32px;line-height:0.86;letter-spacing:-0.01em;white-space:nowrap;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">50+</div></div><div style="flex:none;padding:0 6px 8px;"><p data-rv="1" data-scr="1" style="margin:0;text-align:center;font-size:10.5px;line-height:13px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Products shipped across Fintech, PharmaTech, PropertyTech, eCommerce, PMS and Web3</p></div></div>
+                <div style="position:absolute;left:0;right:0;top:100px;bottom:0;display:flex;flex-direction:column;justify-content:center;padding:3px 2px 0;"><div style="display:flex;flex-direction:column;gap:7px;font-size:10.5px;line-height:13px;"><div style="display:flex;align-items:baseline;gap:2px;"><span data-rv="1" data-scr="1">iOS &amp; Android Apps</span><span data-rv="1" style="flex:1;border-bottom:1px dotted #cfcfcf;transform:translateY(-3px);"></span><span data-rv="1" data-scr="1">20+</span></div><div style="display:flex;align-items:baseline;gap:2px;"><span data-rv="1" data-scr="1">Websites &amp; Web Apps</span><span data-rv="1" style="flex:1;border-bottom:1px dotted #cfcfcf;transform:translateY(-3px);"></span><span data-rv="1" data-scr="1">30+</span></div></div></div>
+              </div>
+              <div data-hud-set="B" aria-hidden="true" style="position:absolute;inset:5px;opacity:0;">
+                <div style="height:100px;display:flex;flex-direction:column;color:#ffffff;"><div style="flex:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;"><div data-rv="1" data-scr="1" style="font-family:{{ displayFont }};font-weight:700;font-size:24px;line-height:0.86;letter-spacing:-0.01em;white-space:nowrap;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Global Exp</div></div><div style="flex:none;padding:0 6px 8px;"><p data-rv="1" data-scr="1" style="margin:0;text-align:center;font-size:10.5px;line-height:13px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">My design solutions are helping users from 5 different countries</p></div></div>
+                <div style="position:absolute;left:0;right:0;top:100px;bottom:0;display:flex;flex-direction:column;justify-content:center;padding:3px 2px 0;"><div data-rv="1" data-scr="1" style="font-size:9.5px;line-height:12px;color:#d4d4d4;">Products built for</div><div style="display:flex;gap:5px;margin-top:5px;"><img data-rv="1" src="assets/flags/us.svg" alt="United States" style="display:block;width:22px;height:22px;"><img data-rv="1" src="assets/flags/in.svg" alt="India" style="display:block;width:22px;height:22px;"><img data-rv="1" src="assets/flags/gb-eng.svg" alt="England" style="display:block;width:22px;height:22px;"><img data-rv="1" src="assets/flags/ae.svg" alt="United Arab Emirates" style="display:block;width:22px;height:22px;"><img data-rv="1" src="assets/flags/ca.svg" alt="Canada" style="display:block;width:22px;height:22px;"></div></div>
+              </div>
+            </div>
+            <div data-role="crt" data-hud-screen="1" aria-hidden="true" style="position:absolute;left:5px;top:5px;width:162px;height:100px;overflow:hidden;pointer-events:none;z-index:3;">
+              <div style="position:absolute;inset:0;z-index:2;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
+              <canvas data-crt-noise="1" width="120" height="74" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;"></canvas>
+              <div data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 7.3s linear infinite;animation-delay:-1.2s;"></div>
+              <div style="position:absolute;inset:0;z-index:5;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 10px rgba(0,0,0,0.3);"></div>
+              <div data-crt-flicker="1" style="position:absolute;inset:0;z-index:6;background:#000000;opacity:0;"></div>
+              <div data-crt-tear="1" style="position:absolute;left:0;right:0;top:40%;height:2px;z-index:6;background:rgba(255,255,255,0.5);opacity:0;"></div>
+            </div>
+            <div data-hud-boot="1" data-w="162" data-h="100" aria-hidden="true" style="position:absolute;left:5px;top:5px;width:162px;height:100px;pointer-events:none;z-index:4;">
+              <div data-hud-fill="1" style="position:absolute;inset:0;background:#D9D9D9;opacity:0;transform-origin:50% 50%;"></div>
+              <span data-hud-arm="tl-h" style="position:absolute;left:0;top:0;width:14px;height:{{ armPx }};background:#ffffff;transform-origin:0 0;"></span>
+              <span data-hud-arm="tl-v" style="position:absolute;left:0;top:0;width:{{ armPx }};height:14px;background:#ffffff;transform-origin:0 0;"></span>
+              <span data-hud-arm="tr-h" style="position:absolute;right:0;top:0;width:14px;height:{{ armPx }};background:#ffffff;transform-origin:100% 0;"></span>
+              <span data-hud-arm="tr-v" style="position:absolute;right:0;top:0;width:{{ armPx }};height:14px;background:#ffffff;transform-origin:100% 0;"></span>
+              <span data-hud-arm="bl-h" style="position:absolute;left:0;bottom:0;width:14px;height:{{ armPx }};background:#ffffff;transform-origin:0 100%;"></span>
+              <span data-hud-arm="bl-v" style="position:absolute;left:0;bottom:0;width:{{ armPx }};height:14px;background:#ffffff;transform-origin:0 100%;"></span>
+              <span data-hud-arm="br-h" style="position:absolute;right:0;bottom:0;width:14px;height:{{ armPx }};background:#ffffff;transform-origin:100% 100%;"></span>
+              <span data-hud-arm="br-v" style="position:absolute;right:0;bottom:0;width:{{ armPx }};height:14px;background:#ffffff;transform-origin:100% 100%;"></span>
+            </div>
+            <div data-hud-outline="1" aria-hidden="true" style="position:absolute;inset:0;border:0.5px solid #ffffff;pointer-events:none;z-index:5;"></div>
+          </section>
+          <section data-hud-card="1" style="position:relative;flex:none;width:172px;height:184px;">
+            <div data-hud-screen="1" aria-hidden="true" style="position:absolute;left:5px;top:5px;width:162px;height:100px;background:rgba(217,217,217,0.3);z-index:1;"></div>
+            <div data-hud-sets="1" data-crt-content="1" style="position:absolute;inset:0;z-index:2;">
+              <div data-hud-set="A" style="position:absolute;inset:5px;">
+                <div style="height:100px;display:flex;flex-direction:column;color:#ffffff;"><div style="flex:1;min-height:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;"><img data-rv="1" src="assets/skyline-alpha.png" alt="New York skyline" style="display:block;width:100%;height:50px;object-fit:cover;object-position:50% 100%;filter:drop-shadow(0 0 1.5px rgba(255,255,255,0.55)) drop-shadow(0 0 6px rgba(255,255,255,0.22));"></div><div style="flex:none;padding:0 6px 8px;"><p data-rv="1" data-scr="1" style="margin:0;text-align:center;font-size:10.5px;line-height:13px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Currently based out of New York and stuck on the J train</p></div></div>
+                <div style="position:absolute;left:0;right:0;top:100px;bottom:0;display:flex;flex-direction:column;justify-content:center;padding:3px 2px 0;"><div data-rv="1" data-scr="1" style="font-size:9.5px;line-height:12px;color:#d4d4d4;">Alma Mater: New York Institute of Technology</div><div data-rv="1" data-scr="1" style="font-size:9.5px;line-height:12px;margin-top:2px;text-wrap:pretty;">Masters in UX/UI Design &amp; Development</div></div>
+              </div>
+              <div data-hud-set="B" aria-hidden="true" style="position:absolute;inset:5px;opacity:0;">
+                <div style="height:100px;display:flex;flex-direction:column;color:#ffffff;"><div style="flex:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;"><div data-rv="1" data-scr="1" style="font-family:{{ displayFont }};font-weight:700;font-size:24px;line-height:0.86;letter-spacing:-0.01em;white-space:nowrap;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Ex-Founder</div></div><div style="flex:none;padding:0 6px 8px;"><p data-rv="1" data-scr="1" style="margin:0;text-align:center;font-size:10.5px;line-height:13px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">I consulted with early stage startup founders &amp; SMBs</p></div></div>
+                <div style="position:absolute;left:0;right:0;top:100px;bottom:0;display:flex;flex-direction:column;justify-content:center;padding:3px 2px 0;"><div data-rv="1" data-scr="1" style="font-size:9.5px;line-height:12px;color:#d4d4d4;">My value</div><div data-rv="1" data-scr="1" style="font-size:9.5px;line-height:12px;margin-top:2px;text-wrap:pretty;">I ran workshops to upskill design teams in SMBs and legacy companies to leverage AI native workflows</div></div>
+              </div>
+            </div>
+            <div data-role="crt" data-hud-screen="1" aria-hidden="true" style="position:absolute;left:5px;top:5px;width:162px;height:100px;overflow:hidden;pointer-events:none;z-index:3;">
+              <div style="position:absolute;inset:0;z-index:2;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
+              <canvas data-crt-noise="1" width="120" height="74" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;"></canvas>
+              <div data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 6.4s linear infinite;animation-delay:-2.9s;"></div>
+              <div style="position:absolute;inset:0;z-index:5;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 10px rgba(0,0,0,0.3);"></div>
+              <div data-crt-flicker="1" style="position:absolute;inset:0;z-index:6;background:#000000;opacity:0;"></div>
+              <div data-crt-tear="1" style="position:absolute;left:0;right:0;top:40%;height:2px;z-index:6;background:rgba(255,255,255,0.5);opacity:0;"></div>
+            </div>
+            <div data-hud-boot="1" data-w="162" data-h="100" aria-hidden="true" style="position:absolute;left:5px;top:5px;width:162px;height:100px;pointer-events:none;z-index:4;">
+              <div data-hud-fill="1" style="position:absolute;inset:0;background:#D9D9D9;opacity:0;transform-origin:50% 50%;"></div>
+              <span data-hud-arm="tl-h" style="position:absolute;left:0;top:0;width:14px;height:{{ armPx }};background:#ffffff;transform-origin:0 0;"></span>
+              <span data-hud-arm="tl-v" style="position:absolute;left:0;top:0;width:{{ armPx }};height:14px;background:#ffffff;transform-origin:0 0;"></span>
+              <span data-hud-arm="tr-h" style="position:absolute;right:0;top:0;width:14px;height:{{ armPx }};background:#ffffff;transform-origin:100% 0;"></span>
+              <span data-hud-arm="tr-v" style="position:absolute;right:0;top:0;width:{{ armPx }};height:14px;background:#ffffff;transform-origin:100% 0;"></span>
+              <span data-hud-arm="bl-h" style="position:absolute;left:0;bottom:0;width:14px;height:{{ armPx }};background:#ffffff;transform-origin:0 100%;"></span>
+              <span data-hud-arm="bl-v" style="position:absolute;left:0;bottom:0;width:{{ armPx }};height:14px;background:#ffffff;transform-origin:0 100%;"></span>
+              <span data-hud-arm="br-h" style="position:absolute;right:0;bottom:0;width:14px;height:{{ armPx }};background:#ffffff;transform-origin:100% 100%;"></span>
+              <span data-hud-arm="br-v" style="position:absolute;right:0;bottom:0;width:{{ armPx }};height:14px;background:#ffffff;transform-origin:100% 100%;"></span>
+            </div>
+            <div data-hud-outline="1" aria-hidden="true" style="position:absolute;inset:0;border:0.5px solid #ffffff;pointer-events:none;z-index:5;"></div>
+          </section>
+        </div>
+        <div data-role="col-center" style="position:relative;z-index:3;width:240px;height:296px;">
+          <section data-crt-center="1" data-hud-center="1" style="position:relative;width:240px;height:296px;overflow:hidden;">
+            <div data-hud-screen="1" aria-hidden="true" style="position:absolute;inset:0;z-index:1;background:linear-gradient(rgba(171,171,171,0.17), rgba(171,171,171,0.17)), #141414;"></div>
+            <div data-crt-content="1" data-figure-mount="1" style="position:absolute;inset:0;z-index:2;"></div>
+            <div data-bio-src="1" style="position:absolute;inset:0;z-index:2;padding:20px 16px 0;opacity:0;pointer-events:none;color:#ffffff;font-family:{{ displayFont }};font-weight:700;font-size:11px;line-height:13.5px;">
+              <p data-bio-block="1" style="margin:0 0 12px;">HI, I’M MONIL!</p>
+              <p data-bio-block="1" style="margin:0;">I TRANSLATE AMBIGUITY FOR A LIVING. I LOVE DESIGNING FOR SYSTEMS TOO SMART TO BE SIMPLE AND I USE AI AS MY FORCE MULTIPLIER RATHER THAN A PROXY. I BRING THE DILIGENCE OF A CONSULTANT AND THE DEDICATION OF A CRAFTSMAN TO MY WORK. SOME OF MY WORK HAS HELPED CLOSE A $75M ACQUISITION AND FEW SERIES FUNDINGS. EVERY DECISION IS ANCHORED TO A BUSINESS OUTCOME, NOT JUST A VISUAL DIRECTION BECAUSE INFLUENTIAL &amp; TRUSTABLE PRODUCTS ARE BUILT BY INTENTIONAL DESIGN AND CARE, NOT BY SIMPLY SIMPLIFYING</p>
+            </div>
+            <div data-bio-out="1" aria-hidden="true" style="position:absolute;inset:0;z-index:2;padding:20px 16px 0;pointer-events:none;color:#ffffff;font-family:{{ displayFont }};font-weight:700;font-size:11px;line-height:13.5px;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);"></div>
+            <canvas data-thread="1" aria-hidden="true" style="position:absolute;left:0;top:0;width:100%;height:100%;z-index:2;pointer-events:none;"></canvas>
+            <div data-role="crt" data-hud-screen="1" aria-hidden="true" style="position:absolute;inset:0;z-index:3;overflow:hidden;pointer-events:none;">
+              <div style="position:absolute;inset:0;z-index:2;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
+              <canvas data-crt-noise="1" width="240" height="96" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;"></canvas>
+              <div data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 10.4s linear infinite;animation-delay:-3.3s;"></div>
+              <div style="position:absolute;inset:0;z-index:5;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 12px rgba(0,0,0,0.3);"></div>
+              <div data-crt-flicker="1" style="position:absolute;inset:0;z-index:6;background:#000000;opacity:0;"></div>
+              <div data-crt-tear="1" style="position:absolute;left:0;right:0;top:40%;height:2px;z-index:6;background:rgba(255,255,255,0.5);opacity:0;"></div>
+            </div>
+            <div data-hud-boot="1" data-w="228" data-h="284" aria-hidden="true" style="position:absolute;inset:6px;pointer-events:none;z-index:4;">
+              <div data-hud-fill="1" style="position:absolute;inset:0;background:#D9D9D9;opacity:0;transform-origin:50% 50%;"></div>
+              <span data-hud-arm="tl-h" style="position:absolute;left:0;top:0;width:16px;height:{{ armPx }};background:#ffffff;transform-origin:0 0;"></span>
+              <span data-hud-arm="tl-v" style="position:absolute;left:0;top:0;width:{{ armPx }};height:16px;background:#ffffff;transform-origin:0 0;"></span>
+              <span data-hud-arm="tr-h" style="position:absolute;right:0;top:0;width:16px;height:{{ armPx }};background:#ffffff;transform-origin:100% 0;"></span>
+              <span data-hud-arm="tr-v" style="position:absolute;right:0;top:0;width:{{ armPx }};height:16px;background:#ffffff;transform-origin:100% 0;"></span>
+              <span data-hud-arm="bl-h" style="position:absolute;left:0;bottom:0;width:16px;height:{{ armPx }};background:#ffffff;transform-origin:0 100%;"></span>
+              <span data-hud-arm="bl-v" style="position:absolute;left:0;bottom:0;width:{{ armPx }};height:16px;background:#ffffff;transform-origin:0 100%;"></span>
+              <span data-hud-arm="br-h" style="position:absolute;right:0;bottom:0;width:16px;height:{{ armPx }};background:#ffffff;transform-origin:100% 100%;"></span>
+              <span data-hud-arm="br-v" style="position:absolute;right:0;bottom:0;width:{{ armPx }};height:16px;background:#ffffff;transform-origin:100% 100%;"></span>
+            </div>
+            <div data-hud-outline="1" aria-hidden="true" style="position:absolute;inset:0;border:0.5px solid #ffffff;pointer-events:none;z-index:5;"></div>
+          </section>
+        </div>
+        <div data-role="col-right" style="position:relative;z-index:2;width:100%;display:flex;justify-content:space-between;">
+          <section data-hud-card="2" style="position:relative;flex:none;width:172px;height:184px;">
+            <div data-hud-screen="1" aria-hidden="true" style="position:absolute;left:5px;top:5px;width:162px;height:100px;background:rgba(217,217,217,0.3);z-index:1;"></div>
+            <div data-hud-sets="1" data-crt-content="1" style="position:absolute;inset:0;z-index:2;">
+              <div data-hud-set="A" style="position:absolute;inset:5px;">
+                <div style="height:100px;display:flex;flex-direction:column;color:#ffffff;"><div style="flex:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;"><div data-rv="1" data-scr="1" style="font-family:{{ displayFont }};font-weight:700;font-size:30px;line-height:0.86;letter-spacing:-0.01em;white-space:nowrap;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">6+ YoE</div></div><div style="flex:none;padding:0 6px 8px;"><p data-rv="1" data-scr="1" style="margin:0;text-align:center;font-size:10.5px;line-height:13px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Working directly with founders, c-suite execs, cross-functional teams and engineers</p></div></div>
+                <div style="position:absolute;left:0;right:0;top:100px;bottom:0;display:flex;flex-direction:column;justify-content:center;padding:3px 2px 0;"><div data-rv="1" data-scr="1" style="font-size:9.5px;line-height:12px;color:#d4d4d4;">My superpower:</div><div data-rv="1" data-scr="1" style="font-size:9.5px;line-height:12px;margin-top:2px;text-wrap:pretty;">I’ve made it my business to understand different businesses. Design just happens to be one of my mediums to solve business problems</div></div>
+              </div>
+              <div data-hud-set="B" aria-hidden="true" style="position:absolute;inset:5px;opacity:0;">
+                <div style="height:100px;display:flex;flex-direction:column;color:#ffffff;"><div style="flex:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;"><div data-rv="1" data-scr="1" style="font-family:{{ displayFont }};font-weight:700;font-size:21px;line-height:0.86;letter-spacing:-0.01em;white-space:nowrap;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">AI Native DS</div></div><div style="flex:none;padding:0 6px 8px;"><p data-rv="1" data-scr="1" style="margin:0;text-align:center;font-size:10.5px;line-height:13px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Built and scaled 4 design systems used by humans and agents alike</p></div></div>
+                <div style="position:absolute;left:0;right:0;top:100px;bottom:0;display:flex;flex-direction:column;justify-content:center;padding:3px 2px 0;"><div data-rv="1" data-scr="1" style="font-size:9.5px;line-height:12px;color:#d4d4d4;">Currently building:</div><div data-rv="1" data-scr="1" style="font-size:9.5px;line-height:12px;margin-top:2px;text-wrap:pretty;">A white-labeled, agent friendly design system that can empower legacy companies revamp their digital ecosystem with AI</div></div>
+              </div>
+            </div>
+            <div data-role="crt" data-hud-screen="1" aria-hidden="true" style="position:absolute;left:5px;top:5px;width:162px;height:100px;overflow:hidden;pointer-events:none;z-index:3;">
+              <div style="position:absolute;inset:0;z-index:2;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
+              <canvas data-crt-noise="1" width="120" height="74" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;"></canvas>
+              <div data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 9.1s linear infinite;animation-delay:-4.7s;"></div>
+              <div style="position:absolute;inset:0;z-index:5;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 10px rgba(0,0,0,0.3);"></div>
+              <div data-crt-flicker="1" style="position:absolute;inset:0;z-index:6;background:#000000;opacity:0;"></div>
+              <div data-crt-tear="1" style="position:absolute;left:0;right:0;top:40%;height:2px;z-index:6;background:rgba(255,255,255,0.5);opacity:0;"></div>
+            </div>
+            <div data-hud-boot="1" data-w="162" data-h="100" aria-hidden="true" style="position:absolute;left:5px;top:5px;width:162px;height:100px;pointer-events:none;z-index:4;">
+              <div data-hud-fill="1" style="position:absolute;inset:0;background:#D9D9D9;opacity:0;transform-origin:50% 50%;"></div>
+              <span data-hud-arm="tl-h" style="position:absolute;left:0;top:0;width:14px;height:{{ armPx }};background:#ffffff;transform-origin:0 0;"></span>
+              <span data-hud-arm="tl-v" style="position:absolute;left:0;top:0;width:{{ armPx }};height:14px;background:#ffffff;transform-origin:0 0;"></span>
+              <span data-hud-arm="tr-h" style="position:absolute;right:0;top:0;width:14px;height:{{ armPx }};background:#ffffff;transform-origin:100% 0;"></span>
+              <span data-hud-arm="tr-v" style="position:absolute;right:0;top:0;width:{{ armPx }};height:14px;background:#ffffff;transform-origin:100% 0;"></span>
+              <span data-hud-arm="bl-h" style="position:absolute;left:0;bottom:0;width:14px;height:{{ armPx }};background:#ffffff;transform-origin:0 100%;"></span>
+              <span data-hud-arm="bl-v" style="position:absolute;left:0;bottom:0;width:{{ armPx }};height:14px;background:#ffffff;transform-origin:0 100%;"></span>
+              <span data-hud-arm="br-h" style="position:absolute;right:0;bottom:0;width:14px;height:{{ armPx }};background:#ffffff;transform-origin:100% 100%;"></span>
+              <span data-hud-arm="br-v" style="position:absolute;right:0;bottom:0;width:{{ armPx }};height:14px;background:#ffffff;transform-origin:100% 100%;"></span>
+            </div>
+            <div data-hud-outline="1" aria-hidden="true" style="position:absolute;inset:0;border:0.5px solid #ffffff;pointer-events:none;z-index:5;"></div>
+          </section>
+          <section data-hud-card="3" style="position:relative;flex:none;width:172px;height:184px;">
+            <div data-hud-screen="1" aria-hidden="true" style="position:absolute;left:5px;top:5px;width:162px;height:100px;background:rgba(217,217,217,0.3);z-index:1;"></div>
+            <div data-hud-sets="1" data-crt-content="1" style="position:absolute;inset:0;z-index:2;">
+              <div data-hud-set="A" style="position:absolute;inset:5px;">
+                <div style="height:100px;display:flex;flex-direction:column;color:#ffffff;"><div style="flex:1;min-height:0;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;"><img data-rv="1" src="assets/human-agent.png" alt="Human and agent pixel icons" style="display:block;max-width:100%;height:32px;width:auto;image-rendering:pixelated;filter:drop-shadow(0 0 1.5px rgba(255,255,255,0.55)) drop-shadow(0 0 6px rgba(255,255,255,0.22));"></div><div style="flex:none;padding:0 6px 8px;"><p data-rv="1" data-scr="1" style="margin:0;text-align:center;font-size:10.5px;line-height:13px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Building solutions for humans &amp; agents with both in loop</p></div></div>
+                <div style="position:absolute;left:0;right:0;top:100px;bottom:0;display:flex;flex-direction:column;justify-content:center;padding:3px 2px 0;"><div data-rv="1" data-scr="1" style="font-size:9.5px;line-height:12px;color:#d4d4d4;">Current tech stack:</div><div style="display:flex;gap:5px;margin-top:5px;"><img data-rv="1" src="assets/stack/chatgpt.png" alt="ChatGPT" style="display:block;width:22px;height:22px;"><img data-rv="1" src="assets/stack/cursor.png" alt="Cursor" style="display:block;width:22px;height:22px;"><img data-rv="1" src="assets/stack/claude.png" alt="Claude" style="display:block;width:22px;height:22px;"><img data-rv="1" src="assets/stack/perplexity.png" alt="Perplexity" style="display:block;width:22px;height:22px;"><img data-rv="1" src="assets/stack/figma.png" alt="Figma" style="display:block;width:22px;height:22px;"><img data-rv="1" src="assets/stack/paper.png" alt="Paper" style="display:block;width:22px;height:22px;"></div></div>
+              </div>
+              <div data-hud-set="B" aria-hidden="true" style="position:absolute;inset:5px;opacity:0;">
+                <div style="height:100px;display:flex;flex-direction:column;color:#ffffff;"><div style="flex:1;display:flex;align-items:flex-end;justify-content:center;padding-bottom:6px;"><div data-rv="1" data-scr="1" style="font-family:{{ displayFont }};font-weight:700;font-size:32px;line-height:0.86;letter-spacing:-0.01em;white-space:nowrap;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">25+</div></div><div style="flex:none;padding:0 6px 8px;"><p data-rv="1" data-scr="1" style="margin:0;text-align:center;font-size:10.5px;line-height:13px;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">Workshops, guest lectures, and upskilling sessions conducted for companies and universities</p></div></div>
+                <div style="position:absolute;left:0;right:0;top:100px;bottom:0;display:flex;flex-direction:column;justify-content:center;padding:3px 2px 0;"><div data-rv="1" data-scr="1" style="font-size:9.5px;line-height:12px;color:#d4d4d4;">I love teaching</div><div data-rv="1" data-scr="1" style="font-size:9.5px;line-height:12px;margin-top:2px;text-wrap:pretty;">I have helped companies set up their design teams &amp; processes and mentor early stage designers.</div></div>
+              </div>
+            </div>
+            <div data-role="crt" data-hud-screen="1" aria-hidden="true" style="position:absolute;left:5px;top:5px;width:162px;height:100px;overflow:hidden;pointer-events:none;z-index:3;">
+              <div style="position:absolute;inset:0;z-index:2;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
+              <canvas data-crt-noise="1" width="120" height="74" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;"></canvas>
+              <div data-crt-anim="1" style="position:absolute;left:0;right:0;top:0;height:18%;z-index:4;background:linear-gradient(180deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.045) 70%, rgba(255,255,255,0.08) 78%, rgba(255,255,255,0) 100%);animation:crtRoll 8.2s linear infinite;animation-delay:-6.1s;"></div>
+              <div style="position:absolute;inset:0;z-index:5;box-shadow:inset 0 0 0 1px rgba(0,0,0,0.22), inset 0 0 10px rgba(0,0,0,0.3);"></div>
+              <div data-crt-flicker="1" style="position:absolute;inset:0;z-index:6;background:#000000;opacity:0;"></div>
+              <div data-crt-tear="1" style="position:absolute;left:0;right:0;top:40%;height:2px;z-index:6;background:rgba(255,255,255,0.5);opacity:0;"></div>
+            </div>
+            <div data-hud-boot="1" data-w="162" data-h="100" aria-hidden="true" style="position:absolute;left:5px;top:5px;width:162px;height:100px;pointer-events:none;z-index:4;">
+              <div data-hud-fill="1" style="position:absolute;inset:0;background:#D9D9D9;opacity:0;transform-origin:50% 50%;"></div>
+              <span data-hud-arm="tl-h" style="position:absolute;left:0;top:0;width:14px;height:{{ armPx }};background:#ffffff;transform-origin:0 0;"></span>
+              <span data-hud-arm="tl-v" style="position:absolute;left:0;top:0;width:{{ armPx }};height:14px;background:#ffffff;transform-origin:0 0;"></span>
+              <span data-hud-arm="tr-h" style="position:absolute;right:0;top:0;width:14px;height:{{ armPx }};background:#ffffff;transform-origin:100% 0;"></span>
+              <span data-hud-arm="tr-v" style="position:absolute;right:0;top:0;width:{{ armPx }};height:14px;background:#ffffff;transform-origin:100% 0;"></span>
+              <span data-hud-arm="bl-h" style="position:absolute;left:0;bottom:0;width:14px;height:{{ armPx }};background:#ffffff;transform-origin:0 100%;"></span>
+              <span data-hud-arm="bl-v" style="position:absolute;left:0;bottom:0;width:{{ armPx }};height:14px;background:#ffffff;transform-origin:0 100%;"></span>
+              <span data-hud-arm="br-h" style="position:absolute;right:0;bottom:0;width:14px;height:{{ armPx }};background:#ffffff;transform-origin:100% 100%;"></span>
+              <span data-hud-arm="br-v" style="position:absolute;right:0;bottom:0;width:{{ armPx }};height:14px;background:#ffffff;transform-origin:100% 100%;"></span>
+            </div>
+            <div data-hud-outline="1" aria-hidden="true" style="position:absolute;inset:0;border:0.5px solid #ffffff;pointer-events:none;z-index:5;"></div>
+          </section>
+        </div>
+      </main>
+      </sc-if>
       </div>
       </div>
 
@@ -362,6 +549,31 @@ html.ce-pre:not(.ce-cover-off) body::after{content:"";position:fixed;inset:0;z-i
   <div data-noise-layer="1" style="position:absolute;inset:0;pointer-events:none;opacity:{{ lightOpacity }};background-image:url(assets/noise-light.svg);background-size:200px 200px;"></div>
   <div data-noise-layer="1" style="position:absolute;inset:0;pointer-events:none;opacity:{{ darkOpacity }};background-image:url(assets/noise-dark.svg);background-size:200px 200px;"></div>
 
+  <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+    <div role="dialog" aria-modal="true" aria-label="Menu" data-screen-label="Mobile menu" style="position:fixed;inset:0;z-index:300;background:#1c1c1c;color:#ececec;display:flex;flex-direction:column;padding:8px 20px 28px;font-family:'Redaction',Georgia,serif;overflow-y:auto;">
+      <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none;background-image:url(assets/noise-dark.svg);background-size:200px 200px;opacity:0.45;"></div>
+      <div style="position:relative;display:flex;align-items:center;justify-content:space-between;">
+        <button type="button" aria-label="Close menu" onClick="{{ closeMenu }}" style="pointer-events:auto;background:#1c1c1c;flex:0 0 40px;width:40px;height:40px;border:2px solid #d8d8d8;display:flex;align-items:center;justify-content:center;overflow:hidden;box-sizing:border-box;padding:0;cursor:pointer;">
+          <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true" style="display:block;"><path d="M3 3L17 17M17 3L3 17" stroke="#ececec" stroke-width="3" stroke-linecap="round"></path></svg>
+        </button>
+        <a href="{{ resumeUrl }}" aria-label="Resume" style="pointer-events:auto;background:#1c1c1c;flex:0 0 40px;width:40px;height:40px;border:2px solid #d8d8d8;display:flex;align-items:center;justify-content:center;overflow:hidden;box-sizing:border-box;padding:0;cursor:pointer;"><img src="assets/nav-note.png" alt="" style="width:24px;height:24px;display:block;image-rendering:pixelated;"></a>
+      </div>
+      <nav aria-label="Primary" style="position:relative;margin-top:48px;display:flex;flex-direction:column;border-top:0.5px solid #6a6a6a;">
+        <sc-for list="{{ menuItems }}" as="it" hint-placeholder-count="4">
+          <a href="{{ it.href }}" onClick="{{ it.go }}" aria-current="{{ it.cur }}" style="position:relative;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:18px 12px;border-bottom:0.5px solid #6a6a6a;font-family:'Redaction 35','Redaction',Georgia,serif;font-size:40px;line-height:44px;color:{{ it.fg }};background:{{ it.bg }};">
+            <sc-if value="{{ it.noise }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position:absolute;inset:0;background-image:url(assets/noise-dark.svg);background-size:200px 200px;opacity:0.35;pointer-events:none;"></span></sc-if>
+            <span style="position:relative;">{{ it.label }}</span>
+            <svg width="22" height="12" viewBox="0 0 16 8" fill="none" stroke="currentColor" stroke-width="1.2" aria-hidden="true" style="position:relative;flex:none;display:block;"><path d="M0 4H15.4M12.2 1L15.4 4L12.2 7"></path></svg>
+          </a>
+        </sc-for>
+      </nav>
+      <div style="position:relative;margin-top:auto;padding-top:40px;display:flex;align-items:center;justify-content:space-between;gap:16px;font-size:13px;letter-spacing:0.08em;text-transform:uppercase;">
+        <button type="button" onClick="{{ menuToComputer }}" style="padding:10px 0;background:none;border:0;cursor:pointer;font:inherit;letter-spacing:inherit;color:#bdbdbd;">↺ Computer</button>
+        <a href="{{ resumeUrl }}" style="padding:10px 0;color:#bdbdbd;">Resume</a>
+      </div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{ debugOn }}" hint-placeholder-val="{{ false }}">
     <div role="region" aria-label="Motion debug" style="position:fixed;right:16px;bottom:16px;z-index:1000;width:264px;background:#1c1c1c;border:0.5px solid #ffffff;padding:12px;display:flex;flex-direction:column;gap:10px;font-family:'Redaction',Georgia,serif;font-size:14px;line-height:18px;color:#ececec;">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
@@ -388,6 +600,11 @@ html.ce-pre:not(.ce-cover-off) body::after{content:"";position:fixed;inset:0;z-i
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;noise&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:0.6,&quot;min&quot;:0,&quot;max&quot;:1,&quot;step&quot;:0.05,&quot;tsType&quot;:&quot;number&quot;},&quot;displayCut&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Clean&quot;,&quot;10&quot;,&quot;20&quot;,&quot;35&quot;,&quot;50&quot;,&quot;70&quot;,&quot;100&quot;],&quot;default&quot;:&quot;35&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Type&quot;}}">
 const DW = 1625, DH = 692, MIN_Z = 0.55;
+// Mobile (≤ MOBILE_MAX px wide): pinned 2-1-2 stage of MW × MH, zoomed to fit the viewport under the nav.
+const MOBILE_MAX = 760, MW = 353, MH = 688;
+// ?mobile previews the phone layout at any width (testing only)
+const FORCE_MOBILE = (typeof location !== 'undefined' && /[?&]mobile\b/.test(location.search));
+const RESUME_URL = '#'; // swap for the resume PDF path once it's uploaded
 // Figure turn ends when the top of the Card B set reaches this share of the viewport height (stacked layout).
 // In the pinned desktop layout Card B is the set that swaps in, so the turn ends at the swap trigger.
 const END_ANCHOR = 0.7, SKIP_INTRO_Y = 24;
@@ -421,7 +638,7 @@ class Component extends DCLogic {
   heroRef = el => {
     if (this.ro) { this.ro.disconnect(); this.ro = null; }
     if (!el || typeof ResizeObserver === 'undefined') return;
-    this.ro = new ResizeObserver(([e]) => { const cw = Math.round(e.contentRect.width), vh = window.innerHeight; if (cw > 0 && (Math.abs(cw - this.state.cw) > 1 || Math.abs(vh - this.state.vh) > 1)) this.setState({ cw, vh }); });
+    this.ro = new ResizeObserver(([e]) => { const cw = Math.round(e.contentRect.width), vh = this.pickVh(window.innerHeight); if (cw > 0 && (Math.abs(cw - this.state.cw) > 1 || Math.abs(vh - this.state.vh) > 1)) this.setState({ cw, vh }); });
     this.ro.observe(el);
   };
   cards() { return Array.from(document.querySelectorAll('[data-hud-card]')).sort((a, b) => a.getAttribute('data-hud-card') - b.getAttribute('data-hud-card')); }
@@ -459,6 +676,7 @@ class Component extends DCLogic {
     if (/[?&]debug\b/.test(window.location.search)) this.setState({ debug: true });
     this.onKey = e => {
       const tg = e.target || {};
+      if (e.key === 'Escape' && this.state.menuOpen) this.setMenu(false);
       if (e.shiftKey && (e.key === 'D' || e.key === 'd') && !/INPUT|TEXTAREA|SELECT/.test(tg.tagName || '') && !tg.isContentEditable) this.setState(s => ({ debug: !s.debug }));
     };
     window.addEventListener('keydown', this.onKey);
@@ -473,7 +691,7 @@ class Component extends DCLogic {
     window.addEventListener('scroll', this.onS, { passive: true });
     this.onInput = e => { if (e.type === 'keydown' && !/^(Arrow|Page|Home|End| $)/.test(e.key)) return; if (e.type === 'pointerdown' && e.target !== document.documentElement) return; this.userInputAt = performance.now(); };
     ['wheel', 'touchmove', 'keydown', 'pointerdown'].forEach(t => window.addEventListener(t, this.onInput, { passive: true }));
-    this.onR = () => { this.measureNav(); if (Math.abs(window.innerHeight - this.state.vh) > 1) this.setState({ vh: window.innerHeight }); };
+    this.onR = () => { this.measureNav(); const v = this.pickVh(window.innerHeight); if (Math.abs(v - this.state.vh) > 1) this.setState({ vh: v }); if (this.state.menuOpen && window.innerWidth > MOBILE_MAX) this.setMenu(false); };
     window.addEventListener('resize', this.onR);
     // computer hands over (first visit or ↺ Computer): replay the hero's load animation as the page tunes in
     this.onRelease = () => {
@@ -518,7 +736,7 @@ class Component extends DCLogic {
   }
   mountFig() {
     const el = document.querySelector('[data-figure-mount]'); if (!el || this.fig) return;
-    this.fig = window.GlyphFigure.mount(el, { getEndDelta: () => this.figEndDelta() });
+    this.fig = window.GlyphFigure.mount(el, { getEndDelta: () => this.figEndDelta(), look: this.layout && this.layout.mobile ? { fill: 1.3, bottomPad: -0.27 } : undefined });
     if (this.figPending) { this.fig.reveal(this.figPending); this.figPending = null; }
   }
   revealFig(o) { if (this.fig) this.fig.reveal(o); else this.figPending = o; }
@@ -532,6 +750,9 @@ class Component extends DCLogic {
     return b ? b.getBoundingClientRect().top - END_ANCHOR * vh : 0;
   }
   componentDidUpdate(pp) {
+    const mob = !!(this.layout && this.layout.mobile);
+    if (this.wasMobile !== undefined && this.wasMobile !== mob) this.remode();
+    this.wasMobile = mob;
     if (pp.displayCut !== this.props.displayCut && this.H) this.H.fontsReady(document.querySelector('[data-role="stage"]')).then(() => this.buildBio());
   }
   componentWillUnmount() {
@@ -545,6 +766,14 @@ class Component extends DCLogic {
   buildBio() {
     const src = document.querySelector('[data-bio-src]'), out = document.querySelector('[data-bio-out]'), ce = this.center();
     if (!src || !out || !ce) return;
+    if (this.layout && this.layout.mobile) {
+      // mobile: largest bio size that still fits the middle screen
+      const fit = v => [src, out].forEach(e => { e.style.fontSize = v + 'px'; e.style.lineHeight = (v * 1.22).toFixed(2) + 'px'; });
+      let fs = 12.5; fit(fs);
+      const blks = src.querySelectorAll('[data-bio-block]'), last = blks[blks.length - 1];
+      const bottom = () => { if (!last) return 0; const k = (ce.getBoundingClientRect().height / Math.max(1, ce.offsetHeight)) || 1; return (last.getBoundingClientRect().bottom - src.getBoundingClientRect().top) / k; };
+      while (bottom() > src.clientHeight - 14 && fs > 8) { fs -= 0.25; fit(fs); }
+    }
     if (this.eng) (this.bioLines || []).forEach(l => this.eng.cancel(l.el));
     out.textContent = '';
     const lines = [];
@@ -748,7 +977,14 @@ class Component extends DCLogic {
     NAV.forEach((n, i) => { const el = document.getElementById(n.id); if (el && el.getBoundingClientRect().top < y) act = i; });
     if (act !== this.state.navActive) this.setState({ navActive: act });
   }
+  setMenu(v) { document.documentElement.style.overflow = v ? 'hidden' : ''; this.setState({ menuOpen: v }); }
   navVals() {
+    const v = this.navVals0(), open = !!this.state.menuOpen;
+    return { ...v, menuOpen: open, menuOpenStr: open ? 'true' : 'false', openMenu: () => this.setMenu(true), closeMenu: () => this.setMenu(false),
+      menuToComputer: () => { this.setMenu(false); v.backToComputer(); },
+      menuItems: v.navItems.map(it => ({ ...it, go: e => { this.setMenu(false); it.go(e); } })) };
+  }
+  navVals0() {
     const ac = this.state.navActive ?? null, N = NAV.length;
     return {
       backToComputer: () => window.dispatchEvent(new CustomEvent('computer:back')),
@@ -769,6 +1005,17 @@ class Component extends DCLogic {
       }))
     };
   }
+  // Crossing the mobile breakpoint swaps the hero markup: remount the figure and re-run the load animation on the new nodes.
+  remode() {
+    if (this.fig) { this.fig.destroy(); this.fig = null; }
+    this.mountFig(); this.crt = null; this.wmNodes = null; this.sideState = 'open';
+    if (!this.H) return;
+    const H = this.H; this.cards().forEach(c => H.prime(c, this.shown)); const ce = this.center(); if (ce) H.prime(ce, null);
+    this.started = false; this.booting = false; this.busy = false; this.bootPending = true;
+    H.fontsReady(document.querySelector('[data-role="stage"]')).then(() => { if (!this.dead) this.buildBio(); });
+  }
+  // Mobile browsers resize the viewport as their toolbars slide in and out; ignore those small height changes so the pinned hero doesn't jump.
+  pickVh(h) { return (window.innerWidth <= MOBILE_MAX || FORCE_MOBILE) && Math.abs(h - this.state.vh) < 160 ? this.state.vh : h; }
   unhide() { (this.hiddenEls || []).forEach(e => (e.style.visibility = '')); this.hiddenEls = null; }
   measureNav() {
     const h = document.querySelector('[data-role="nav"]'); if (!h) return;
@@ -863,6 +1110,10 @@ class Component extends DCLogic {
   heroLayout() {
     const { cw, vh, navH } = this.state, r = v => Math.round(v * 1000) / 1000;
     const pinVh = (window.HUDMotion && window.HUDMotion.CONFIG.hero.pinVh) || 1;
+    if (typeof window !== 'undefined' && (window.innerWidth <= MOBILE_MAX || FORCE_MOBILE)) {
+      const z = r(Math.min(cw / MW, (vh - navH - 20) / MH));
+      return { mobile: true, narrow: false, wide: false, armPx: r(1 / z) + 'px', heroZoom: z, cardZoom: 1, pinH: Math.round(vh * (1 + pinVh + TL.end) - navH) + 'px', pinPos: 'sticky', pinTop: navH + 'px', pinInnerH: (vh - navH) + 'px', heroPad: '0', csOverlap: '-' + Math.round(vh * (1 + TL.end - TL.grow[1])) + 'px' };
+    }
     const z = Math.min(cw / DW, (vh - navH - 32) / DH), narrow = z < MIN_Z;
     if (narrow) {
       const cz = r(Math.min(1, cw / 500));
@@ -875,7 +1126,7 @@ class Component extends DCLogic {
     const fam = cut === 'Clean' ? "'Redaction'" : `'Redaction ${cut}'`;
     const L = (this.layout = this.heroLayout());
     return {
-      ...L, heroRef: this.heroRef, ...this.navVals(), showToolkit: false,
+      ...L, heroRef: this.heroRef, ...this.navVals(), showToolkit: false, desk: !L.mobile, mobile: !!L.mobile, resumeUrl: RESUME_URL,
       navTf: this.state.navHidden ? 'translateY(-130%)' : 'none',
       lightOpacity: 0.08 + n * 0.3, darkOpacity: 0.15 + n * 0.5,
       displayFont: `${fam}, 'Redaction', Georgia, serif`,

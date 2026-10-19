@@ -14,12 +14,12 @@
 @font-face{font-family:'Redaction 50';src:url(fonts/Redaction_50-Regular.woff2) format('woff2');font-weight:400;font-style:normal;font-display:swap;}
 </style>
 </helmet>
-<div style="display:flex;flex-direction:column;gap:clamp(120px, 16.2vw, 280px);width:100vw;margin-left:calc(50% - 50vw);color:#eeeeee;font-family:'Redaction',Georgia,serif;">
+<div style="display:flex;flex-direction:column;gap:{{ secGap }};width:100vw;margin-left:calc(50% - 50vw);color:#eeeeee;font-family:'Redaction',Georgia,serif;">
 
   <section id="articles" data-screen-label="Articles" aria-label="Articles" style="overflow:hidden;" onPointerEnter="{{ holdA }}" onPointerLeave="{{ releaseA }}">
     <div data-ticker="a" style="display:flex;width:max-content;will-change:transform;">
       <sc-for list="{{ articles }}" as="a" hint-placeholder-count="5">
-        <a href="{{ a.href }}" aria-hidden="{{ a.hidden }}" tabindex="{{ a.tab }}" style="flex:0 0 auto;width:min(399px, 82vw);margin-right:4px;display:flex;flex-direction:column;color:#eeeeee;" style-hover="color:#ffffff;">
+        <a href="{{ a.href }}" aria-hidden="{{ a.hidden }}" tabindex="{{ a.tab }}" style="flex:0 0 auto;zoom:{{ aZoom }};width:{{ aW }};margin-right:4px;display:flex;flex-direction:column;color:#eeeeee;" style-hover="color:#ffffff;">
           <div style="position:relative;height:182px;padding:18px 24px 0 24px;background-color:#ffffff;background-image:url(assets/noise-card.svg);background-size:240px 240px;color:#000000;font-family:'Redaction 35','Redaction',Georgia,serif;font-size:38px;line-height:42px;letter-spacing:-0.005em;text-wrap:pretty;overflow:hidden;">{{ a.title }}</div>
           <div style="height:70px;padding:14px 24px 0 24px;background:#000000;border:1px solid #595959;font-family:'Redaction 35','Redaction',Georgia,serif;font-size:16px;line-height:20px;color:#ffffff;overflow:hidden;"><div style="display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;max-height:40px;">{{ a.blurb }}</div></div>
         </a>
@@ -30,7 +30,7 @@
   <section id="testimonials" data-screen-label="Testimonials" aria-label="Testimonials" style="overflow:hidden;" onPointerEnter="{{ holdT }}" onPointerLeave="{{ releaseT }}">
     <div data-ticker="t" style="display:flex;gap:8px;width:max-content;padding-right:8px;will-change:transform;">
       <sc-for list="{{ testimonials }}" as="q" hint-placeholder-count="4">
-        <article aria-hidden="{{ q.hidden }}" style="zoom:0.75;position:relative;flex:0 0 auto;width:min(464px, 88vw);padding:6px;display:flex;flex-direction:column;">
+        <article aria-hidden="{{ q.hidden }}" style="zoom:{{ tZoom }};position:relative;flex:0 0 auto;width:{{ tW }};padding:6px;display:flex;flex-direction:column;">
           <span style="position:absolute;left:0;top:0;width:12px;height:12px;background:#d9d9d9;z-index:1;"></span>
           <span style="position:absolute;right:0;top:0;width:12px;height:12px;background:#d9d9d9;z-index:1;"></span>
           <span style="position:absolute;left:0;top:74px;width:12px;height:12px;background:#d9d9d9;z-index:1;"></span>
@@ -118,8 +118,12 @@ const loop = (list, minCount) => {
 
 class Component extends DCLogic {
   hold = { a: false, t: false };
+  state = { mobile: typeof window !== 'undefined' && (window.innerWidth <= 760 || /[?&]mobile\b/.test(location.search)) };
 
   componentDidMount() {
+    this.mql = window.matchMedia(/[?&]mobile\b/.test(location.search) ? 'all' : '(max-width: 760px)');
+    this.onMql = () => this.setState({ mobile: this.mql.matches });
+    this.mql.addEventListener('change', this.onMql);
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     const st = { a: { x: 0, v: SPEED.a }, t: { x: null, v: SPEED.t } };
     let last = performance.now(), lastRun = 0;
@@ -146,10 +150,15 @@ class Component extends DCLogic {
     this.watch = setInterval(() => { if (performance.now() - lastRun > 150) { cancelAnimationFrame(this.raf); tick(performance.now()); } }, 100);
   }
 
-  componentWillUnmount() { cancelAnimationFrame(this.raf); clearInterval(this.watch); }
+  componentWillUnmount() { cancelAnimationFrame(this.raf); clearInterval(this.watch); if (this.mql) this.mql.removeEventListener('change', this.onMql); }
 
   renderVals() {
+    // Mobile: cards at ~65% of their phone size, so type lands on the same ~10–12px scale as the sections above.
+    const m = this.state.mobile;
     return {
+      secGap: m ? '72px' : 'clamp(120px, 16.2vw, 280px)',
+      aZoom: m ? 0.65 : 1, aW: m ? '399px' : 'min(399px, 82vw)',
+      tZoom: m ? 0.55 : 0.75, tW: m ? '464px' : 'min(464px, 88vw)',
       articles: loop(ARTICLES, 5),
       testimonials: loop(TESTIMONIALS.map(q => ({ ...q, outcomes: q.outcomes.map((t, i) => ({ t, mid: i < q.outcomes.length - 1, end: i === q.outcomes.length - 1 })) })), 4),
       holdA: () => { this.hold.a = true; }, releaseA: () => { this.hold.a = false; },
