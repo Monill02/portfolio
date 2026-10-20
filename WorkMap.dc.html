@@ -225,7 +225,7 @@ class Component extends DCLogic {
       const mob = !!this.props.mobile;
       // label placement reads layout (offsetWidth/Height); sizes only change with layout or fonts, so re-place
       // when the geometry was re-measured (geo.lp unset) or once a second, not on every frame
-      if (mob) { if (!geo.lp || now - geo.lp > 1000) { this.placeLabels(sec); geo.lp = now; } this.labelWant = this.allLinked ? new Set([LABEL_ORDER[Math.floor(now / LABEL_MS) % LABEL_ORDER.length]]) : new Set(); }
+      if (mob) { if (!geo.lp || now - geo.lp > 1000) { this.placeLabels(sec); geo.lp = now; } this.labelWant = this.allLinked ? new Set(LABEL_ORDER) : new Set(); }
       this.animLabels(sec, now);
       const P = typeof window.__wmSprout === 'number' ? window.__wmSprout : 1;
       const PU = typeof window.__wmPull === 'number' ? window.__wmPull : 0;
@@ -315,7 +315,7 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const mob = !!this.props.mobile, lb = mob ? { lbFs: '22px', lbLh: '28px', lbPad: '10px 16px' } : { lbFs: '15px', lbLh: '20px', lbPad: '9px 14px' };
+    const mob = !!this.props.mobile, lb = mob ? { lbFs: '16px', lbLh: '20px', lbPad: '6px 10px' } : { lbFs: '15px', lbLh: '20px', lbPad: '9px 14px' };
     const pos = (b, i) => (mob ? { x: NODES[i].mx, y: NODES[i].my } : {});
     return {
       sectionRef: this.sectionRef,

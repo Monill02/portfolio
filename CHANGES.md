@@ -7,13 +7,20 @@ Replace the repo contents with this folder (keep .git), then commit and push:
 
 ```
 git add -A
-git commit -m "Case study video, 7 testimonials, 6 new articles, scroll feel, nav note icon"
+git commit -m "Mobile pass: fluid hero, case study transition + arrows, footer, 3 case studies"
 git push origin main
 ```
 
 Do NOT open index.html via file:// — fonts need a server. Preview with `npx serve .` → http://localhost:3000
 
-## Latest: Content + scroll update
+## Latest: Mobile pass + footer
+- Footer.dc.html (new): CRT pager + pixel night scenery. Fill LinkedIn / X / Resume URLs in its props.
+- Mobile hero: full-width 2-1-2 layout, cards fill their container; no more fixed 353px zoomed stage.
+- Work Map (mobile): all labels appear together once logos finish; smaller labels.
+- Case Studies: 3 cases (4th removed). Mobile: videos letterbox on black with the box sized to the video; Goals/Outcomes/Team cycled by arrows (scroll only changes case); simplified section 2→3 handoff (frame → dividers → content); consistent 13px body.
+- Computer intro: any tap enters on touch/small screens; watchdog so the page never stays locked.
+
+## Previous: Content + scroll update
 - scroll-feel.js (new): damped wheel/trackpad/keyboard scrolling + desktop sticky stops at key moments.
 - Work Map plays on view (not scroll-linked).
 - 3D computer intro: computer-entrance.js + assets/computer.glb + screen-grid.json (root). three.js loads from jsDelivr CDN.
