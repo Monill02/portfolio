@@ -207,7 +207,7 @@ class Component extends DCLogic {
       const geo = fit(sec);
       if (!geo) return;
       const mob = !!this.props.mobile;
-      if (mob) { this.placeLabels(sec); this.labelWant = this.allLinked ? new Set([LABEL_ORDER[Math.floor(now / LABEL_MS) % LABEL_ORDER.length]]) : new Set(); }
+      if (mob) { this.placeLabels(sec); this.labelWant = this.allLinked ? new Set(LABEL_ORDER) : new Set(); }
       this.animLabels(sec, now);
       const P = typeof window.__wmSprout === 'number' ? window.__wmSprout : 1;
       const PU = typeof window.__wmPull === 'number' ? window.__wmPull : 0;
@@ -284,7 +284,7 @@ class Component extends DCLogic {
   }
 
   renderVals() {
-    const mob = !!this.props.mobile, lb = mob ? { lbFs: '22px', lbLh: '28px', lbPad: '10px 16px' } : { lbFs: '15px', lbLh: '20px', lbPad: '9px 14px' };
+    const mob = !!this.props.mobile, lb = mob ? { lbFs: '16px', lbLh: '20px', lbPad: '6px 10px' } : { lbFs: '15px', lbLh: '20px', lbPad: '9px 14px' };
     const pos = (b, i) => (mob ? { x: NODES[i].mx, y: NODES[i].my } : {});
     return {
       sectionRef: this.sectionRef,

@@ -178,7 +178,7 @@
     <sc-if value="{{ mobile }}" hint-placeholder-val="{{ false }}">
     <div data-cs-card="1" key="{{ cardKey }}" style="position:relative;width:100%;display:flex;flex-direction:column;padding:0 1px 1px 0;color:#eeeeee;font-family:'Redaction 35','Redaction',Georgia,serif;">
       <div data-screen-label="Case Bar" data-cs-box="1" style="position:relative;flex:none;display:flex;flex-direction:column;gap:8px;padding:8px 10px 9px;border:1px solid #929292;margin:0 -1px -1px 0;">
-        <h2 data-anim="1" data-cs-title="1" style="margin:0;min-width:0;font-family:'Redaction 10','Redaction',Georgia,serif;font-weight:400;font-size:15px;line-height:19px;color:#ffffff;text-wrap:balance;">{{ c.title }}</h2>
+        <h2 data-anim="1" data-cs-title="1" style="margin:0;min-width:0;font-family:'Redaction 10','Redaction',Georgia,serif;font-weight:400;width:100%;font-size:15px;line-height:19px;color:#ffffff;text-wrap:pretty;">{{ c.title }}</h2>
         <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;">
           <div style="display:flex;gap:6px;">
             <sc-for list="{{ c.tags }}" as="t" hint-placeholder-count="3">
@@ -206,18 +206,22 @@
           </div>
         </div>
       </div>
-      <div data-screen-label="Case Visual" data-cs-box="1" style="position:relative;flex:1 1 auto;min-height:150px;border:1px solid #929292;margin:0 -1px -1px 0;overflow:hidden;">
+      <div data-screen-label="Case Visual" data-cs-box="1" data-cs-visual="1" style="position:relative;flex:none;aspect-ratio:1600 / 1404;min-height:150px;background:#000000;border:1px solid #929292;margin:0 -1px -1px 0;overflow:hidden;">
         <sc-if value="{{ c.video }}" hint-placeholder-val="{{ true }}">
-          <video data-noise-exclude="1" src="{{ c.video }}" autoPlay="{{ true }}" muted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" preload="auto" aria-label="{{ c.videoLabel }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;background:#000000;opacity:0;display:block;"></video>
+          <video data-noise-exclude="1" src="{{ c.video }}" autoPlay="{{ true }}" muted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" preload="auto" onLoadedMetadata="{{ onMeta }}" aria-label="{{ c.videoLabel }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain;object-position:50% 50%;background:#000000;opacity:0;display:block;"></video>
         </sc-if>
       </div>
       <div data-screen-label="Case Detail" data-cs-box="1" style="position:relative;flex:none;display:grid;padding:10px 10px 12px;border:1px solid #929292;margin:0 -1px -1px 0;">
+          <div data-cs-arrows="1" style="position:absolute;top:3px;right:3px;z-index:1;display:flex;">
+            <button type="button" aria-label="Previous section" onClick="{{ mbPrev }}" style="width:36px;height:36px;padding:0;border:0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;" style-active="opacity:0.55;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="display:block;transform:scaleX(-1);"><path d="M16 22H18V21H19V20H20V19H21V18H22V16H23V8H22V6H21V5H20V4H19V3H18V2H16V1H8V2H6V3H5V4H4V5H3V6H2V8H1V16H2V18H3V19H4V20H5V21H6V22H8V23H16V22ZM15 13H5V11H15V10H14V9H13V8H12V7H11V6H12V5H13V6H14V7H15V8H16V9H17V10H18V11H19V13H18V14H17V15H16V16H15V17H14V18H13V19H12V18H11V17H12V16H13V15H14V14H15V13Z" fill="#ffffff"></path></svg></button>
+            <button type="button" aria-label="Next section" onClick="{{ mbNext }}" style="width:36px;height:36px;padding:0;border:0;background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;" style-active="opacity:0.55;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true" style="display:block;"><path d="M16 22H18V21H19V20H20V19H21V18H22V16H23V8H22V6H21V5H20V4H19V3H18V2H16V1H8V2H6V3H5V4H4V5H3V6H2V8H1V16H2V18H3V19H4V20H5V21H6V22H8V23H16V22ZM15 13H5V11H15V10H14V9H13V8H12V7H11V6H12V5H13V6H14V7H15V8H16V9H17V10H18V11H19V13H18V14H17V15H16V16H15V17H14V18H13V19H12V18H11V17H12V16H13V15H14V14H15V13Z" fill="#ffffff"></path></svg></button>
+          </div>
           <div data-cs-tree="1" data-cs-block="0" aria-hidden="{{ mb.h0 }}" style="grid-area:1 / 1;min-width:0;visibility:{{ mb.v0 }};">
             <div style="display:flex;"><div data-anim="1" style="display:inline-flex;align-items:center;gap:7px;height:24px;padding:0 5px;background:#ffffff;color:#000000;font-size:13px;line-height:1;white-space:nowrap;"><svg width="15" height="13.5" viewBox="47 123 20 18" fill="none" style="flex:0 0 auto;"><path d="M48 126V136.8C48 137.92 48 138.48 48.218 138.908C48.4097 139.284 48.7155 139.59 49.0918 139.782C49.5192 140 50.079 140 51.1969 140H62.8031C63.921 140 64.48 140 64.9074 139.782C65.2837 139.59 65.5905 139.284 65.7822 138.908C66.0002 138.48 66.0002 137.92 66.0002 136.8L66.0002 129.2C66.0002 128.08 66.0002 127.52 65.7822 127.092C65.5905 126.715 65.2839 126.41 64.9076 126.218C64.4798 126 63.9201 126 62.8 126H57M48 126H57M48 126C48 124.895 48.8954 124 50 124H53.6745C54.1637 124 54.4089 124 54.639 124.055C54.8431 124.104 55.0379 124.185 55.2168 124.295C55.4186 124.419 55.5918 124.592 55.9375 124.938L57 126" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>[Core] Goals</span></div></div>
             <div style="display:flex;flex-direction:column;gap:6px;padding-left:18px;margin-top:6px;">
               <sc-for list="{{ c.goals }}" as="g" hint-placeholder-count="2">
                 <div style="display:flex;flex-direction:column;gap:6px;">
-                  <div style="display:flex;"><div data-anim="1" style="display:inline-flex;align-items:flex-start;gap:7px;max-width:100%;min-height:24px;padding:3px 5px;border:1px solid #ffffff;font-size:12px;line-height:16px;"><svg width="14" height="12.6" viewBox="47 123 20 18" fill="none" style="flex:0 0 auto;margin-top:1.5px;"><path d="M48 126V136.8C48 137.92 48 138.48 48.218 138.908C48.4097 139.284 48.7155 139.59 49.0918 139.782C49.5192 140 50.079 140 51.1969 140H62.8031C63.921 140 64.48 140 64.9074 139.782C65.2837 139.59 65.5905 139.284 65.7822 138.908C66.0002 138.48 66.0002 137.92 66.0002 136.8L66.0002 129.2C66.0002 128.08 66.0002 127.52 65.7822 127.092C65.5905 126.715 65.2839 126.41 64.9076 126.218C64.4798 126 63.9201 126 62.8 126H57M48 126H57M48 126C48 124.895 48.8954 124 50 124H53.6745C54.1637 124 54.4089 124 54.639 124.055C54.8431 124.104 55.0379 124.185 55.2168 124.295C55.4186 124.419 55.5918 124.592 55.9375 124.938L57 126" stroke="#eeeeee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>{{ g.label }}</span></div></div>
+                  <div style="display:flex;"><div data-anim="1" style="display:inline-flex;align-items:flex-start;gap:7px;max-width:100%;min-height:24px;padding:3px 5px;border:1px solid #ffffff;font-size:13px;line-height:17px;"><svg width="14" height="12.6" viewBox="47 123 20 18" fill="none" style="flex:0 0 auto;margin-top:1.5px;"><path d="M48 126V136.8C48 137.92 48 138.48 48.218 138.908C48.4097 139.284 48.7155 139.59 49.0918 139.782C49.5192 140 50.079 140 51.1969 140H62.8031C63.921 140 64.48 140 64.9074 139.782C65.2837 139.59 65.5905 139.284 65.7822 138.908C66.0002 138.48 66.0002 137.92 66.0002 136.8L66.0002 129.2C66.0002 128.08 66.0002 127.52 65.7822 127.092C65.5905 126.715 65.2839 126.41 64.9076 126.218C64.4798 126 63.9201 126 62.8 126H57M48 126H57M48 126C48 124.895 48.8954 124 50 124H53.6745C54.1637 124 54.4089 124 54.639 124.055C54.8431 124.104 55.0379 124.185 55.2168 124.295C55.4186 124.419 55.5918 124.592 55.9375 124.938L57 126" stroke="#eeeeee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>{{ g.label }}</span></div></div>
                   <div style="display:flex;flex-direction:column;gap:6px;padding-left:18px;">
                     <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="2">
                       <div style="position:relative;display:flex;">
@@ -225,7 +229,7 @@
                         <sc-if value="{{ it.bridge }}" hint-placeholder-val="{{ false }}"><span data-line="1" style="position:absolute;left:-9px;top:-6px;bottom:-6px;width:1px;background:#ffffff;transform-origin:50% 0;"></span></sc-if>
                         <sc-if value="{{ it.end }}" hint-placeholder-val="{{ false }}"><span data-line="1" style="position:absolute;left:-9px;top:-6px;height:calc(50% + 7px);width:1px;background:#ffffff;transform-origin:50% 0;"></span></sc-if>
                         <span data-line="1" style="position:absolute;left:-9px;top:50%;width:9px;height:1px;background:#ffffff;transform-origin:0 50%;"></span>
-                        <div data-anim="1" style="display:inline-flex;align-items:flex-start;gap:7px;max-width:100%;min-height:24px;padding:3px 5px;border:1px solid {{ it.stroke }};font-size:12px;line-height:16px;"><svg width="14" height="12.6" viewBox="47 123 20 18" fill="none" style="flex:0 0 auto;margin-top:1.5px;"><path d="M48 126V136.8C48 137.92 48 138.48 48.218 138.908C48.4097 139.284 48.7155 139.59 49.0918 139.782C49.5192 140 50.079 140 51.1969 140H62.8031C63.921 140 64.48 140 64.9074 139.782C65.2837 139.59 65.5905 139.284 65.7822 138.908C66.0002 138.48 66.0002 137.92 66.0002 136.8L66.0002 129.2C66.0002 128.08 66.0002 127.52 65.7822 127.092C65.5905 126.715 65.2839 126.41 64.9076 126.218C64.4798 126 63.9201 126 62.8 126H57M48 126H57M48 126C48 124.895 48.8954 124 50 124H53.6745C54.1637 124 54.4089 124 54.639 124.055C54.8431 124.104 55.0379 124.185 55.2168 124.295C55.4186 124.419 55.5918 124.592 55.9375 124.938L57 126" stroke="#eeeeee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>{{ it.t }}</span></div>
+                        <div data-anim="1" style="display:inline-flex;align-items:flex-start;gap:7px;max-width:100%;min-height:24px;padding:3px 5px;border:1px solid {{ it.stroke }};font-size:13px;line-height:17px;"><svg width="14" height="12.6" viewBox="47 123 20 18" fill="none" style="flex:0 0 auto;margin-top:1.5px;"><path d="M48 126V136.8C48 137.92 48 138.48 48.218 138.908C48.4097 139.284 48.7155 139.59 49.0918 139.782C49.5192 140 50.079 140 51.1969 140H62.8031C63.921 140 64.48 140 64.9074 139.782C65.2837 139.59 65.5905 139.284 65.7822 138.908C66.0002 138.48 66.0002 137.92 66.0002 136.8L66.0002 129.2C66.0002 128.08 66.0002 127.52 65.7822 127.092C65.5905 126.715 65.2839 126.41 64.9076 126.218C64.4798 126 63.9201 126 62.8 126H57M48 126H57M48 126C48 124.895 48.8954 124 50 124H53.6745C54.1637 124 54.4089 124 54.639 124.055C54.8431 124.104 55.0379 124.185 55.2168 124.295C55.4186 124.419 55.5918 124.592 55.9375 124.938L57 126" stroke="#eeeeee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>{{ it.t }}</span></div>
                       </div>
                     </sc-for>
                   </div>
@@ -240,7 +244,7 @@
                 <div data-role="crt" data-hud-screen="1" style="position:relative;min-height:112px;overflow:hidden;background:rgba(217,217,217,0.3);">
                   <div data-crt-content="1" style="position:relative;z-index:1;min-height:112px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:14px 18px;text-align:center;">
                     <div data-rv="1" data-scr="1" style="font-family:'Redaction 35','Redaction',Georgia,serif;font-size:46px;line-height:42px;letter-spacing:-0.01em;color:#ffffff;white-space:nowrap;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">{{ c.outcome.value }}</div>
-                    <div data-rv="1" data-scr="1" style="font-family:'Redaction',Georgia,serif;font-size:12px;line-height:15px;color:#ffffff;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">{{ c.outcome.caption }}</div>
+                    <div data-rv="1" data-scr="1" style="font-family:'Redaction',Georgia,serif;font-size:13px;line-height:17px;color:#ffffff;text-wrap:balance;text-shadow:0 0 1.5px rgba(255,255,255,0.65), 0 0 8px rgba(255,255,255,0.3);">{{ c.outcome.caption }}</div>
                   </div>
                   <div aria-hidden="true" style="position:absolute;inset:0;z-index:2;pointer-events:none;background-image:repeating-linear-gradient(180deg, rgba(0,0,0,0.26) 0px, rgba(0,0,0,0.26) 1px, rgba(0,0,0,0) 1px, rgba(0,0,0,0) 3px);"></div>
                   <canvas data-crt-noise="1" width="160" height="60" aria-hidden="true" style="position:absolute;inset:0;z-index:3;width:100%;height:100%;display:block;pointer-events:none;"></canvas>
@@ -254,7 +258,7 @@
                   <span data-hud-arm="tl-h" style="position:absolute;left:0;top:0;width:14px;height:1px;background:#ffffff;transform-origin:0 0;"></span><span data-hud-arm="tl-v" style="position:absolute;left:0;top:0;width:1px;height:14px;background:#ffffff;transform-origin:0 0;"></span><span data-hud-arm="tr-h" style="position:absolute;right:0;top:0;width:14px;height:1px;background:#ffffff;transform-origin:100% 0;"></span><span data-hud-arm="tr-v" style="position:absolute;right:0;top:0;width:1px;height:14px;background:#ffffff;transform-origin:100% 0;"></span><span data-hud-arm="bl-h" style="position:absolute;left:0;bottom:0;width:14px;height:1px;background:#ffffff;transform-origin:0 100%;"></span><span data-hud-arm="bl-v" style="position:absolute;left:0;bottom:0;width:1px;height:14px;background:#ffffff;transform-origin:0 100%;"></span><span data-hud-arm="br-h" style="position:absolute;right:0;bottom:0;width:14px;height:1px;background:#ffffff;transform-origin:100% 100%;"></span><span data-hud-arm="br-v" style="position:absolute;right:0;bottom:0;width:1px;height:14px;background:#ffffff;transform-origin:100% 100%;"></span>
                 </div>
               </div>
-              <div style="margin-top:10px;display:flex;flex-direction:column;gap:4px;font-size:12px;line-height:16px;color:#ffffff;">
+              <div style="margin-top:10px;display:flex;flex-direction:column;gap:4px;font-size:13px;line-height:17px;color:#ffffff;">
                 <sc-for list="{{ c.outcome.stats }}" as="s" hint-placeholder-count="3">
                   <div data-anim="1" style="display:flex;align-items:baseline;gap:2px;">
                     <span data-rv="1" data-scr="1">{{ s.k }}</span>
@@ -265,8 +269,8 @@
               </div>
               <sc-if value="{{ c.outcome.range }}" hint-placeholder-val="{{ false }}">
                 <div style="margin-top:10px;display:flex;flex-direction:column;gap:4px;color:#ffffff;">
-                  <div data-anim="1" data-rv="1" data-scr="1" style="font-size:10px;line-height:13px;color:#bdbdbd;">{{ c.outcome.rangeLabel }}</div>
-                  <div data-anim="1" data-rv="1" data-scr="1" style="font-size:12px;line-height:16px;text-wrap:pretty;">{{ c.outcome.range }}</div>
+                  <div data-anim="1" data-rv="1" data-scr="1" style="font-size:11px;line-height:14px;color:#bdbdbd;">{{ c.outcome.rangeLabel }}</div>
+                  <div data-anim="1" data-rv="1" data-scr="1" style="font-size:13px;line-height:17px;text-wrap:pretty;">{{ c.outcome.range }}</div>
                 </div>
               </sc-if>
             </div>
@@ -276,7 +280,7 @@
             <div style="display:flex;flex-direction:column;gap:6px;padding-left:18px;margin-top:6px;">
               <sc-for list="{{ c.team }}" as="g" hint-placeholder-count="2">
                 <div style="display:flex;flex-direction:column;gap:6px;">
-                  <div style="display:flex;"><div data-anim="1" style="display:inline-flex;align-items:flex-start;gap:7px;max-width:100%;min-height:24px;padding:3px 5px;border:1px solid #ffffff;font-size:12px;line-height:16px;"><svg width="14" height="12.6" viewBox="47 123 20 18" fill="none" style="flex:0 0 auto;margin-top:1.5px;"><path d="M48 126V136.8C48 137.92 48 138.48 48.218 138.908C48.4097 139.284 48.7155 139.59 49.0918 139.782C49.5192 140 50.079 140 51.1969 140H62.8031C63.921 140 64.48 140 64.9074 139.782C65.2837 139.59 65.5905 139.284 65.7822 138.908C66.0002 138.48 66.0002 137.92 66.0002 136.8L66.0002 129.2C66.0002 128.08 66.0002 127.52 65.7822 127.092C65.5905 126.715 65.2839 126.41 64.9076 126.218C64.4798 126 63.9201 126 62.8 126H57M48 126H57M48 126C48 124.895 48.8954 124 50 124H53.6745C54.1637 124 54.4089 124 54.639 124.055C54.8431 124.104 55.0379 124.185 55.2168 124.295C55.4186 124.419 55.5918 124.592 55.9375 124.938L57 126" stroke="#eeeeee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>{{ g.label }}</span></div></div>
+                  <div style="display:flex;"><div data-anim="1" style="display:inline-flex;align-items:flex-start;gap:7px;max-width:100%;min-height:24px;padding:3px 5px;border:1px solid #ffffff;font-size:13px;line-height:17px;"><svg width="14" height="12.6" viewBox="47 123 20 18" fill="none" style="flex:0 0 auto;margin-top:1.5px;"><path d="M48 126V136.8C48 137.92 48 138.48 48.218 138.908C48.4097 139.284 48.7155 139.59 49.0918 139.782C49.5192 140 50.079 140 51.1969 140H62.8031C63.921 140 64.48 140 64.9074 139.782C65.2837 139.59 65.5905 139.284 65.7822 138.908C66.0002 138.48 66.0002 137.92 66.0002 136.8L66.0002 129.2C66.0002 128.08 66.0002 127.52 65.7822 127.092C65.5905 126.715 65.2839 126.41 64.9076 126.218C64.4798 126 63.9201 126 62.8 126H57M48 126H57M48 126C48 124.895 48.8954 124 50 124H53.6745C54.1637 124 54.4089 124 54.639 124.055C54.8431 124.104 55.0379 124.185 55.2168 124.295C55.4186 124.419 55.5918 124.592 55.9375 124.938L57 126" stroke="#eeeeee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>{{ g.label }}</span></div></div>
                   <div style="display:flex;flex-direction:column;gap:6px;padding-left:18px;">
                     <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="2">
                       <div style="position:relative;display:flex;">
@@ -284,7 +288,7 @@
                         <sc-if value="{{ it.bridge }}" hint-placeholder-val="{{ false }}"><span data-line="1" style="position:absolute;left:-9px;top:-6px;bottom:-6px;width:1px;background:#ffffff;transform-origin:50% 0;"></span></sc-if>
                         <sc-if value="{{ it.end }}" hint-placeholder-val="{{ false }}"><span data-line="1" style="position:absolute;left:-9px;top:-6px;height:calc(50% + 7px);width:1px;background:#ffffff;transform-origin:50% 0;"></span></sc-if>
                         <span data-line="1" style="position:absolute;left:-9px;top:50%;width:9px;height:1px;background:#ffffff;transform-origin:0 50%;"></span>
-                        <div data-anim="1" style="display:inline-flex;align-items:flex-start;gap:7px;max-width:100%;min-height:24px;padding:3px 5px;border:1px solid {{ it.stroke }};font-size:12px;line-height:16px;"><svg width="14" height="12.6" viewBox="47 123 20 18" fill="none" style="flex:0 0 auto;margin-top:1.5px;"><path d="M48 126V136.8C48 137.92 48 138.48 48.218 138.908C48.4097 139.284 48.7155 139.59 49.0918 139.782C49.5192 140 50.079 140 51.1969 140H62.8031C63.921 140 64.48 140 64.9074 139.782C65.2837 139.59 65.5905 139.284 65.7822 138.908C66.0002 138.48 66.0002 137.92 66.0002 136.8L66.0002 129.2C66.0002 128.08 66.0002 127.52 65.7822 127.092C65.5905 126.715 65.2839 126.41 64.9076 126.218C64.4798 126 63.9201 126 62.8 126H57M48 126H57M48 126C48 124.895 48.8954 124 50 124H53.6745C54.1637 124 54.4089 124 54.639 124.055C54.8431 124.104 55.0379 124.185 55.2168 124.295C55.4186 124.419 55.5918 124.592 55.9375 124.938L57 126" stroke="#eeeeee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>{{ it.t }}</span></div>
+                        <div data-anim="1" style="display:inline-flex;align-items:flex-start;gap:7px;max-width:100%;min-height:24px;padding:3px 5px;border:1px solid {{ it.stroke }};font-size:13px;line-height:17px;"><svg width="14" height="12.6" viewBox="47 123 20 18" fill="none" style="flex:0 0 auto;margin-top:1.5px;"><path d="M48 126V136.8C48 137.92 48 138.48 48.218 138.908C48.4097 139.284 48.7155 139.59 49.0918 139.782C49.5192 140 50.079 140 51.1969 140H62.8031C63.921 140 64.48 140 64.9074 139.782C65.2837 139.59 65.5905 139.284 65.7822 138.908C66.0002 138.48 66.0002 137.92 66.0002 136.8L66.0002 129.2C66.0002 128.08 66.0002 127.52 65.7822 127.092C65.5905 126.715 65.2839 126.41 64.9076 126.218C64.4798 126 63.9201 126 62.8 126H57M48 126H57M48 126C48 124.895 48.8954 124 50 124H53.6745C54.1637 124 54.4089 124 54.639 124.055C54.8431 124.104 55.0379 124.185 55.2168 124.295C55.4186 124.419 55.5918 124.592 55.9375 124.938L57 126" stroke="#eeeeee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg><span>{{ it.t }}</span></div>
                       </div>
                     </sc-for>
                   </div>
@@ -338,10 +342,10 @@ const GENIEAI = {
   ]
 };
 // Case 4 duplicates case 1 until their content is ready.
-const CASES = [{ ...WEALTHDESK, video: 'assets/wealthdesk-case-study-card.mp4', videoLabel: 'WealthDesk product screens' }, { ...PILGRIM, video: 'assets/pilgrim-case-study-card.mp4', videoLabel: 'Pilgrim product screens' }, { ...GENIEAI, video: 'assets/genieai-case-study-card.mp4', videoLabel: 'GenieAI product screens' }, WEALTHDESK];
+const CASES = [{ ...WEALTHDESK, video: 'assets/wealthdesk-case-study-card.mp4', videoLabel: 'WealthDesk product screens' }, { ...PILGRIM, video: 'assets/pilgrim-case-study-card.mp4', videoLabel: 'Pilgrim product screens' }, { ...GENIEAI, video: 'assets/genieai-case-study-card.mp4', videoLabel: 'GenieAI product screens' }];
 const SCROLL_PER_CASE = 75; // vh of scroll per case study
 const MAX_VH = 0.84;
-const MOBILE_STEP = 42; // mobile: vh of scroll per block (Goals → Outcomes → Team, then the next case) // card never taller than 84% of the viewport, and always clear of the nav bar
+const MOBILE_STEP = 70; // mobile: vh of scroll per block (Goals → Outcomes → Team, then the next case) // card never taller than 84% of the viewport, and always clear of the nav bar
 
 const tree = groups => groups.map((g, gi) => ({
   label: g.label,
@@ -392,12 +396,16 @@ class Component extends DCLogic {
     this.rr = requestAnimationFrame(() => this.watchReveal());
     const tr = this.track(), card = tr && tr.querySelector('[data-cs-card]'); if (!card) return;
     let want = window.__csReveal;
-    if (typeof want !== 'boolean') want = !!this.revealed || card.getBoundingClientRect().top < window.innerHeight * 0.8;
-    if (want === this.revealed) return;
-    this.revealed = want;
+    // while the hero is pinned (desktop + mobile), only the hero's handoff may reveal the card
+    if (typeof want !== 'boolean') { const fit = document.querySelector('[data-role="hero-fit"]'); want = fit && getComputedStyle(fit).position === 'sticky' ? false : null; }
+    if (want === null) want = (!!this.revealed || card.getBoundingClientRect().top < window.innerHeight * 0.8);
+    // the card node can be swapped (desktop ↔ mobile mount); re-apply state to the new node
+    if (want === this.revealed && card === this.lastCard) return;
+    this.revealed = want; this.lastCard = card;
     if (want) this.form(card); else this.unform(card);
   }
   unform(card) {
+    clearTimeout(this.formT); clearTimeout(this.formT2);
     if (this.eng) { this.eng.cancel('cs'); this.eng.cancel('cs-o'); }
     if (card.getAnimations) card.getAnimations({ subtree: true }).forEach(a => a.cancel());
     card.querySelectorAll('[data-cs-edge]').forEach(e => e.remove());
@@ -413,9 +421,36 @@ class Component extends DCLogic {
       if (v.animate && !this.reduce) v.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 420, delay, easing: 'cubic-bezier(.2,.75,.2,1)', fill: 'backwards' });
     });
   }
+  // Mobile: the hero's outline has already grown to the card, so it holds as the frame; the inner dividers draw,
+  // and only then does content arrive — header, then video, then the current detail block.
+  formMobile(card) {
+    const EASE = 'cubic-bezier(.2,.75,.2,1)', frame = card.querySelector('[data-cs-frame]');
+    if (frame) frame.style.opacity = '1';
+    const boxes = Array.from(card.querySelectorAll('[data-cs-box]')), D = 320;
+    let linesEnd = 0;
+    boxes.forEach((b, i) => {
+      const cs = getComputedStyle(b), col = cs.borderTopColor, w = cs.borderTopWidth, d = i * 60;
+      b.style.borderColor = 'transparent'; linesEnd = Math.max(linesEnd, d + D);
+      [['left:-' + w + ';right:-' + w + ';top:-' + w + ';height:' + w, 'scaleX(0)'], ['left:-' + w + ';right:-' + w + ';bottom:-' + w + ';height:' + w, 'scaleX(0)'],
+       ['top:-' + w + ';bottom:-' + w + ';left:-' + w + ';width:' + w, 'scaleY(0)'], ['top:-' + w + ';bottom:-' + w + ';right:-' + w + ';width:' + w, 'scaleY(0)']].forEach(([pos, from]) => {
+        const s = document.createElement('span'); s.setAttribute('data-cs-edge', '1');
+        s.style.cssText = 'position:absolute;z-index:4;pointer-events:none;transform-origin:50% 50%;background:' + col + ';' + pos;
+        b.appendChild(s); s.animate([{ transform: from }, { transform: 'none' }], { duration: D, delay: d, easing: EASE, fill: 'backwards' });
+      });
+    });
+    clearTimeout(this.formT);
+    this.formT = setTimeout(() => { card.querySelectorAll('[data-cs-edge]').forEach(e => e.remove()); boxes.forEach(b => (b.style.borderColor = '')); if (frame) frame.style.opacity = '0'; }, linesEnd + 40);
+    const c0 = linesEnd + 60, bar = card.querySelector('[data-screen-label="Case Bar"]'), detail = card.querySelector('[data-screen-label="Case Detail"]');
+    if (bar) Array.from(bar.children).filter(e => !e.hasAttribute('data-cs-edge')).forEach((e, k) => e.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 280, delay: c0 + k * 70, easing: EASE, fill: 'backwards' }));
+    this.showAsset(card, c0 + 140);
+    const dd = c0 + 260;
+    if (detail) Array.from(detail.children).filter(e => !e.hasAttribute('data-cs-edge')).forEach(e => e.animate([{ opacity: 0 }, { opacity: 0 }], { duration: dd }));
+    this.formT2 = setTimeout(() => { if (this.revealed) this.animateBlock(this.state.sub); }, dd);
+  }
   form(card) {
     const H = window.HUDMotion;
     card.style.visibility = '';
+    if (this.state.mobile && !this.reduce && card.animate) return this.formMobile(card);
     if (!H || this.reduce) { this.showAsset(card, 0); if (H) { const o = card.querySelector('[data-cs-outcomes]'); if (o) { H.prime(o, 'A'); const e = this.eng || (this.eng = new H.Engine()); e.reduced = true; e.start(); H.bootUp(e, o, { set: 'A', tag: 'cs-o' }); } } return; }
     const eng = this.eng || (this.eng = new H.Engine()); eng.start(); eng.reduced = false;
     const EASE = 'cubic-bezier(.2,.75,.2,1)', frame = card.querySelector('[data-cs-frame]'), outc = card.querySelector('[data-cs-outcomes]');
@@ -475,32 +510,41 @@ class Component extends DCLogic {
   // Mobile toolbars resize the viewport while scrolling; small height changes are ignored so the sticky track doesn't jump.
   vh() { const h = window.innerHeight; if (!this.state.mobile || !this.vhS || Math.abs(h - this.vhS) >= 160) this.vhS = h; return this.vhS; }
   // Mobile: the newly shown block plays in (Outcomes boots like the section 1 cards).
+  // Mobile: the newly shown block boots in like the desktop card forms — top → bottom each row's branch line ticks in
+  // and the row wipes open in hard steps; Outcomes boots like the section 1 cards.
   animateBlock(sub) {
     const tr = this.track(), b = tr && tr.querySelector('[data-cs-block="' + sub + '"]'); if (!b) return;
-    const H = window.HUDMotion, ease = 'cubic-bezier(.2,.75,.2,1)';
-    if (!this.reduce && b.animate) {
-      b.querySelectorAll('[data-anim]').forEach((el, k) => el.animate([{ opacity: 0, transform: 'translateY(6px)', filter: 'blur(2px)' }, { opacity: 1, transform: 'none', filter: 'none' }], { duration: 420, delay: k * 30, easing: ease, fill: 'backwards' }));
-      b.querySelectorAll('[data-line]').forEach((el, k) => el.animate([{ transform: el.style.height === '1px' ? 'scaleX(0)' : 'scaleY(0)' }, { transform: 'none' }], { duration: 380, delay: 60 + k * 24, easing: ease, fill: 'backwards' }));
-    }
-    if (sub === 1 && H) {
+    const H = window.HUDMotion;
+    tr.querySelectorAll('[data-cs-block]').forEach(x => { if (x.getAnimations) x.getAnimations({ subtree: true }).forEach(an => an.cancel()); });
+    if (sub === 1) {
+      if (!H) return;
       const eng = this.eng || (this.eng = new H.Engine()); eng.start(); eng.reduced = !!this.reduce;
       const bt = b.querySelector('[data-hud-boot]'); if (bt) { bt.setAttribute('data-w', bt.offsetWidth); bt.setAttribute('data-h', bt.offsetHeight); }
-      eng.cancel('cs-o'); H.prime(b, 'A'); H.bootUp(eng, b, { delay: 60, set: 'A', tag: 'cs-o' });
+      eng.cancel('cs-o'); H.prime(b, 'A'); H.bootUp(eng, b, { delay: 40, set: 'A', tag: 'cs-o' });
+      return;
     }
+    if (this.reduce || !b.animate) return;
+    const rows = Array.from(b.querySelectorAll('[data-anim]')).map(el => ({ el, top: el.getBoundingClientRect().top }));
+    const tops = []; rows.forEach(r => { let k = tops.findIndex(t => Math.abs(t - r.top) < 6); if (k < 0) { tops.push(r.top); k = tops.length - 1; } r.k = k; });
+    rows.forEach(r => {
+      const d = 40 + r.k * 80;
+      r.el.parentElement.querySelectorAll(':scope > [data-line]').forEach(l => l.animate([{ transform: l.style.height === '1px' ? 'scaleX(0)' : 'scaleY(0)' }, { transform: 'none' }], { duration: 120, delay: Math.max(0, d - 70), easing: 'steps(3, end)', fill: 'backwards' }));
+      r.el.animate([{ clipPath: 'inset(0 100% 0 0)' }, { clipPath: 'inset(0 0% 0 0)' }], { duration: 220, delay: d, easing: 'steps(6, end)', fill: 'backwards' });
+    });
   }
   componentDidUpdate() {
     const idx = this.state.idx;
     if (this.state.mobile && this.shownSub !== undefined && this.shownSub !== this.state.sub && this.shownIdx === idx) { this.shownSub = this.state.sub; this.animateBlock(this.state.sub); }
     this.shownSub = this.state.sub;
     if (this.shownIdx === undefined) { this.shownIdx = idx; return; }
-    if (this.shownIdx !== idx) { this.shownIdx = idx; const tr = this.track(), card = tr && tr.querySelector('[data-cs-card]'); if (card) { card.style.visibility = this.revealed === false ? 'hidden' : ''; this.fit(card, window.innerHeight); if (this.revealed !== false) this.showAsset(card, 120); } this.animateIn(); this.paintFill(idx, this.local || 0); }
+    if (this.shownIdx !== idx) { this.shownIdx = idx; const tr = this.track(), card = tr && tr.querySelector('[data-cs-card]'); if (card) { card.style.visibility = this.revealed === false ? 'hidden' : ''; this.fit(card, window.innerHeight); if (this.revealed !== false) this.showAsset(card, 120); } if (this.state.mobile) { this.animateIn('[data-screen-label="Case Bar"] [data-anim]'); this.animateBlock(this.state.sub); } else this.animateIn(); this.paintFill(idx, this.local || 0); }
   }
 
   update() {
     const tr = this.track();
     if (!tr) return;
     const n = CASES.length;
-    const mob = this.state.mobile, steps = mob ? n * 3 : n;
+    const mob = this.state.mobile, steps = n;
     const card = tr.querySelector('[data-cs-card]');
     const vh = this.vh();
     if (card) this.fit(card, vh);
@@ -513,9 +557,9 @@ class Component extends DCLogic {
     const p = Math.min(dist, Math.max(0, top - tr.getBoundingClientRect().top));
     const per = dist / steps;
     const st = Math.min(steps - 1, Math.floor(p / per)), loc = Math.min(1, (p - st * per) / per);
-    const idx = mob ? Math.floor(st / 3) : st, sub = mob ? st % 3 : 0;
-    this.local = mob ? (sub + loc) / 3 : loc;
-    if (idx !== this.state.idx || sub !== this.state.sub) this.setState({ idx, sub });
+    const idx = st;
+    this.local = loc;
+    if (idx !== this.state.idx) this.setState({ idx, sub: 0 });
     this.paintFill(idx, this.local);
   }
 
@@ -526,7 +570,10 @@ class Component extends DCLogic {
     if (this.state.mobile) {
       // fixed height: the video takes whatever the header and the (tallest) detail block leave
       card.style.zoom = ''; card.style.width = ''; card.style.maxHeight = ''; card.style.overflowY = '';
-      card.style.height = Math.round(target) + 'px'; this.z = 1; return;
+      card.style.height = ''; this.z = 1;
+      const vb = card.querySelector('[data-cs-visual]');
+      if (vb) { vb.style.maxHeight = ''; const over = card.getBoundingClientRect().height - target; if (over > 0) vb.style.maxHeight = Math.max(150, Math.round(vb.getBoundingClientRect().height - over)) + 'px'; }
+      return;
     }
     card.style.height = '';
     card.style.maxHeight = ''; card.style.overflowY = '';
@@ -552,15 +599,15 @@ class Component extends DCLogic {
     });
   }
 
-  animateIn() {
+  animateIn(sel) {
     const tr = this.track();
     if (!tr || this.reduce || !tr.animate) return;
     const ease = 'cubic-bezier(.2,.75,.2,1)';
-    tr.querySelectorAll('[data-anim]').forEach((el, k) => {
+    tr.querySelectorAll(sel || '[data-anim]').forEach((el, k) => {
       el.animate([{ opacity: 0, transform: 'translateY(8px)', filter: 'blur(2px)' }, { opacity: 1, transform: 'none', filter: 'none' }],
         { duration: 520, delay: k * 22, easing: ease, fill: 'backwards' });
     });
-    tr.querySelectorAll('[data-line]').forEach((el, k) => {
+    if (!sel) tr.querySelectorAll('[data-line]').forEach((el, k) => {
       const v = el.style.height === '1px' ? 'scaleX(0)' : 'scaleY(0)';
       el.animate([{ transform: v }, { transform: 'none' }], { duration: 480, delay: 80 + k * 18, easing: ease, fill: 'backwards' });
     });
@@ -577,11 +624,14 @@ class Component extends DCLogic {
 
   renderVals() {
     const { idx, sub, mobile, geo } = this.state;
-    const n = CASES.length, steps = mobile ? n * 3 : n, perVh = mobile ? MOBILE_STEP : SCROLL_PER_CASE;
+    const n = CASES.length, steps = n, perVh = mobile ? MOBILE_STEP : SCROLL_PER_CASE;
     return {
       desk: !mobile, mobile,
-      mb: { v0: sub === 0 ? 'visible' : 'hidden', v1: sub === 1 ? 'visible' : 'hidden', v2: sub === 2 ? 'visible' : 'hidden', h0: sub === 0 ? 'false' : 'true', h1: sub === 1 ? 'false' : 'true', h2: sub === 2 ? 'false' : 'true' },
+      mb: { v0: sub === 0 ? 'inherit' : 'hidden', v1: sub === 1 ? 'inherit' : 'hidden', v2: sub === 2 ? 'inherit' : 'hidden', o0: sub === 0 ? '1' : '0.25', o1: sub === 1 ? '1' : '0.25', o2: sub === 2 ? '1' : '0.25', h0: sub === 0 ? 'false' : 'true', h1: sub === 1 ? 'false' : 'true', h2: sub === 2 ? 'false' : 'true' },
       bracketXm: idx * 18 + 'px',
+      mbPrev: () => this.setState(st => ({ sub: (st.sub + 2) % 3 })),
+      mbNext: () => this.setState(st => ({ sub: (st.sub + 1) % 3 })),
+      onMeta: e => { const v = e.currentTarget, box = v && v.parentElement; if (box && v.videoWidth && v.videoHeight) { box.style.aspectRatio = v.videoWidth + ' / ' + v.videoHeight; const card = box.closest('[data-cs-card]'); if (card) this.fit(card, this.vh()); } },
       trackRef: this.trackRef,
       cardKey: 'case-' + idx,
       c: SHAPED[idx],

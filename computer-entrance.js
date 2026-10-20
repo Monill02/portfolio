@@ -371,7 +371,8 @@ function bindCanvas(s) {
   cv.addEventListener('pointerdown', (e) => { pointer.down = { x: e.clientX, y: e.clientY }; });
   cv.addEventListener('pointerup', (e) => {
     const d = pointer.down; pointer.down = null;
-    if (d && Math.hypot(e.clientX - d.x, e.clientY - d.y) <= 10 && hitModel(e.clientX, e.clientY)) enter();
+    // touch / small screens: the on-glass button is tiny, so any tap enters
+    if (d && Math.hypot(e.clientX - d.x, e.clientY - d.y) <= 10 && (e.pointerType === 'touch' || innerWidth < 760 || hitModel(e.clientX, e.clientY))) enter();
   });
   cv.addEventListener('pointercancel', () => { pointer.down = null; });
   cv.addEventListener('pointerleave', () => { hot = false; });
@@ -451,6 +452,8 @@ function enter() {
   const off = camera.position.clone().sub(C), d0 = off.length(), dir0 = off.normalize();
   zoom = { t0: performance.now(), C, n, up, d0, d1, dir0, fromLook: S.lookTarget.clone(), q: new THREE.Quaternion().setFromUnitVectors(dir0, n), qI: new THREE.Quaternion(), qT: new THREE.Quaternion(), dir: new THREE.Vector3(), upV: new THREE.Vector3() };
   toTop();
+  // watchdog: if the frame loop stalls (throttled tab, GPU hiccup) never leave the page locked
+  setTimeout(() => { if (state === 'zooming') startReveal(performance.now()); }, CFG.enterMs + 1200);
 }
 
 function startReveal(now) {
@@ -486,6 +489,9 @@ function skip() {
 
 /* ---------- frame loop (only while the entrance is visible) ---------- */
 function tick(now) {
+  try { tickInner(now); } catch (e) { console.warn('Computer entrance frame failed, skipping to the page', e); raf = 0; if (state === 'zooming') startReveal(performance.now()); else skip(); }
+}
+function tickInner(now) {
   raf = 0;
   if (!S || (state !== 'idle' && state !== 'zooming')) return;
   const { screenMat, camera, renderer } = S;
